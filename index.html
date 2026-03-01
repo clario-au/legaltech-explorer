@@ -17739,19 +17739,19 @@ void main(){
     /* User menu button */
     .user-menu-btn {
       margin-left: 8px;
-      padding: 8px 16px;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 999px;
+      padding: 4px 8px;
+      background: none;
+      border: none;
       color: #ffffff;
-      font-size: 14px;
+      font-size: 13px;
+      font-weight: 500;
       cursor: pointer;
-      transition: all 0.2s ease;
+      opacity: 0.85;
+      transition: opacity 0.2s ease;
     }
 
     .user-menu-btn:hover {
-      background: rgba(46, 167, 167, 0.3);
-      border-color: rgba(46, 167, 167, 0.6);
+      opacity: 1;
     }
   </style>
 
@@ -18098,7 +18098,7 @@ void main(){
       if (!userMenuBtn) {
         userMenuBtn = document.createElement('button');
         userMenuBtn.id = 'userMenuBtn';
-        userMenuBtn.className = 'btn user-menu-btn';
+        userMenuBtn.className = 'user-menu-btn';
         // Insert before Menu button
         const menuBtn = document.getElementById('landingMenuBtn');
         if (menuBtn) menuBtn.parentNode.insertBefore(userMenuBtn, menuBtn);
