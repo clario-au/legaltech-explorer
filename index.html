@@ -17073,10 +17073,12 @@
         body:JSON.stringify({ query:q })
       });
       if(!res.ok){
-        if(res.status === 401){
-          // Session expired mid-flight — fall back to client-side search
+        // 401 = session expired (ghost state) — re-validate and prompt login
+        if(res.status === 401 && typeof checkAuthStatus === 'function'){
           window.AUTH_STATE.authenticated = false;
-          runClientSideSearch(q);
+          await checkAuthStatus();
+          if(!window.AUTH_STATE.authenticated && typeof openLoginModal === 'function') openLoginModal();
+          aiStatus.textContent = 'Session expired — please sign in again.';
           return;
         }
         const text = await res.text().catch(()=>"<no body>");
@@ -18669,6 +18671,21 @@ void main(){
 
       // Silently check auth status — no forced gate; modal appears only on action
       await checkAuthStatus();
+    });
+
+    // ===== Ghost State Prevention =====
+    // Silently re-validate the session every 5 minutes.
+    // If the JWT has expired and refresh fails, show the login modal immediately
+    // rather than leaving the user in a broken "logged-in" state.
+    setInterval(async function() {
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') return;
+      if (!window.AUTH_STATE || !window.AUTH_STATE.authenticated) return;
+      var wasAuthenticated = window.AUTH_STATE.authenticated;
+      await checkAuthStatus();
+      if (wasAuthenticated && !window.AUTH_STATE.authenticated) {
+        // Session expired mid-session — prompt re-login
+        openLoginModal();
+      }
     });
 
     // ===== Ghost State Prevention =====
