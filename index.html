@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Legal-Tech Explorer — Soft Dashboard</title>
+<title>Legal Tech Navigator</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1050,18 +1050,13 @@
 <!-- PostHog Analytics -->
 <script>
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]);t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+" (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys getNextSurveyStep onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
-  // Key loaded from backend env var — never hardcoded here
-  fetch('/config').then(r=>r.json()).then(function(cfg){
-    if(cfg.posthog_key){
-      posthog.init(cfg.posthog_key, {
-        api_host: 'https://us.i.posthog.com',
-        person_profiles: 'identified_only',
-        capture_pageview: true,
-        capture_pageleave: true,
-        session_recording: { maskAllInputs: false }
-      });
-    }
-  }).catch(function(){});
+  posthog.init('phc_k2sXHaQJDajyOJvfV9LrUSZAuhIclFHToKuV20FgbDW', {
+    api_host: 'https://us.i.posthog.com',
+    person_profiles: 'identified_only',
+    capture_pageview: true,
+    capture_pageleave: true,
+    session_recording: { maskAllInputs: false }
+  });
 </script>
 </head>
 <body class="state-main has-landing">
@@ -1138,9 +1133,9 @@
     <div class="scoring-modal-overlay"></div>
     <div class="scoring-modal-content">
       <button id="howToUseModalClose" class="scoring-modal-close" aria-label="Close">&times;</button>
-      <h2>How to Use the Legal-Tech Explorer</h2>
+      <h2>How to Use the Legal Tech Navigator</h2>
       <div class="scoring-modal-body">
-        <p>The Legal-Tech Explorer helps in-house legal teams discover and compare legal technology tools available in Australia.</p>
+        <p>The Legal Tech Navigator helps in-house legal teams discover and compare legal technology tools available in Australia.</p>
 
         <h3>1. Getting Started</h3>
         <p>There are two main ways to find the tools you need:</p>
@@ -1261,7 +1256,7 @@
     <div class="topbar">
       <div class="brand">
         <img src="logos/clario.png" alt="Clario" class="brand-logo">
-        <h1>Legal-Tech Explorer</h1>
+        <h1>Legal Tech Navigator</h1>
       </div>
       <span class="spacer"></span>
       <button class="btn" id="compareHeaderBtn" style="display:none">
@@ -17746,19 +17741,19 @@ void main(){
     /* User menu button */
     .user-menu-btn {
       margin-left: 8px;
-      padding: 8px 16px;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 999px;
+      padding: 4px 8px;
+      background: none;
+      border: none;
       color: #ffffff;
-      font-size: 14px;
+      font-size: 13px;
+      font-weight: 500;
       cursor: pointer;
-      transition: all 0.2s ease;
+      opacity: 0.85;
+      transition: opacity 0.2s ease;
     }
 
     .user-menu-btn:hover {
-      background: rgba(46, 167, 167, 0.3);
-      border-color: rgba(46, 167, 167, 0.6);
+      opacity: 1;
     }
   </style>
 
@@ -17768,7 +17763,7 @@ void main(){
     <div class="auth-modal-content">
       <button id="loginModalClose" class="auth-modal-close" aria-label="Close">&times;</button>
       <h2>Sign In</h2>
-      <p class="subtitle">Access the Legal-Tech Explorer</p>
+      <p class="subtitle">Access the Legal Tech Navigator</p>
 
       <form id="loginForm">
         <div class="auth-form-group">
@@ -18105,7 +18100,7 @@ void main(){
       if (!userMenuBtn) {
         userMenuBtn = document.createElement('button');
         userMenuBtn.id = 'userMenuBtn';
-        userMenuBtn.className = 'btn user-menu-btn';
+        userMenuBtn.className = 'user-menu-btn';
         // Insert before Menu button
         const menuBtn = document.getElementById('landingMenuBtn');
         if (menuBtn) menuBtn.parentNode.insertBefore(userMenuBtn, menuBtn);
@@ -18167,7 +18162,7 @@ void main(){
       document.getElementById('forgotPasswordForm').style.display = 'none';
       document.getElementById('signUpForm').style.display = 'block';
       document.querySelector('#loginModal h2').textContent = 'Create Account';
-      document.querySelector('#loginModal .subtitle').textContent = 'Join Legal-Tech Explorer';
+      document.querySelector('#loginModal .subtitle').textContent = 'Join Legal Tech Navigator';
       document.getElementById('signUpEmail').focus();
     }
 
@@ -18176,7 +18171,7 @@ void main(){
       document.getElementById('forgotPasswordForm').style.display = 'none';
       document.getElementById('loginForm').style.display = 'block';
       document.querySelector('#loginModal h2').textContent = 'Sign In';
-      document.querySelector('#loginModal .subtitle').textContent = 'Access the Legal-Tech Explorer';
+      document.querySelector('#loginModal .subtitle').textContent = 'Access the Legal Tech Navigator';
     }
 
     // Register modal functions
