@@ -15776,7 +15776,9 @@
   var SHORTLIST_SELECTION = []; // Array of selected tool IDs for report
   var SHORTLIST_RESULTS = []; // Current sorted results (for reference)
   var TEMP_SELECTION = []; // Temporary selection during edit modal
-  var LAST_GENERATED_KEY = ''; // Tracks the selection key when report was last generated
+  var LAST_GENERATED_KEY = '';  // Tracks the selection key when report was last generated
+  var LAST_GENERATED_URL = null; // Blob URL of the last generated report (for "View Report")
+  var REPORT_GENERATING = false; // True while a report request is in-flight
 
   // State persistence functions
   // Saves and restores application state (filters, search, compare) in localStorage
@@ -16253,6 +16255,14 @@
     // Render shortlist items
     renderShortlistItems();
     updateShortlistButton();
+
+    // Auto-generate report in background for authenticated users after each search
+    if(window.AUTH_STATE && window.AUTH_STATE.authenticated){
+      var newKey = SHORTLIST_SELECTION.slice().sort().join('|');
+      if(newKey && newKey !== LAST_GENERATED_KEY && !REPORT_GENERATING){
+        generateShortlistReport();
+      }
+    }
   }
 
   function renderShortlistItems(){
@@ -16384,26 +16394,73 @@
     closeEditSelectionModal();
   }
 
-  function generateShortlistReport(){
-    if(SHORTLIST_SELECTION.length === 0){
-      alert('Please select at least one tool for the report.');
+  async function generateShortlistReport(){
+    if(SHORTLIST_SELECTION.length === 0) return;
+
+    var currentKey = SHORTLIST_SELECTION.slice().sort().join('|');
+
+    // If already generated for this exact shortlist, just open it
+    if(currentKey === LAST_GENERATED_KEY && LAST_GENERATED_URL){
+      viewGeneratedReport();
       return;
     }
 
-    compare = SHORTLIST_SELECTION.slice();
-    updateCompareCount();
-    saveState();
-    posthog?.capture('shortlist_report_generated', {
-      query: LAST_QUERY,
-      tools: SHORTLIST_SELECTION.map(id => DATA.find(r=>r.__id===id)?.__display_name || id)
-    });
+    // Don't double-fire if already generating
+    if(REPORT_GENERATING) return;
 
-    // Record which selection was just generated so button hides until selection changes
-    LAST_GENERATED_KEY = SHORTLIST_SELECTION.slice().sort().join('|');
-    var generateBtn = document.getElementById('shortlistGenerateBtn');
-    if(generateBtn){ generateBtn.style.display = 'none'; }
+    REPORT_GENERATING = true;
+    updateShortlistButton();
 
-    openCompareOverlay('ai');
+    try {
+      var tools = SHORTLIST_SELECTION.map(function(id){
+        return DATA.find(function(r){ return r.__id === id; });
+      }).filter(Boolean);
+
+      var today = new Date().toISOString().split('T')[0];
+      var token = (window.AUTH_STATE && window.AUTH_STATE.accessToken) ? window.AUTH_STATE.accessToken : '';
+
+      var response = await fetch('/report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          meta: { query: LAST_QUERY || '', generated_at: today },
+          tools: tools
+        })
+      });
+
+      if(!response.ok) throw new Error('Report generation failed: ' + response.status);
+
+      var blob = await response.blob();
+      // Revoke previous blob URL to free memory
+      if(LAST_GENERATED_URL) URL.revokeObjectURL(LAST_GENERATED_URL);
+      LAST_GENERATED_URL = URL.createObjectURL(blob);
+      LAST_GENERATED_KEY = currentKey;
+
+      posthog?.capture('shortlist_report_generated', {
+        query: LAST_QUERY,
+        tools: tools.map(function(t){ return t.__display_name || t['Product Name'] || t['Vendor Name'] || ''; })
+      });
+
+    } catch(err) {
+      console.error('[Report]', err);
+    } finally {
+      REPORT_GENERATING = false;
+      updateShortlistButton();
+    }
+  }
+
+  function viewGeneratedReport(){
+    if(!LAST_GENERATED_URL) return;
+    var today = new Date().toISOString().split('T')[0];
+    var a = document.createElement('a');
+    a.href = LAST_GENERATED_URL;
+    a.download = 'Legal-Tech-Report-' + today + '.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 
   // Mobile shortlist toggle
@@ -16424,7 +16481,16 @@
     var modalOverlay = document.querySelector('.edit-selection-overlay');
 
     if(editBtn) editBtn.addEventListener('click', openEditSelectionModal);
-    if(generateBtn) generateBtn.addEventListener('click', function(){ window.requireAuth(generateShortlistReport); });
+    if(generateBtn) generateBtn.addEventListener('click', function(){
+      var currentKey = SHORTLIST_SELECTION.slice().sort().join('|');
+      if(currentKey === LAST_GENERATED_KEY && LAST_GENERATED_URL){
+        // Report already generated — just open it
+        viewGeneratedReport();
+      } else {
+        // Need to generate — require auth first
+        window.requireAuth(generateShortlistReport);
+      }
+    });
     if(header) header.addEventListener('click', toggleShortlistPanel);
     if(cancelBtn) cancelBtn.addEventListener('click', closeEditSelectionModal);
     if(applyBtn) applyBtn.addEventListener('click', applyEditSelection);
@@ -16717,24 +16783,24 @@
   }
 
   function updateShortlistButton(){
-    var generateBtn = document.getElementById('shortlistGenerateBtn');
-    if(!generateBtn) return;
-    var count = SHORTLIST_SELECTION.length;
-    var currentKey = SHORTLIST_SELECTION.slice().sort().join('|');
-    // Show button only when the current selection differs from last generated
-    if(currentKey === LAST_GENERATED_KEY){
-      generateBtn.style.display = 'none';
+    var btn = document.getElementById('shortlistGenerateBtn');
+    if(!btn) return;
+
+    // Button is always visible
+    btn.style.display = '';
+
+    if(REPORT_GENERATING){
+      btn.textContent = 'Generating...';
+      btn.disabled = true;
       return;
     }
-    generateBtn.style.display = '';
-    if(count === 0){
-      generateBtn.textContent = 'Generate Report';
-    } else if(count === 1){
-      generateBtn.textContent = 'Generate Report (1 tool)';
-    } else if(count < 3){
-      generateBtn.textContent = 'Generate Report (' + count + ' tools)';
+
+    btn.disabled = false;
+    var currentKey = SHORTLIST_SELECTION.slice().sort().join('|');
+    if(currentKey && currentKey === LAST_GENERATED_KEY && LAST_GENERATED_URL){
+      btn.textContent = 'View Report';
     } else {
-      generateBtn.textContent = 'Generate Report';
+      btn.textContent = 'Generate Report';
     }
   }
 
