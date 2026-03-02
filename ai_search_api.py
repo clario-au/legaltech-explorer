@@ -751,22 +751,20 @@ async def report_preview(request: Request, user: dict = Depends(require_auth)):
     )
 
 
-@app.post("/report")
+@app.post("/report", response_class=HTMLResponse)
 async def generate_report(req: ReportRequest, user: dict = Depends(require_auth)):
-    """Generate a PDF report for the shortlisted tools.
-    Phase 1: returns a stub response. Playwright rendering added in Phase 4."""
+    """Generate a report for the shortlisted tools.
+    Phase 2: returns rendered HTML. Phase 4 will replace this with Playwright PDF."""
     if not req.tools:
         raise HTTPException(status_code=400, detail="No tools provided")
-    if len(req.tools) > 3:
-        req.tools = req.tools[:3]
 
-    # Phase 1 stub — returns a plain-text placeholder until Playwright is wired up (Phase 4)
-    stub = f"Legal Tech Navigator Report\n\nGenerated for: {user.get('email')}\nQuery: {req.meta.query or 'N/A'}\nTools: {', '.join(t.get('Tool Name', 'Unknown') for t in req.tools)}\n\n[PDF rendering coming in Phase 4]"
-    return StreamingResponse(
-        iter([stub.encode()]),
-        media_type="text/plain",
-        headers={"Content-Disposition": f"attachment; filename=report-stub.txt"}
+    tools = req.tools[:3]
+    meta = {"query": req.meta.query or "", "generated_at": req.meta.generated_at or ""}
+
+    html = templates.get_template("report.html").render(
+        request=None, tools=tools, meta=meta, user=user
     )
+    return HTMLResponse(content=html)
 
 @app.post("/query")
 async def generate_filters(req: Query, user: dict = Depends(rate_limit_dependency)):
