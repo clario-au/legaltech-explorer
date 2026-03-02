@@ -18323,7 +18323,6 @@ void main(){
 
       const submitBtn = document.getElementById('signUpSubmitBtn');
       const errorDiv = document.getElementById('signUpError');
-      const successDiv = document.getElementById('signUpSuccess');
       const password = document.getElementById('signUpPassword').value;
       const passwordConfirm = document.getElementById('signUpPasswordConfirm').value;
 
@@ -18336,7 +18335,6 @@ void main(){
       submitBtn.disabled = true;
       submitBtn.textContent = 'Creating account...';
       errorDiv.style.display = 'none';
-      successDiv.style.display = 'none';
 
       try {
         const response = await fetch('/auth/signup', {
