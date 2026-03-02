@@ -16232,6 +16232,8 @@
       panel.classList.add('is-hidden');
       SHORTLIST_SELECTION = [];
       SHORTLIST_RESULTS = [];
+      compare = [];
+      updateCompareCount();
       return;
     }
 
@@ -16247,6 +16249,9 @@
       }
     }
     SHORTLIST_SELECTION = uniqueIds;
+    // Keep compare in sync — shortlist is the single source of truth
+    compare = SHORTLIST_SELECTION.slice();
+    updateCompareCount();
 
     // Show the panel
     wrapper.classList.remove('no-panel');
@@ -16384,7 +16389,10 @@
 
   function applyEditSelection(){
     SHORTLIST_SELECTION = TEMP_SELECTION.slice();
-    // Reset generated report key so button reverts to "Generate Report" after edit
+    // Keep compare in sync — shortlist edit drives both lists
+    compare = SHORTLIST_SELECTION.slice();
+    updateCompareCount();
+    // Reset generated report so button reverts to "Generate Report" after edit
     LAST_GENERATED_KEY = '';
     LAST_GENERATED_URL = null;
     saveState();
@@ -17023,9 +17031,11 @@
     document.getElementById('aiQuery').value = '';
     LAST_QUERY = '';
     HAS_SEARCHED = false;
-    compare = []; // Clear compare selection
+    compare = [];
+    SHORTLIST_SELECTION = [];
+    updateCompareCount();
     applyFilters();
-    localStorage.removeItem('legaltech_explorer_state'); // Clear saved state
+    localStorage.removeItem('legaltech_explorer_state');
     history.pushState({ view: 'landing' }, '');
   });
   document.getElementById('filtersBtn').onclick=function(){
