@@ -17136,6 +17136,10 @@
 
   // View All Tools button - shows all tools without any filters
   function viewAllTools(){
+    if (!window.AUTH_STATE || !window.AUTH_STATE.authenticated) {
+      openLoginModal();
+      return;
+    }
     HAS_SEARCHED = true;
     LAST_QUERY = '';
     SHORTLIST_SELECTION = []; // Reset shortlist when viewing all
