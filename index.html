@@ -17850,12 +17850,19 @@ void main(){
         <button type="submit" class="auth-submit-btn" id="signUpSubmitBtn">Create Account</button>
 
         <div id="signUpError" class="auth-error" style="display: none;"></div>
-        <div id="signUpSuccess" class="auth-success" style="display: none;"></div>
 
         <div class="auth-link" style="margin-top: 20px;">
           <a href="#" id="backToSignInLink">Already have an account? Sign in</a>
         </div>
       </form>
+
+      <!-- Success screen shown after sign-up (replaces the form) -->
+      <div id="signUpSuccessScreen" style="display:none;text-align:center;padding:8px 0;">
+        <div style="font-size:40px;margin-bottom:16px;">✉️</div>
+        <p style="font-weight:600;font-size:16px;margin-bottom:8px;">Check your email</p>
+        <p id="signUpSuccessMsg" style="color:#6b7280;font-size:14px;margin-bottom:24px;"></p>
+        <a href="#" id="backToSignInFromSuccess" style="color:#2EA7A7;font-size:14px;font-weight:600;text-decoration:none;">Back to Sign In</a>
+      </div>
     </div>
   </div>
 
@@ -18168,6 +18175,7 @@ void main(){
 
     function showLoginView() {
       document.getElementById('signUpForm').style.display = 'none';
+      document.getElementById('signUpSuccessScreen').style.display = 'none';
       document.getElementById('forgotPasswordForm').style.display = 'none';
       document.getElementById('loginForm').style.display = 'block';
       document.querySelector('#loginModal h2').textContent = 'Sign In';
@@ -18301,7 +18309,11 @@ void main(){
     document.getElementById('backToSignInLink').addEventListener('click', (e) => {
       e.preventDefault();
       document.getElementById('signUpError').style.display = 'none';
-      document.getElementById('signUpSuccess').style.display = 'none';
+      showLoginView();
+    });
+
+    document.getElementById('backToSignInFromSuccess').addEventListener('click', (e) => {
+      e.preventDefault();
       showLoginView();
     });
 
@@ -18340,9 +18352,13 @@ void main(){
 
         if (response.ok) {
           posthog?.capture('sign_up', { email: document.getElementById('signUpEmail').value });
-          successDiv.textContent = result.message || 'Check your email to verify your account.';
-          successDiv.style.display = 'block';
-          document.getElementById('signUpForm').reset();
+          // Hide the form and show the dedicated success screen
+          document.getElementById('signUpForm').style.display = 'none';
+          const screen = document.getElementById('signUpSuccessScreen');
+          document.getElementById('signUpSuccessMsg').textContent = result.message || 'We sent a verification link to your email. Click it to activate your account.';
+          screen.style.display = 'block';
+          document.querySelector('#loginModal h2').textContent = 'Almost there!';
+          document.querySelector('#loginModal .subtitle').textContent = '';
         } else {
           errorDiv.textContent = result.detail || 'Sign up failed. Please try again.';
           errorDiv.style.display = 'block';
@@ -18632,11 +18648,13 @@ void main(){
           return;  // Don't proceed with normal auth flow
         }
 
-        if (type === 'invite' || type === 'signup') {
+        if (type === 'invite') {
           // Invite flow - user needs to set their password
           openSetPasswordModal();
           return;  // Don't proceed with normal auth flow
         }
+        // type === 'signup' means email verification for self-registered user
+        // password already set — just authenticate normally
 
         // Check auth status with new token
         await checkAuthStatus();
