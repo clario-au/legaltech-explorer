@@ -18094,7 +18094,13 @@ void main(){
       }
     }
 
+    // Debounce timer — prevents the Sign In button flickering during auth re-checks
+    var _anonUITimer = null;
+
     function updateUIForAuthenticatedUser() {
+      // Cancel any pending switch to anonymous state
+      if (_anonUITimer) { clearTimeout(_anonUITimer); _anonUITimer = null; }
+
       const user = window.AUTH_STATE.user;
       posthog?.identify(user.id, { email: user.email, role: user.role });
 
@@ -18126,20 +18132,29 @@ void main(){
     }
 
     function updateUIForAnonymousUser() {
-      // Remove user menu button if it exists
-      const userMenuBtn = document.getElementById('userMenuBtn');
-      if (userMenuBtn) userMenuBtn.remove();
+      // Debounce: wait 800ms before switching to anonymous UI.
+      // If auth confirms within that window the timer is cancelled and nothing flickers.
+      if (_anonUITimer) clearTimeout(_anonUITimer);
+      _anonUITimer = setTimeout(function() {
+        _anonUITimer = null;
+        // Only apply if still unauthenticated after the delay
+        if (window.AUTH_STATE && window.AUTH_STATE.authenticated) return;
 
-      // Show topbar Sign In button
-      const headerSignInBtn = document.getElementById('headerSignInBtn');
-      if (headerSignInBtn) headerSignInBtn.style.display = '';
+        // Remove user menu button if it exists
+        const userMenuBtn = document.getElementById('userMenuBtn');
+        if (userMenuBtn) userMenuBtn.remove();
 
-      // Show "Sign In" menu item, hide "Sign Out"
-      const signInMenuItem = document.getElementById('signInMenuItem');
-      if (signInMenuItem) signInMenuItem.style.display = '';
+        // Show topbar Sign In button
+        const headerSignInBtn = document.getElementById('headerSignInBtn');
+        if (headerSignInBtn) headerSignInBtn.style.display = '';
 
-      const signOutMenuItem = document.getElementById('signOutMenuItem');
-      if (signOutMenuItem) signOutMenuItem.style.display = 'none';
+        // Show "Sign In" menu item, hide "Sign Out"
+        const signInMenuItem = document.getElementById('signInMenuItem');
+        if (signInMenuItem) signInMenuItem.style.display = '';
+
+        const signOutMenuItem = document.getElementById('signOutMenuItem');
+        if (signOutMenuItem) signOutMenuItem.style.display = 'none';
+      }, 800);
     }
 
     function showUserMenu() {
