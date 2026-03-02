@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Legal Tech Navigator — Shortlist Report</title>
+  <style>
+    /* =====================
+       Brand tokens
+       ===================== */
+    :root {
+      --brand-bg:       #ffffff;
+      --brand-ink:      #1a1a2e;
+      --brand-accent:   #2EA7A7;
+      --brand-accent2:  #F22C7A;
+      --brand-muted:    #6b7280;
+      --brand-border:   #e5e7eb;
+      --brand-surface:  #f9fafb;
+      --font:           system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+
+    /* =====================
+       Print / page setup
+       ===================== */
+    @page {
+      size: A4;
+      margin: 14mm 16mm;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      font-size: 10pt;
+      color: var(--brand-ink);
+      background: var(--brand-bg);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* =====================
+       Page containers
+       ===================== */
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      padding: 14mm 16mm;
+      position: relative;
+      background: var(--brand-bg);
+      break-after: page;
+      page-break-after: always;
+    }
+    .page:last-child {
+      break-after: auto;
+      page-break-after: auto;
+    }
+
+    /* =====================
+       Page header (repeated each page)
+       ===================== */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--brand-accent);
+      padding-bottom: 6mm;
+      margin-bottom: 8mm;
+    }
+    .page-header .brand-name {
+      font-size: 11pt;
+      font-weight: 700;
+      color: var(--brand-accent);
+      letter-spacing: 0.02em;
+    }
+    .page-header .page-meta {
+      font-size: 8pt;
+      color: var(--brand-muted);
+    }
+
+    /* =====================
+       Page footer
+       ===================== */
+    .page-footer {
+      position: absolute;
+      bottom: 10mm;
+      left: 16mm;
+      right: 16mm;
+      display: flex;
+      justify-content: space-between;
+      font-size: 7.5pt;
+      color: var(--brand-muted);
+      border-top: 1px solid var(--brand-border);
+      padding-top: 3mm;
+    }
+
+    /* =====================
+       Typography
+       ===================== */
+    h1 { font-size: 22pt; font-weight: 800; line-height: 1.1; color: var(--brand-ink); }
+    h2 { font-size: 13pt; font-weight: 700; color: var(--brand-ink); margin-bottom: 4mm; }
+    h3 { font-size: 11pt; font-weight: 600; color: var(--brand-ink); margin-bottom: 2mm; }
+    p  { font-size: 9.5pt; line-height: 1.55; color: var(--brand-ink); }
+    .muted { color: var(--brand-muted); }
+    .accent { color: var(--brand-accent); }
+
+    /* =====================
+       Page 1 — Cover
+       ===================== */
+    .cover-hero {
+      margin-bottom: 10mm;
+    }
+    .cover-hero .eyebrow {
+      font-size: 9pt;
+      font-weight: 600;
+      color: var(--brand-accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 4mm;
+    }
+    .cover-hero h1 {
+      margin-bottom: 4mm;
+    }
+    .cover-hero .subtitle {
+      font-size: 11pt;
+      color: var(--brand-muted);
+      margin-bottom: 8mm;
+    }
+    .cover-meta-row {
+      display: flex;
+      gap: 8mm;
+      margin-bottom: 8mm;
+      flex-wrap: wrap;
+    }
+    .cover-meta-item label {
+      display: block;
+      font-size: 7.5pt;
+      font-weight: 600;
+      color: var(--brand-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 1mm;
+    }
+    .cover-meta-item span {
+      font-size: 9.5pt;
+      color: var(--brand-ink);
+    }
+
+    .query-box {
+      background: var(--brand-surface);
+      border-left: 3px solid var(--brand-accent);
+      padding: 4mm 5mm;
+      margin-bottom: 8mm;
+      border-radius: 0 4px 4px 0;
+    }
+    .query-box .query-label {
+      font-size: 7.5pt;
+      font-weight: 600;
+      color: var(--brand-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 1.5mm;
+    }
+    .query-box .query-text {
+      font-size: 10pt;
+      font-style: italic;
+      color: var(--brand-ink);
+    }
+
+    /* Shortlist summary tiles */
+    .shortlist-tiles {
+      display: flex;
+      gap: 4mm;
+      margin-bottom: 8mm;
+    }
+    .shortlist-tile {
+      flex: 1;
+      border: 1px solid var(--brand-border);
+      border-radius: 6px;
+      padding: 4mm;
+      background: var(--brand-surface);
+    }
+    .shortlist-tile .rank {
+      font-size: 7.5pt;
+      font-weight: 700;
+      color: var(--brand-accent);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 1.5mm;
+    }
+    .shortlist-tile .tool-name {
+      font-size: 10pt;
+      font-weight: 700;
+      color: var(--brand-ink);
+      margin-bottom: 1mm;
+    }
+    .shortlist-tile .tool-vendor {
+      font-size: 8.5pt;
+      color: var(--brand-muted);
+      margin-bottom: 2mm;
+    }
+    .shortlist-tile .tool-category {
+      display: inline-block;
+      font-size: 7.5pt;
+      font-weight: 600;
+      background: var(--brand-accent);
+      color: #fff;
+      padding: 1mm 2.5mm;
+      border-radius: 999px;
+    }
+
+    /* =====================
+       Page 2–3 — Tool deep dives
+       ===================== */
+    .tool-section {
+      margin-bottom: 8mm;
+      padding-bottom: 6mm;
+      border-bottom: 1px solid var(--brand-border);
+    }
+    .tool-section:last-child {
+      border-bottom: none;
+    }
+    .tool-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 3mm;
+    }
+    .tool-header-left .tool-title {
+      font-size: 13pt;
+      font-weight: 700;
+      color: var(--brand-ink);
+    }
+    .tool-header-left .tool-vendor-label {
+      font-size: 9pt;
+      color: var(--brand-muted);
+      margin-top: 0.5mm;
+    }
+    .tool-badges {
+      display: flex;
+      gap: 2mm;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .badge {
+      font-size: 7.5pt;
+      font-weight: 600;
+      padding: 1mm 2.5mm;
+      border-radius: 999px;
+      border: 1px solid var(--brand-border);
+      color: var(--brand-ink);
+      background: var(--brand-surface);
+    }
+    .badge.accent { background: var(--brand-accent); color: #fff; border-color: var(--brand-accent); }
+
+    .tool-description {
+      font-size: 9.5pt;
+      line-height: 1.55;
+      color: var(--brand-ink);
+      margin-bottom: 3mm;
+    }
+
+    .tool-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3mm;
+    }
+    .tool-detail-item label {
+      display: block;
+      font-size: 7.5pt;
+      font-weight: 600;
+      color: var(--brand-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 1mm;
+    }
+    .tool-detail-item span {
+      font-size: 9pt;
+      color: var(--brand-ink);
+    }
+
+    /* =====================
+       Page 3 — Comparison table
+       ===================== */
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 8mm;
+      font-size: 8.5pt;
+    }
+    .comparison-table th {
+      background: var(--brand-accent);
+      color: #fff;
+      padding: 2.5mm 3mm;
+      text-align: left;
+      font-weight: 600;
+    }
+    .comparison-table td {
+      padding: 2.5mm 3mm;
+      border-bottom: 1px solid var(--brand-border);
+      vertical-align: top;
+    }
+    .comparison-table tr:nth-child(even) td {
+      background: var(--brand-surface);
+    }
+    .comparison-table .row-label {
+      font-weight: 600;
+      color: var(--brand-muted);
+      white-space: nowrap;
+    }
+
+    /* Next steps section */
+    .next-steps {
+      background: var(--brand-surface);
+      border: 1px solid var(--brand-border);
+      border-radius: 6px;
+      padding: 5mm;
+    }
+    .next-steps h3 {
+      margin-bottom: 3mm;
+    }
+    .next-steps ol {
+      padding-left: 5mm;
+    }
+    .next-steps li {
+      font-size: 9.5pt;
+      line-height: 1.6;
+      color: var(--brand-ink);
+      margin-bottom: 1.5mm;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== PAGE 1 — Cover ===================== -->
+  <div class="page">
+    <div class="page-header">
+      <span class="brand-name">Legal Tech Navigator</span>
+      <span class="page-meta">Generated {{ meta.generated_at }}</span>
+    </div>
+
+    <div class="cover-hero">
+      <div class="eyebrow">Shortlist Report</div>
+      <h1>Your Legal Tech<br>Shortlist</h1>
+      <p class="subtitle">A curated evaluation of the top tools matching your requirements.</p>
+    </div>
+
+    <div class="cover-meta-row">
+      <div class="cover-meta-item">
+        <label>Prepared for</label>
+        <span>{{ user.email }}</span>
+      </div>
+      <div class="cover-meta-item">
+        <label>Date</label>
+        <span>{{ meta.generated_at }}</span>
+      </div>
+      <div class="cover-meta-item">
+        <label>Tools reviewed</label>
+        <span>{{ tools | length }}</span>
+      </div>
+    </div>
+
+    {% if meta.query %}
+    <div class="query-box">
+      <div class="query-label">What you searched for</div>
+      <div class="query-text">"{{ meta.query }}"</div>
+    </div>
+    {% endif %}
+
+    <h2>Recommended Shortlist</h2>
+    <div class="shortlist-tiles">
+      {% for tool in tools %}
+      <div class="shortlist-tile">
+        <div class="rank">#{{ loop.index }} {{ 'Best Match' if loop.first else 'Shortlisted' }}</div>
+        <div class="tool-name">{{ tool.get('Tool Name') or tool.get('tool_name') or 'Unknown Tool' }}</div>
+        <div class="tool-vendor">{{ tool.get('Vendor') or tool.get('vendor') or '—' }}</div>
+        <div class="tool-category">{{ tool.get('Category') or tool.get('category') or '—' }}</div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="page-footer">
+      <span>Legal Tech Navigator — Confidential</span>
+      <span>Page 1 of 3</span>
+    </div>
+  </div>
+
+
+  <!-- ===================== PAGE 2 — Tool deep dives (Tools 1 & 2) ===================== -->
+  <div class="page">
+    <div class="page-header">
+      <span class="brand-name">Legal Tech Navigator</span>
+      <span class="page-meta">Tool Deep Dives</span>
+    </div>
+
+    <h2 style="margin-bottom:6mm;">Tool Evaluations</h2>
+
+    {% for tool in tools[:2] %}
+    <div class="tool-section">
+      <div class="tool-header">
+        <div class="tool-header-left">
+          <div class="tool-title">{{ tool.get('Tool Name') or tool.get('tool_name') or 'Unknown Tool' }}</div>
+          <div class="tool-vendor-label">by {{ tool.get('Vendor') or tool.get('vendor') or '—' }}</div>
+        </div>
+        <div class="tool-badges">
+          {% if tool.get('Category') or tool.get('category') %}
+          <span class="badge accent">{{ tool.get('Category') or tool.get('category') }}</span>
+          {% endif %}
+          {% if tool.get('Pricing') or tool.get('pricing') %}
+          <span class="badge">{{ tool.get('Pricing') or tool.get('pricing') }}</span>
+          {% endif %}
+          {% if tool.get('Jurisdiction') or tool.get('jurisdiction') %}
+          <span class="badge">{{ tool.get('Jurisdiction') or tool.get('jurisdiction') }}</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <p class="tool-description">
+        {{ tool.get('Description') or tool.get('description') or 'No description available.' }}
+      </p>
+
+      <div class="tool-detail-grid">
+        <div class="tool-detail-item">
+          <label>Pricing model</label>
+          <span>{{ tool.get('Pricing') or tool.get('pricing') or 'Not specified' }}</span>
+        </div>
+        <div class="tool-detail-item">
+          <label>Jurisdiction</label>
+          <span>{{ tool.get('Jurisdiction') or tool.get('jurisdiction') or 'Not specified' }}</span>
+        </div>
+        <div class="tool-detail-item">
+          <label>Deployment</label>
+          <span>{{ tool.get('Deployment') or tool.get('deployment') or 'Not specified' }}</span>
+        </div>
+        <div class="tool-detail-item">
+          <label>Website</label>
+          <span>{{ tool.get('Website') or tool.get('website') or 'Not specified' }}</span>
+        </div>
+        <div class="tool-detail-item">
+          <label>Practice area</label>
+          <span>{{ tool.get('Practice Area') or tool.get('practice_area') or 'Not specified' }}</span>
+        </div>
+        <div class="tool-detail-item">
+          <label>Firm size</label>
+          <span>{{ tool.get('Firm Size') or tool.get('firm_size') or 'Not specified' }}</span>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+    <div class="page-footer">
+      <span>Legal Tech Navigator — Confidential</span>
+      <span>Page 2 of 3</span>
+    </div>
+  </div>
+
+
+  <!-- ===================== PAGE 3 — Tool 3 + Comparison + Next Steps ===================== -->
+  <div class="page">
+    <div class="page-header">
+      <span class="brand-name">Legal Tech Navigator</span>
+      <span class="page-meta">Comparison &amp; Next Steps</span>
+    </div>
+
+    {% if tools | length >= 3 %}
+    <div class="tool-section">
+      {% set tool = tools[2] %}
+      <div class="tool-header">
+        <div class="tool-header-left">
+          <div class="tool-title">{{ tool.get('Tool Name') or tool.get('tool_name') or 'Unknown Tool' }}</div>
+          <div class="tool-vendor-label">by {{ tool.get('Vendor') or tool.get('vendor') or '—' }}</div>
+        </div>
+        <div class="tool-badges">
+          {% if tool.get('Category') or tool.get('category') %}
+          <span class="badge accent">{{ tool.get('Category') or tool.get('category') }}</span>
+          {% endif %}
+          {% if tool.get('Pricing') or tool.get('pricing') %}
+          <span class="badge">{{ tool.get('Pricing') or tool.get('pricing') }}</span>
+          {% endif %}
+        </div>
+      </div>
+      <p class="tool-description">
+        {{ tool.get('Description') or tool.get('description') or 'No description available.' }}
+      </p>
+      <div class="tool-detail-grid">
+        <div class="tool-detail-item">
+          <label>Pricing model</label>
+          <span>{{ tool.get('Pricing') or tool.get('pricing') or 'Not specified' }}</span>
+        </div>
+        <div class="tool-detail-item">
+          <label>Jurisdiction</label>
+          <span>{{ tool.get('Jurisdiction') or tool.get('jurisdiction') or 'Not specified' }}</span>
+        </div>
+        <div class="tool-detail-item">
+          <label>Deployment</label>
+          <span>{{ tool.get('Deployment') or tool.get('deployment') or 'Not specified' }}</span>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <h2 style="margin-bottom:4mm;">Side-by-Side Comparison</h2>
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th style="width:22%">Criteria</th>
+          {% for tool in tools %}
+          <th>{{ tool.get('Tool Name') or tool.get('tool_name') or 'Tool ' ~ loop.index }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="row-label">Category</td>
+          {% for tool in tools %}<td>{{ tool.get('Category') or tool.get('category') or '—' }}</td>{% endfor %}
+        </tr>
+        <tr>
+          <td class="row-label">Pricing</td>
+          {% for tool in tools %}<td>{{ tool.get('Pricing') or tool.get('pricing') or '—' }}</td>{% endfor %}
+        </tr>
+        <tr>
+          <td class="row-label">Jurisdiction</td>
+          {% for tool in tools %}<td>{{ tool.get('Jurisdiction') or tool.get('jurisdiction') or '—' }}</td>{% endfor %}
+        </tr>
+        <tr>
+          <td class="row-label">Deployment</td>
+          {% for tool in tools %}<td>{{ tool.get('Deployment') or tool.get('deployment') or '—' }}</td>{% endfor %}
+        </tr>
+        <tr>
+          <td class="row-label">Website</td>
+          {% for tool in tools %}<td>{{ tool.get('Website') or tool.get('website') or '—' }}</td>{% endfor %}
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="next-steps">
+      <h3>Suggested Next Steps</h3>
+      <ol>
+        <li>Request a live demo from each shortlisted vendor.</li>
+        <li>Evaluate integration requirements with your existing systems.</li>
+        <li>Confirm pricing and contract terms with your procurement team.</li>
+        <li>Run a pilot with your legal team before full deployment.</li>
+      </ol>
+    </div>
+
+    <div class="page-footer">
+      <span>Legal Tech Navigator — Confidential</span>
+      <span>Page 3 of 3</span>
+    </div>
+  </div>
+
+</body>
+</html>
