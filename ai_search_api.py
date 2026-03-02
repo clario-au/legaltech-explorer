@@ -7,8 +7,9 @@ from typing import Any, Dict, List, Optional
 
 from fastapi import FastAPI, Cookie, Request, Response, HTTPException, Depends, Header
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, RedirectResponse, JSONResponse
+from fastapi.responses import FileResponse, RedirectResponse, JSONResponse, HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -33,6 +34,9 @@ OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 app = FastAPI(title="Legal-Tech Filter API", version="0.2.0")
+
+# Jinja2 templates for report generation
+templates = Jinja2Templates(directory="templates")
 
 # CORS (dev-friendly)
 app.add_middleware(
@@ -713,6 +717,56 @@ def serve_updated_csv(user: dict = Depends(require_auth)):
 @app.get("/health")
 def health():
     return {"ok": True, "has_key": bool(OPENAI_API_KEY), "model": OPENAI_MODEL}
+
+
+# =========================
+# Report Generation
+# =========================
+
+class ReportMeta(BaseModel):
+    query: Optional[str] = ""
+    generated_at: Optional[str] = ""
+
+class ReportRequest(BaseModel):
+    meta: ReportMeta = ReportMeta()
+    tools: List[Dict[str, Any]] = []
+
+
+@app.get("/report/preview", response_class=HTMLResponse)
+async def report_preview(request: Request, user: dict = Depends(require_auth)):
+    """Preview the report as HTML in the browser — for fast iteration during development."""
+    # Phase 1: mock data only. Replace with real data in Phase 3.
+    mock_tools = [
+        {"Tool Name": "Acme Contract AI", "Vendor": "Acme Corp", "Category": "Contract Management",
+         "Pricing": "Subscription", "Jurisdiction": "Australia", "Description": "AI-powered contract review and analysis platform for in-house legal teams."},
+        {"Tool Name": "LexFlow", "Vendor": "LexFlow Pty Ltd", "Category": "Matter Management",
+         "Pricing": "Per seat", "Jurisdiction": "Australia", "Description": "End-to-end matter and document management for corporate legal departments."},
+        {"Tool Name": "ClauseCheck", "Vendor": "ClauseCheck Inc", "Category": "Due Diligence",
+         "Pricing": "Freemium", "Jurisdiction": "Australia / NZ", "Description": "Automated clause extraction and risk flagging for M&A and compliance workflows."},
+    ]
+    mock_meta = {"query": "contract review tools for in-house team", "generated_at": "2026-03-03"}
+    return templates.TemplateResponse(
+        "report.html",
+        {"request": request, "tools": mock_tools, "meta": mock_meta, "user": user}
+    )
+
+
+@app.post("/report")
+async def generate_report(req: ReportRequest, user: dict = Depends(require_auth)):
+    """Generate a PDF report for the shortlisted tools.
+    Phase 1: returns a stub response. Playwright rendering added in Phase 4."""
+    if not req.tools:
+        raise HTTPException(status_code=400, detail="No tools provided")
+    if len(req.tools) > 3:
+        req.tools = req.tools[:3]
+
+    # Phase 1 stub — returns a plain-text placeholder until Playwright is wired up (Phase 4)
+    stub = f"Legal Tech Navigator Report\n\nGenerated for: {user.get('email')}\nQuery: {req.meta.query or 'N/A'}\nTools: {', '.join(t.get('Tool Name', 'Unknown') for t in req.tools)}\n\n[PDF rendering coming in Phase 4]"
+    return StreamingResponse(
+        iter([stub.encode()]),
+        media_type="text/plain",
+        headers={"Content-Disposition": f"attachment; filename=report-stub.txt"}
+    )
 
 @app.post("/query")
 async def generate_filters(req: Query, user: dict = Depends(rate_limit_dependency)):
