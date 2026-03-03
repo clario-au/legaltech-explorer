@@ -15779,6 +15779,7 @@
   var LAST_GENERATED_KEY = '';  // Tracks the selection key when report was last generated
   var LAST_GENERATED_URL = null; // Blob URL of the last generated report (for "View Report")
   var REPORT_GENERATING = false; // True while a report request is in-flight
+  var SHORTLIST_USER_EDITED = false; // True once user has manually changed the shortlist
 
   // State persistence functions
   // Saves and restores application state (filters, search, compare) in localStorage
@@ -16240,9 +16241,9 @@
     // Store sorted results for reference
     SHORTLIST_RESULTS = sortedRows;
 
-    // Only auto-populate on a fresh search (SHORTLIST_SELECTION is empty).
-    // Re-renders triggered by applyFilters/compare buttons must NOT override user edits.
-    if(SHORTLIST_SELECTION.length === 0){
+    // Only auto-populate on a fresh search (selection is empty AND user hasn't manually edited).
+    // Re-renders from applyFilters or compare button clicks must NOT override user edits.
+    if(SHORTLIST_SELECTION.length === 0 && !SHORTLIST_USER_EDITED){
       var uniqueIds = [];
       for(var i = 0; i < sortedRows.length && uniqueIds.length < 3; i++){
         var id = sortedRows[i].__id;
@@ -16262,6 +16263,9 @@
       }
     }
 
+    // Refresh card compare button visuals to match current compare array
+    refreshCompareButtonStates();
+
     // Show the panel
     wrapper.classList.remove('no-panel');
     panel.classList.remove('is-hidden');
@@ -16269,6 +16273,19 @@
     // Render whatever is currently in SHORTLIST_SELECTION (fresh or edited)
     renderShortlistItems();
     updateShortlistButton();
+  }
+
+  function refreshCompareButtonStates(){
+    document.querySelectorAll('#tools .tool').forEach(function(card){
+      var id = card.dataset.id;
+      var btn = card.querySelector('.btn-compare');
+      if(!btn || !id) return;
+      var isChosen = compare.indexOf(id) !== -1;
+      btn.textContent = isChosen ? '✓ Added' : 'Add to compare';
+      btn.style.background = isChosen ? '#2EA7A7' : '';
+      btn.style.color = isChosen ? '#ffffff' : '';
+      btn.style.borderColor = isChosen ? 'transparent' : '';
+    });
   }
 
   function renderShortlistItems(){
@@ -16351,7 +16368,7 @@
 
   function toggleEditSelection(id, itemEl){
     var index = TEMP_SELECTION.indexOf(id);
-    var maxItems = 5;
+    var maxItems = 3;
 
     if(index === -1){
       // Add to selection if under max
@@ -16375,7 +16392,7 @@
   }
 
   function updateEditSelectionDisabled(){
-    var maxItems = 5;
+    var maxItems = 3;
     var items = document.querySelectorAll('.edit-selection-item');
 
     items.forEach(function(item){
@@ -16390,17 +16407,15 @@
 
   function applyEditSelection(){
     SHORTLIST_SELECTION = TEMP_SELECTION.slice();
-    // Keep compare in sync — shortlist edit drives both lists
+    SHORTLIST_USER_EDITED = true; // Prevent auto-refill on re-renders
     compare = SHORTLIST_SELECTION.slice();
     updateCompareCount();
-    // Reset generated report so button reverts to "Generate Report" after edit
+    refreshCompareButtonStates();
     LAST_GENERATED_KEY = '';
     LAST_GENERATED_URL = null;
     saveState();
     renderShortlistItems();
     updateShortlistButton();
-    // Do NOT call applyFilters() here — it re-triggers updateShortlistPanel
-    // which would override SHORTLIST_SELECTION back to the top 3
     closeEditSelectionModal();
   }
 
@@ -16776,21 +16791,19 @@
   function toggleCompare(id){
     var i=compare.indexOf(id);
     if(i===-1){
-      if(compare.length>=5) return;
+      if(compare.length>=3) return; // Cap at 3 to match shortlist
       compare.push(id);
-      // Keep shortlist in sync (capped at 3)
-      if(SHORTLIST_SELECTION.indexOf(id)===-1 && SHORTLIST_SELECTION.length < 3){
-        SHORTLIST_SELECTION.push(id);
-      }
+      if(SHORTLIST_SELECTION.indexOf(id)===-1){ SHORTLIST_SELECTION.push(id); }
       var rec = DATA.find(r => r.__id === id);
       posthog?.capture('tool_compared', { tool: rec?.__display_name || id });
     } else {
       compare.splice(i,1);
-      // Keep shortlist in sync
       var si = SHORTLIST_SELECTION.indexOf(id);
       if(si !== -1) SHORTLIST_SELECTION.splice(si, 1);
     }
+    SHORTLIST_USER_EDITED = true; // User manually changed the list
     updateCompareCount();
+    refreshCompareButtonStates();
     renderShortlistItems();
     updateShortlistButton();
     saveState();
@@ -17133,9 +17146,10 @@
     if(!q){ aiStatus.textContent="Please type what you need."; return; }
     aiStatus.textContent="Thinking…";
     LAST_QUERY = q; // Store the search query
-    SHORTLIST_SELECTION = []; // Reset shortlist for new search
-    compare = []; // Reset compare so new search always picks fresh top 3
-    LAST_GENERATED_KEY = ''; // Allow report to be generated for new results
+    SHORTLIST_SELECTION = [];
+    compare = [];
+    SHORTLIST_USER_EDITED = false; // Fresh search — allow auto-populate
+    LAST_GENERATED_KEY = '';
 
     // If user is not authenticated, use client-side keyword search
     if(!window.AUTH_STATE || !window.AUTH_STATE.authenticated){
