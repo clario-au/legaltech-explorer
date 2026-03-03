@@ -16479,8 +16479,13 @@
 
   function viewGeneratedReport(){
     if(!LAST_GENERATED_URL) return;
-    // Open the report in a new tab (HTML preview until Playwright PDF is wired up in Phase 4)
-    window.open(LAST_GENERATED_URL, '_blank');
+    var today = new Date().toISOString().split('T')[0];
+    var a = document.createElement('a');
+    a.href = LAST_GENERATED_URL;
+    a.download = 'Legal-Tech-Report-' + today + '.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 
   // Mobile shortlist toggle
