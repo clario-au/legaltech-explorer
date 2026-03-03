@@ -2,8 +2,12 @@
 import os
 import json
 import time
+import datetime
+import logging
 from collections import defaultdict
 from typing import Any, Dict, List, Optional
+
+logger = logging.getLogger(__name__)
 
 from fastapi import FastAPI, Cookie, Request, Response, HTTPException, Depends, Header
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,6 +17,8 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from openai import OpenAI
+
+from pdf_renderer import render_pdf
 
 # Import Supabase authentication
 from supabase_auth import (
@@ -751,20 +757,35 @@ async def report_preview(request: Request, user: dict = Depends(require_auth)):
     )
 
 
-@app.post("/report", response_class=HTMLResponse)
+@app.post("/report")
 async def generate_report(req: ReportRequest, user: dict = Depends(require_auth)):
-    """Generate a report for the shortlisted tools.
-    Phase 2: returns rendered HTML. Phase 4 will replace this with Playwright PDF."""
+    """Generate a PDF report for the shortlisted tools using Playwright."""
     if not req.tools:
         raise HTTPException(status_code=400, detail="No tools provided")
 
     tools = req.tools[:3]
-    meta = {"query": req.meta.query or "", "generated_at": req.meta.generated_at or ""}
+    today = datetime.date.today().isoformat()
+    meta = {
+        "query": req.meta.query or "",
+        "generated_at": req.meta.generated_at or today,
+    }
 
     html = templates.get_template("report.html").render(
         request=None, tools=tools, meta=meta, user=user
     )
-    return HTMLResponse(content=html)
+
+    try:
+        pdf_bytes = await render_pdf(html)
+    except Exception as e:
+        logger.error(f"[Report] PDF render failed: {e}")
+        raise HTTPException(status_code=500, detail="PDF generation failed. Please try again.")
+
+    filename = f"Legal-Tech-Report-{today}.pdf"
+    return StreamingResponse(
+        iter([pdf_bytes]),
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename={filename}"}
+    )
 
 @app.post("/query")
 async def generate_filters(req: Query, user: dict = Depends(rate_limit_dependency)):
