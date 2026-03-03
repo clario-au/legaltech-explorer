@@ -16791,7 +16791,7 @@
   function toggleCompare(id){
     var i=compare.indexOf(id);
     if(i===-1){
-      if(compare.length>=3) return; // Cap at 3 to match shortlist
+      if(compare.length>=5) return; // Compare allows up to 5; shortlist stays capped at 3
       compare.push(id);
       if(SHORTLIST_SELECTION.indexOf(id)===-1){ SHORTLIST_SELECTION.push(id); }
       var rec = DATA.find(r => r.__id === id);
