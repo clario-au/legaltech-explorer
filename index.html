@@ -16240,34 +16240,35 @@
     // Store sorted results for reference
     SHORTLIST_RESULTS = sortedRows;
 
-    // Always pick top 3 unique results from the search
-    var uniqueIds = [];
-    for(var i = 0; i < sortedRows.length && uniqueIds.length < 3; i++){
-      var id = sortedRows[i].__id;
-      if(uniqueIds.indexOf(id) === -1){
-        uniqueIds.push(id);
+    // Only auto-populate on a fresh search (SHORTLIST_SELECTION is empty).
+    // Re-renders triggered by applyFilters/compare buttons must NOT override user edits.
+    if(SHORTLIST_SELECTION.length === 0){
+      var uniqueIds = [];
+      for(var i = 0; i < sortedRows.length && uniqueIds.length < 3; i++){
+        var id = sortedRows[i].__id;
+        if(uniqueIds.indexOf(id) === -1){ uniqueIds.push(id); }
+      }
+      SHORTLIST_SELECTION = uniqueIds;
+      // Sync compare on fresh search only
+      compare = SHORTLIST_SELECTION.slice();
+      updateCompareCount();
+
+      // Auto-generate report for authenticated users on fresh search
+      if(window.AUTH_STATE && window.AUTH_STATE.authenticated){
+        var newKey = SHORTLIST_SELECTION.slice().sort().join('|');
+        if(newKey && newKey !== LAST_GENERATED_KEY && !REPORT_GENERATING){
+          generateShortlistReport();
+        }
       }
     }
-    SHORTLIST_SELECTION = uniqueIds;
-    // Keep compare in sync — shortlist is the single source of truth
-    compare = SHORTLIST_SELECTION.slice();
-    updateCompareCount();
 
     // Show the panel
     wrapper.classList.remove('no-panel');
     panel.classList.remove('is-hidden');
 
-    // Render shortlist items
+    // Render whatever is currently in SHORTLIST_SELECTION (fresh or edited)
     renderShortlistItems();
     updateShortlistButton();
-
-    // Auto-generate report in background for authenticated users after each search
-    if(window.AUTH_STATE && window.AUTH_STATE.authenticated){
-      var newKey = SHORTLIST_SELECTION.slice().sort().join('|');
-      if(newKey && newKey !== LAST_GENERATED_KEY && !REPORT_GENERATING){
-        generateShortlistReport();
-      }
-    }
   }
 
   function renderShortlistItems(){
@@ -16398,7 +16399,8 @@
     saveState();
     renderShortlistItems();
     updateShortlistButton();
-    applyFilters();
+    // Do NOT call applyFilters() here — it re-triggers updateShortlistPanel
+    // which would override SHORTLIST_SELECTION back to the top 3
     closeEditSelectionModal();
   }
 
@@ -16776,13 +16778,22 @@
     if(i===-1){
       if(compare.length>=5) return;
       compare.push(id);
+      // Keep shortlist in sync (capped at 3)
+      if(SHORTLIST_SELECTION.indexOf(id)===-1 && SHORTLIST_SELECTION.length < 3){
+        SHORTLIST_SELECTION.push(id);
+      }
       var rec = DATA.find(r => r.__id === id);
       posthog?.capture('tool_compared', { tool: rec?.__display_name || id });
     } else {
       compare.splice(i,1);
+      // Keep shortlist in sync
+      var si = SHORTLIST_SELECTION.indexOf(id);
+      if(si !== -1) SHORTLIST_SELECTION.splice(si, 1);
     }
     updateCompareCount();
-    saveState(); // Save state when compare selection changes
+    renderShortlistItems();
+    updateShortlistButton();
+    saveState();
   }
 
   function updateShortlistButton(){
