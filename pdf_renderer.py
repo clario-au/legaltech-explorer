@@ -39,7 +39,7 @@ async def get_browser():
         return _browser
 
 
-async def render_pdf(html: str) -> bytes:
+async def render_pdf(html: str, landscape: bool = False) -> bytes:
     """Render an HTML string to A4 PDF bytes."""
     browser = await get_browser()
     page = await browser.new_page()
@@ -47,6 +47,7 @@ async def render_pdf(html: str) -> bytes:
         await page.set_content(html, wait_until="networkidle")
         pdf_bytes = await page.pdf(
             format="A4",
+            landscape=landscape,
             print_background=True,
             margin={
                 "top": "0mm",
