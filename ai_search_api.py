@@ -770,16 +770,21 @@ def get_structured_comparison(tools: List[Dict[str, Any]]) -> Dict:
         )
 
     system_msg = (
-        "You are an expert legal technology analyst. Analyze the provided legal tech tools and return "
-        "a JSON object with exactly these 4 keys:\n"
-        "- \"similarities\": array of 2-3 strings, each describing something ALL tools share\n"
-        "- \"differences\": array of objects {\"tool\": \"<product name>\", \"text\": \"<1-2 sentences>\"}, "
-        "one per tool, describing what makes each tool distinct from the others\n"
-        "- \"strengths\": array of objects {\"tool\": \"<product name>\", \"text\": \"<1-2 sentences>\"}, "
-        "one per tool, covering the key strength and any notable limitation\n"
-        "- \"best_case\": array of objects {\"tool\": \"<product name>\", \"text\": \"<1 sentence>\"}, "
-        "one per tool, describing the ideal user or scenario\n"
-        "Return ONLY valid JSON. No markdown. Keep each item concise (1-2 sentences max)."
+        "You are an expert legal technology analyst writing a professional shortlist report for in-house legal teams. "
+        "Analyze the provided legal tech tools and return a JSON object with exactly these 4 keys:\n"
+        "- \"similarities\": array of 3-4 strings. Each string should be a substantive observation (2-3 sentences) "
+        "that applies to ALL tools — covering shared capabilities, deployment models, target audiences, or market positioning.\n"
+        "- \"differences\": array of objects {\"tool\": \"<product name>\", \"text\": \"<3-4 sentences>\"}, "
+        "one per tool. Describe in depth what makes each tool functionally and strategically distinct — "
+        "its unique approach, standout features, and how it differs from the others in scope or focus.\n"
+        "- \"strengths\": array of objects {\"tool\": \"<product name>\", \"text\": \"<3-4 sentences>\"}, "
+        "one per tool. Cover the tool's primary strength and the specific value it delivers, "
+        "then note any meaningful limitation or trade-off a buyer should be aware of.\n"
+        "- \"best_case\": array of objects {\"tool\": \"<product name>\", \"text\": \"<2-3 sentences>\"}, "
+        "one per tool. Describe the ideal organisation, team size, maturity level, or use-case scenario "
+        "where this tool would deliver the most value.\n"
+        "Write in a professional, authoritative tone suitable for a C-suite legal audience. "
+        "Return ONLY valid JSON. No markdown, no code blocks, no prose outside the JSON."
     )
     user_msg = f"Analyze these legal tech tools:\n{tool_summaries}"
 
