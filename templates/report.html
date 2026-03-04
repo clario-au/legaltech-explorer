@@ -142,14 +142,15 @@
       padding: 7px 11px;
       font-size: 7.5pt;
       color: #1a2a3a;
-      line-height: 1.55;
+      line-height: 1.45;
+      overflow: hidden;
     }
     .panel-body ul {
       list-style: disc;
       padding-left: 13px;
     }
     .panel-body ul li {
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
     .panel-body ul li strong {
       font-weight: 700;
@@ -408,5 +409,25 @@
 
 </div>
 
+<script>
+  // Auto-fit panel body font sizes so content never overflows its box.
+  // Runs synchronously at page load — complete before Playwright's networkidle fires.
+  (function fitPanelBodies() {
+    var bodies = document.querySelectorAll('.panel-body');
+    bodies.forEach(function(body) {
+      var size = 7.5;          // start at default (pt)
+      var minSize = 5.0;       // never go below 5pt
+      var step = 0.25;
+      // Temporarily allow scroll to measure overflow
+      body.style.overflow = 'visible';
+      while (body.scrollHeight > body.clientHeight && size > minSize) {
+        size -= step;
+        body.style.fontSize = size + 'pt';
+      }
+      // Re-apply hidden after fitting
+      body.style.overflow = 'hidden';
+    });
+  })();
+</script>
 </body>
 </html>
