@@ -1,7 +1,10 @@
 # ai_search_api.py
 import os
+import io
+import re
 import json
 import time
+import base64
 import datetime
 import logging
 from collections import defaultdict
@@ -729,6 +732,95 @@ def health():
 # Report Generation
 # =========================
 
+def get_logo_b64(vendor_name: str) -> Optional[str]:
+    """Load a vendor logo from disk and return a base64 data URI, or None."""
+    name_raw = re.sub(r'\s+', '', vendor_name)          # strip whitespace only
+    name_slug = re.sub(r'[^a-z0-9]', '', vendor_name.lower())  # lowercase alphanumeric
+    candidates = []
+    for name in [name_raw, name_slug]:
+        for ext in ['png', 'jpg', 'jpeg', 'webp']:
+            candidates.append(f"logos/{name}.{ext}")
+    for path in candidates:
+        if os.path.exists(path):
+            with open(path, 'rb') as f:
+                data = base64.b64encode(f.read()).decode()
+            ext = path.rsplit('.', 1)[-1]
+            mime = 'image/jpeg' if ext in ('jpg', 'jpeg') else f'image/{ext}'
+            return f"data:{mime};base64,{data}"
+    return None
+
+
+def get_structured_comparison(tools: List[Dict[str, Any]]) -> Dict:
+    """Call OpenAI to produce a 4-section structured comparison for the report."""
+    tool_summaries = ""
+    for t in tools:
+        name = t.get('Product Name') or t.get('Vendor Name', '')
+        desc = (t.get('Product Description') or t.get('Vendor Overview', ''))[:250]
+        func = t.get('Legal Functionality', '')
+        ai   = t.get('AI Powered', '')
+        ease = t.get('Ease of Purchase', '')
+        price = t.get('Pricing Model', '')
+        tool_summaries += (
+            f"\n**{name}**\n"
+            f"- Description: {desc}\n"
+            f"- Legal Functionality: {func}\n"
+            f"- AI Powered: {ai}\n"
+            f"- Ease of Purchase: {ease}\n"
+            f"- Pricing: {price}\n"
+        )
+
+    system_msg = (
+        "You are an expert legal technology analyst. Analyze the provided legal tech tools and return "
+        "a JSON object with exactly these 4 keys:\n"
+        "- \"similarities\": array of 2-3 strings, each describing something ALL tools share\n"
+        "- \"differences\": array of objects {\"tool\": \"<product name>\", \"text\": \"<1-2 sentences>\"}, "
+        "one per tool, describing what makes each tool distinct from the others\n"
+        "- \"strengths\": array of objects {\"tool\": \"<product name>\", \"text\": \"<1-2 sentences>\"}, "
+        "one per tool, covering the key strength and any notable limitation\n"
+        "- \"best_case\": array of objects {\"tool\": \"<product name>\", \"text\": \"<1 sentence>\"}, "
+        "one per tool, describing the ideal user or scenario\n"
+        "Return ONLY valid JSON. No markdown. Keep each item concise (1-2 sentences max)."
+    )
+    user_msg = f"Analyze these legal tech tools:\n{tool_summaries}"
+
+    try:
+        result = call_openai_json(system_msg, user_msg)
+        for key in ('similarities', 'differences', 'strengths', 'best_case'):
+            if key not in result:
+                result[key] = []
+        return result
+    except Exception as e:
+        logger.error(f"[Report] Comparison AI call failed: {e}")
+        tool_names = [t.get('Product Name') or t.get('Vendor Name', '') for t in tools]
+        return {
+            "similarities": ["All tools are designed for legal teams."],
+            "differences": [{"tool": n, "text": ""} for n in tool_names],
+            "strengths":   [{"tool": n, "text": ""} for n in tool_names],
+            "best_case":   [{"tool": n, "text": ""} for n in tool_names],
+        }
+
+
+def merge_report_pdfs(dynamic_bytes: bytes) -> bytes:
+    """Merge static pages (1,2,5) with dynamic pages (3,4) into a single PDF."""
+    from pypdf import PdfReader, PdfWriter
+    writer = PdfWriter()
+    static_path = "static/report_static_pages.pdf"
+
+    static_reader = PdfReader(static_path)
+    writer.add_page(static_reader.pages[0])   # Page 1 — Cover
+    writer.add_page(static_reader.pages[1])   # Page 2 — How Navigator works
+
+    dynamic_reader = PdfReader(io.BytesIO(dynamic_bytes))
+    for page in dynamic_reader.pages:         # Pages 3 & 4 — dynamic
+        writer.add_page(page)
+
+    writer.add_page(static_reader.pages[2])   # Page 5 — About Clario
+
+    out = io.BytesIO()
+    writer.write(out)
+    return out.getvalue()
+
+
 class ReportMeta(BaseModel):
     query: Optional[str] = ""
     generated_at: Optional[str] = ""
@@ -759,7 +851,7 @@ async def report_preview(request: Request, user: dict = Depends(require_auth)):
 
 @app.post("/report")
 async def generate_report(req: ReportRequest, user: dict = Depends(require_auth)):
-    """Generate a PDF report for the shortlisted tools using Playwright."""
+    """Generate a 5-page PDF report: static pages 1,2,5 merged with dynamic pages 3,4."""
     if not req.tools:
         raise HTTPException(status_code=400, detail="No tools provided")
 
@@ -770,19 +862,34 @@ async def generate_report(req: ReportRequest, user: dict = Depends(require_auth)
         "generated_at": req.meta.generated_at or today,
     }
 
+    # Load logos as base64 data URIs so Playwright doesn't need HTTP requests
+    logos = [get_logo_b64(t.get('Vendor Name', '')) for t in tools]
+
+    # Get structured AI comparison (4 sections)
+    comparison = get_structured_comparison(tools)
+
+    # Render dynamic pages 3 & 4 as HTML
     html = templates.get_template("report.html").render(
-        request=None, tools=tools, meta=meta, user=user
+        request=None, tools=tools, meta=meta, logos=logos, comparison=comparison
     )
 
     try:
-        pdf_bytes = await render_pdf(html)
+        dynamic_pdf_bytes = await render_pdf(html, landscape=True)
     except Exception as e:
         logger.error(f"[Report] PDF render failed: {e}")
         raise HTTPException(status_code=500, detail="PDF generation failed. Please try again.")
 
-    filename = f"Legal-Tech-Report-{today}.pdf"
+    # Merge: static pages 1,2 + dynamic pages 3,4 + static page 5
+    try:
+        merged_bytes = merge_report_pdfs(dynamic_pdf_bytes)
+    except Exception as e:
+        logger.error(f"[Report] PDF merge failed: {e}")
+        # Fall back to dynamic-only if merge fails
+        merged_bytes = dynamic_pdf_bytes
+
+    filename = f"Navigator-Snapshot-Report-{today}.pdf"
     return StreamingResponse(
-        iter([pdf_bytes]),
+        iter([merged_bytes]),
         media_type="application/pdf",
         headers={"Content-Disposition": f"attachment; filename={filename}"}
     )
