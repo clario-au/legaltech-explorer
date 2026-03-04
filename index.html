@@ -1092,14 +1092,14 @@
     <div class="scoring-modal-overlay"></div>
     <div class="scoring-modal-content">
       <button id="scoringModalClose" class="scoring-modal-close" aria-label="Close">&times;</button>
-      <h2>Popularity Score</h2>
+      <h2>Navigator Score</h2>
       <div class="scoring-modal-body">
-        <h3>What the popularity score means</h3>
-        <p>The popularity score is a 0–100 indicator designed to help you quickly understand how established, visible, and well-documented a legal tech tool is in the market.</p>
+        <h3>What the Navigator Score means</h3>
+        <p>The Navigator Score is a 0–100 indicator designed to help you quickly understand how established, visible, and well-documented a legal tech tool is in the market.</p>
         <p>It brings together multiple signals to provide a balanced, comparable view across tools.</p>
 
         <h3>How the score is calculated</h3>
-        <p>Each tool's popularity score is based on a combination of:</p>
+        <p>Each tool's Navigator Score is based on a combination of:</p>
 
         <h4>Market interest</h4>
         <p>How often the tool is searched for over the past year.</p>
@@ -1123,7 +1123,7 @@
         <p>When information is unavailable, the score is calculated using the data that is available, rather than penalising the tool. This ensures newer or emerging tools can still be fairly compared.</p>
 
         <h3>Transparency</h3>
-        <p>You can view a breakdown of the factors contributing to a tool's popularity score by opening its details. This is provided to help you understand why a tool scores the way it does.</p>
+        <p>You can view a breakdown of the factors contributing to a tool's Navigator Score by opening its details. This is provided to help you understand why a tool scores the way it does.</p>
       </div>
     </div>
   </div>
@@ -16061,7 +16061,7 @@
     // Add popularity bar
     var popScore = parseFloat(rec['popularity_score']) || 0;
     var popBar = document.createElement('div'); popBar.className='popularity-bar';
-    popBar.innerHTML = '<span class="popularity-bar-label">Popularity</span>'+
+    popBar.innerHTML = '<span class="popularity-bar-label">Navigator Score</span>'+
                        '<div class="popularity-bar-track"><div class="popularity-bar-fill" style="width:'+popScore+'%"></div></div>'+
                        '<span class="popularity-score">'+popScore.toFixed(0)+'</span>';
 
@@ -16621,7 +16621,7 @@
 
     var breakdown = document.createElement('div');
     breakdown.className = 'popularity-breakdown';
-    breakdown.innerHTML = '<div class="popularity-breakdown-header"><span>Popularity Score: '+popScore.toFixed(0)+'</span><span class="popularity-breakdown-toggle">▼</span></div>'+
+    breakdown.innerHTML = '<div class="popularity-breakdown-header"><span>Navigator Score: '+popScore.toFixed(0)+'</span><span class="popularity-breakdown-toggle">▼</span></div>'+
       '<div class="popularity-breakdown-content">'+breakdownItems+'</div>';
 
     var rows='';
