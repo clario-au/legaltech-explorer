@@ -750,6 +750,30 @@ def get_logo_b64(vendor_name: str) -> Optional[str]:
     return None
 
 
+def clean_query_text(query: str) -> str:
+    """Fix typos, capitalisation and grammar in a user search query for display in the report."""
+    if not query or not query.strip():
+        return query
+    try:
+        resp = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content":
+                    "You are a copy editor. The user will give you a short search query. "
+                    "Return ONLY the corrected query — fix any typos, spelling mistakes, and capitalisation errors, "
+                    "and ensure it reads as natural English. Do not change the meaning or add extra words. "
+                    "Do not add punctuation at the end. Return the corrected text only, no explanation."},
+                {"role": "user", "content": query}
+            ],
+            temperature=0,
+            max_tokens=100,
+        )
+        cleaned = resp.choices[0].message.content.strip().strip('"').strip("'")
+        return cleaned if cleaned else query
+    except Exception:
+        return query
+
+
 def get_structured_comparison(tools: List[Dict[str, Any]]) -> Dict:
     """Call OpenAI to produce a 4-section structured comparison for the report."""
     tool_summaries = ""
@@ -863,7 +887,7 @@ async def generate_report(req: ReportRequest, user: dict = Depends(require_auth)
     tools = req.tools[:3]
     today = datetime.date.today().isoformat()
     meta = {
-        "query": req.meta.query or "",
+        "query": clean_query_text(req.meta.query or ""),
         "generated_at": req.meta.generated_at or today,
     }
 
