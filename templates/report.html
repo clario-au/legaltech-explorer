@@ -13,12 +13,12 @@
       {%- set ns.total = ns.total + (item | string | length) -%}
     {%- endif -%}
   {%- endfor -%}
-  {%- if ns.total > 900 -%}5.5pt
-  {%- elif ns.total > 700 -%}6pt
-  {%- elif ns.total > 500 -%}6.5pt
-  {%- elif ns.total > 300 -%}7pt
-  {%- elif ns.total > 150 -%}7.5pt
-  {%- else -%}8pt
+  {%- if ns.total > 900 -%}6.5pt
+  {%- elif ns.total > 700 -%}7pt
+  {%- elif ns.total > 500 -%}7.5pt
+  {%- elif ns.total > 300 -%}8pt
+  {%- elif ns.total > 150 -%}8.5pt
+  {%- else -%}9pt
   {%- endif -%}
 {%- endmacro -%}
 <html lang="en">
