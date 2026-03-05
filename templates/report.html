@@ -1,4 +1,26 @@
 <!DOCTYPE html>
+{# -----------------------------------------------------------------------
+   Jinja2 macro: returns a conservative font-size (pt) based on total
+   character count of the panel's content. Errs on the side of smaller
+   text to guarantee content fits within the fixed panel height.
+----------------------------------------------------------------------- #}
+{%- macro panel_font(items) -%}
+  {%- set ns = namespace(total=0) -%}
+  {%- for item in items -%}
+    {%- if item is mapping -%}
+      {%- set ns.total = ns.total + (item.get('text', '') | length) + (item.get('tool', '') | length) -%}
+    {%- else -%}
+      {%- set ns.total = ns.total + (item | string | length) -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if ns.total > 900 -%}4.5pt
+  {%- elif ns.total > 700 -%}5pt
+  {%- elif ns.total > 500 -%}5.5pt
+  {%- elif ns.total > 300 -%}6pt
+  {%- elif ns.total > 150 -%}6.5pt
+  {%- else -%}7pt
+  {%- endif -%}
+{%- endmacro -%}
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -289,7 +311,7 @@
 
       <div class="panel">
         <div class="panel-header">Key Similarities</div>
-        <div class="panel-body">
+        <div class="panel-body" style="font-size:{{ panel_font(comparison.get('similarities', [])) }}">
           <ul>
             {% for item in comparison.get('similarities', []) %}
             <li>{{ item | safe }}</li>
@@ -300,7 +322,7 @@
 
       <div class="panel">
         <div class="panel-header">Key Differences</div>
-        <div class="panel-body">
+        <div class="panel-body" style="font-size:{{ panel_font(comparison.get('differences', [])) }}">
           <ul>
             {% for item in comparison.get('differences', []) %}
             <li><strong>{{ item.get('tool', '') }}</strong> {{ item.get('text', '') | safe }}</li>
@@ -311,7 +333,7 @@
 
       <div class="panel">
         <div class="panel-header">Strengths</div>
-        <div class="panel-body">
+        <div class="panel-body" style="font-size:{{ panel_font(comparison.get('strengths', [])) }}">
           <ul>
             {% for item in comparison.get('strengths', []) %}
             <li><strong>{{ item.get('tool', '') }}:</strong> {{ item.get('text', '') | safe }}</li>
@@ -322,7 +344,7 @@
 
       <div class="panel">
         <div class="panel-header">Best Case</div>
-        <div class="panel-body">
+        <div class="panel-body" style="font-size:{{ panel_font(comparison.get('best_case', [])) }}">
           <ul>
             {% for item in comparison.get('best_case', []) %}
             <li><strong>{{ item.get('tool', '') }}:</strong> {{ item.get('text', '') | safe }}</li>
@@ -409,25 +431,5 @@
 
 </div>
 
-<script>
-  // Auto-fit panel body font sizes so content never overflows its box.
-  // Runs synchronously at page load — complete before Playwright's networkidle fires.
-  (function fitPanelBodies() {
-    var bodies = document.querySelectorAll('.panel-body');
-    bodies.forEach(function(body) {
-      var size = 7.5;          // start at default (pt)
-      var minSize = 5.0;       // never go below 5pt
-      var step = 0.25;
-      // Temporarily allow scroll to measure overflow
-      body.style.overflow = 'visible';
-      while (body.scrollHeight > body.clientHeight && size > minSize) {
-        size -= step;
-        body.style.fontSize = size + 'pt';
-      }
-      // Re-apply hidden after fitting
-      body.style.overflow = 'hidden';
-    });
-  })();
-</script>
 </body>
 </html>
