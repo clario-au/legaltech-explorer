@@ -1,17 +1,27 @@
 # ai_search_api.py
 import os
+import io
+import re
 import json
 import time
+import base64
+import datetime
+import logging
 from collections import defaultdict
 from typing import Any, Dict, List, Optional
 
+logger = logging.getLogger(__name__)
+
 from fastapi import FastAPI, Cookie, Request, Response, HTTPException, Depends, Header
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, RedirectResponse, JSONResponse
+from fastapi.responses import FileResponse, RedirectResponse, JSONResponse, HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from openai import OpenAI
+
+from pdf_renderer import render_pdf
 
 # Import Supabase authentication
 from supabase_auth import (
@@ -33,6 +43,9 @@ OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 app = FastAPI(title="Legal-Tech Filter API", version="0.2.0")
+
+# Jinja2 templates for report generation
+templates = Jinja2Templates(directory="templates")
 
 # CORS (dev-friendly)
 app.add_middleware(
@@ -713,6 +726,202 @@ def serve_updated_csv(user: dict = Depends(require_auth)):
 @app.get("/health")
 def health():
     return {"ok": True, "has_key": bool(OPENAI_API_KEY), "model": OPENAI_MODEL}
+
+
+# =========================
+# Report Generation
+# =========================
+
+def get_logo_b64(vendor_name: str) -> Optional[str]:
+    """Load a vendor logo from disk and return a base64 data URI, or None."""
+    name_raw = re.sub(r'\s+', '', vendor_name)          # strip whitespace only
+    name_slug = re.sub(r'[^a-z0-9]', '', vendor_name.lower())  # lowercase alphanumeric
+    candidates = []
+    for name in [name_raw, name_slug]:
+        for ext in ['png', 'jpg', 'jpeg', 'webp']:
+            candidates.append(f"logos/{name}.{ext}")
+    for path in candidates:
+        if os.path.exists(path):
+            with open(path, 'rb') as f:
+                data = base64.b64encode(f.read()).decode()
+            ext = path.rsplit('.', 1)[-1]
+            mime = 'image/jpeg' if ext in ('jpg', 'jpeg') else f'image/{ext}'
+            return f"data:{mime};base64,{data}"
+    return None
+
+
+def clean_query_text(query: str) -> str:
+    """Fix typos, capitalisation and grammar in a user search query for display in the report."""
+    if not query or not query.strip():
+        return query
+    try:
+        resp = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content":
+                    "You are a copy editor. The user will give you a short search query. "
+                    "Return ONLY the corrected query — fix any typos, spelling mistakes, and capitalisation errors, "
+                    "and ensure it reads as natural English. Do not change the meaning or add extra words. "
+                    "Do not add punctuation at the end. Return the corrected text only, no explanation."},
+                {"role": "user", "content": query}
+            ],
+            temperature=0,
+            max_tokens=100,
+        )
+        cleaned = resp.choices[0].message.content.strip().strip('"').strip("'")
+        return cleaned if cleaned else query
+    except Exception:
+        return query
+
+
+def get_structured_comparison(tools: List[Dict[str, Any]]) -> Dict:
+    """Call OpenAI to produce a 4-section structured comparison for the report."""
+    tool_summaries = ""
+    for t in tools:
+        name = t.get('Product Name') or t.get('Vendor Name', '')
+        desc = (t.get('Product Description') or t.get('Vendor Overview', ''))[:250]
+        func = t.get('Legal Functionality', '')
+        ai   = t.get('AI Powered', '')
+        ease = t.get('Ease of Purchase', '')
+        price = t.get('Pricing Model', '')
+        tool_summaries += (
+            f"\n**{name}**\n"
+            f"- Description: {desc}\n"
+            f"- Legal Functionality: {func}\n"
+            f"- AI Powered: {ai}\n"
+            f"- Ease of Purchase: {ease}\n"
+            f"- Pricing: {price}\n"
+        )
+
+    system_msg = (
+        "You are an expert legal technology analyst writing a professional shortlist report for in-house legal teams. "
+        "Analyze the provided legal tech tools and return a JSON object with exactly these 4 keys:\n"
+        "- \"similarities\": array of 3-4 strings. Each string should be a substantive observation (2-3 sentences) "
+        "that applies to ALL tools — covering shared capabilities, deployment models, target audiences, or market positioning.\n"
+        "- \"differences\": array of objects {\"tool\": \"<product name>\", \"text\": \"<3-4 sentences>\"}, "
+        "one per tool. Describe in depth what makes each tool functionally and strategically distinct — "
+        "its unique approach, standout features, and how it differs from the others in scope or focus.\n"
+        "- \"strengths\": array of objects {\"tool\": \"<product name>\", \"text\": \"<3-4 sentences>\"}, "
+        "one per tool. Cover the tool's primary strength and the specific value it delivers, "
+        "then note any meaningful limitation or trade-off a buyer should be aware of.\n"
+        "- \"best_case\": array of objects {\"tool\": \"<product name>\", \"text\": \"<2-3 sentences>\"}, "
+        "one per tool. Describe the ideal organisation, team size, maturity level, or use-case scenario "
+        "where this tool would deliver the most value.\n"
+        "Write in a professional, authoritative tone suitable for a C-suite legal audience. "
+        "Return ONLY valid JSON. No markdown, no code blocks, no prose outside the JSON."
+    )
+    user_msg = f"Analyze these legal tech tools:\n{tool_summaries}"
+
+    try:
+        result = call_openai_json(system_msg, user_msg)
+        for key in ('similarities', 'differences', 'strengths', 'best_case'):
+            if key not in result:
+                result[key] = []
+        return result
+    except Exception as e:
+        logger.error(f"[Report] Comparison AI call failed: {e}")
+        tool_names = [t.get('Product Name') or t.get('Vendor Name', '') for t in tools]
+        return {
+            "similarities": ["All tools are designed for legal teams."],
+            "differences": [{"tool": n, "text": ""} for n in tool_names],
+            "strengths":   [{"tool": n, "text": ""} for n in tool_names],
+            "best_case":   [{"tool": n, "text": ""} for n in tool_names],
+        }
+
+
+def merge_report_pdfs(dynamic_bytes: bytes) -> bytes:
+    """Merge static pages (1,2,5) with dynamic pages (3,4) into a single PDF."""
+    from pypdf import PdfReader, PdfWriter
+    writer = PdfWriter()
+    static_path = "static/report_static_pages.pdf"
+
+    static_reader = PdfReader(static_path)
+    writer.add_page(static_reader.pages[0])   # Page 1 — Cover
+    writer.add_page(static_reader.pages[1])   # Page 2 — How Navigator works
+
+    dynamic_reader = PdfReader(io.BytesIO(dynamic_bytes))
+    for page in dynamic_reader.pages:         # Pages 3 & 4 — dynamic
+        writer.add_page(page)
+
+    writer.add_page(static_reader.pages[2])   # Page 5 — About Clario
+
+    out = io.BytesIO()
+    writer.write(out)
+    return out.getvalue()
+
+
+class ReportMeta(BaseModel):
+    query: Optional[str] = ""
+    generated_at: Optional[str] = ""
+
+class ReportRequest(BaseModel):
+    meta: ReportMeta = ReportMeta()
+    tools: List[Dict[str, Any]] = []
+
+
+@app.get("/report/preview", response_class=HTMLResponse)
+async def report_preview(request: Request, user: dict = Depends(require_auth)):
+    """Preview the report as HTML in the browser — for fast iteration during development."""
+    # Phase 1: mock data only. Replace with real data in Phase 3.
+    mock_tools = [
+        {"Tool Name": "Acme Contract AI", "Vendor": "Acme Corp", "Category": "Contract Management",
+         "Pricing": "Subscription", "Jurisdiction": "Australia", "Description": "AI-powered contract review and analysis platform for in-house legal teams."},
+        {"Tool Name": "LexFlow", "Vendor": "LexFlow Pty Ltd", "Category": "Matter Management",
+         "Pricing": "Per seat", "Jurisdiction": "Australia", "Description": "End-to-end matter and document management for corporate legal departments."},
+        {"Tool Name": "ClauseCheck", "Vendor": "ClauseCheck Inc", "Category": "Due Diligence",
+         "Pricing": "Freemium", "Jurisdiction": "Australia / NZ", "Description": "Automated clause extraction and risk flagging for M&A and compliance workflows."},
+    ]
+    mock_meta = {"query": "contract review tools for in-house team", "generated_at": "2026-03-03"}
+    return templates.TemplateResponse(
+        "report.html",
+        {"request": request, "tools": mock_tools, "meta": mock_meta, "user": user}
+    )
+
+
+@app.post("/report")
+async def generate_report(req: ReportRequest, user: dict = Depends(require_auth)):
+    """Generate a 5-page PDF report: static pages 1,2,5 merged with dynamic pages 3,4."""
+    if not req.tools:
+        raise HTTPException(status_code=400, detail="No tools provided")
+
+    tools = req.tools[:3]
+    today = datetime.date.today().isoformat()
+    meta = {
+        "query": clean_query_text(req.meta.query or ""),
+        "generated_at": req.meta.generated_at or today,
+    }
+
+    # Load logos as base64 data URIs so Playwright doesn't need HTTP requests
+    logos = [get_logo_b64(t.get('Vendor Name', '')) for t in tools]
+
+    # Get structured AI comparison (4 sections)
+    comparison = get_structured_comparison(tools)
+
+    # Render dynamic pages 3 & 4 as HTML
+    html = templates.get_template("report.html").render(
+        request=None, tools=tools, meta=meta, logos=logos, comparison=comparison
+    )
+
+    try:
+        dynamic_pdf_bytes = await render_pdf(html, landscape=True)
+    except Exception as e:
+        logger.error(f"[Report] PDF render failed: {e}")
+        raise HTTPException(status_code=500, detail="PDF generation failed. Please try again.")
+
+    # Merge: static pages 1,2 + dynamic pages 3,4 + static page 5
+    try:
+        merged_bytes = merge_report_pdfs(dynamic_pdf_bytes)
+    except Exception as e:
+        logger.error(f"[Report] PDF merge failed: {e}")
+        # Fall back to dynamic-only if merge fails
+        merged_bytes = dynamic_pdf_bytes
+
+    filename = f"Navigator-Snapshot-Report-{today}.pdf"
+    return StreamingResponse(
+        iter([merged_bytes]),
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename={filename}"}
+    )
 
 @app.post("/query")
 async def generate_filters(req: Query, user: dict = Depends(rate_limit_dependency)):

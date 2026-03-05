@@ -1092,14 +1092,14 @@
     <div class="scoring-modal-overlay"></div>
     <div class="scoring-modal-content">
       <button id="scoringModalClose" class="scoring-modal-close" aria-label="Close">&times;</button>
-      <h2>Popularity Score</h2>
+      <h2>Navigator Score</h2>
       <div class="scoring-modal-body">
-        <h3>What the popularity score means</h3>
-        <p>The popularity score is a 0–100 indicator designed to help you quickly understand how established, visible, and well-documented a legal tech tool is in the market.</p>
+        <h3>What the Navigator Score means</h3>
+        <p>The Navigator Score is a 0–100 indicator designed to help you quickly understand how established, visible, and well-documented a legal tech tool is in the market.</p>
         <p>It brings together multiple signals to provide a balanced, comparable view across tools.</p>
 
         <h3>How the score is calculated</h3>
-        <p>Each tool's popularity score is based on a combination of:</p>
+        <p>Each tool's Navigator Score is based on a combination of:</p>
 
         <h4>Market interest</h4>
         <p>How often the tool is searched for over the past year.</p>
@@ -1123,7 +1123,7 @@
         <p>When information is unavailable, the score is calculated using the data that is available, rather than penalising the tool. This ensures newer or emerging tools can still be fairly compared.</p>
 
         <h3>Transparency</h3>
-        <p>You can view a breakdown of the factors contributing to a tool's popularity score by opening its details. This is provided to help you understand why a tool scores the way it does.</p>
+        <p>You can view a breakdown of the factors contributing to a tool's Navigator Score by opening its details. This is provided to help you understand why a tool scores the way it does.</p>
       </div>
     </div>
   </div>
@@ -1315,6 +1315,7 @@
               <button class="shortlist-btn-primary" id="shortlistGenerateBtn">Generate Report</button>
               <button class="shortlist-btn-secondary" id="shortlistEditBtn">Edit selection</button>
             </div>
+            <div id="shortlistReportError" style="display:none;margin-top:8px;font-size:12px;color:#dc2626;text-align:center;line-height:1.4;"></div>
           </div>
         </div>
       </div>
@@ -15776,7 +15777,10 @@
   var SHORTLIST_SELECTION = []; // Array of selected tool IDs for report
   var SHORTLIST_RESULTS = []; // Current sorted results (for reference)
   var TEMP_SELECTION = []; // Temporary selection during edit modal
-  var LAST_GENERATED_KEY = ''; // Tracks the selection key when report was last generated
+  var LAST_GENERATED_KEY = '';  // Tracks the selection key when report was last generated
+  var LAST_GENERATED_URL = null; // Blob URL of the last generated report (for "View Report")
+  var REPORT_GENERATING = false; // True while a report request is in-flight
+  var SHORTLIST_USER_EDITED = false; // True once user has manually changed the shortlist
 
   // State persistence functions
   // Saves and restores application state (filters, search, compare) in localStorage
@@ -16057,7 +16061,7 @@
     // Add popularity bar
     var popScore = parseFloat(rec['popularity_score']) || 0;
     var popBar = document.createElement('div'); popBar.className='popularity-bar';
-    popBar.innerHTML = '<span class="popularity-bar-label">Popularity</span>'+
+    popBar.innerHTML = '<span class="popularity-bar-label">Navigator Score</span>'+
                        '<div class="popularity-bar-track"><div class="popularity-bar-fill" style="width:'+popScore+'%"></div></div>'+
                        '<span class="popularity-score">'+popScore.toFixed(0)+'</span>';
 
@@ -16230,29 +16234,59 @@
       panel.classList.add('is-hidden');
       SHORTLIST_SELECTION = [];
       SHORTLIST_RESULTS = [];
+      compare = [];
+      updateCompareCount();
       return;
     }
 
     // Store sorted results for reference
     SHORTLIST_RESULTS = sortedRows;
 
-    // Always pick top 3 unique results from the search
-    var uniqueIds = [];
-    for(var i = 0; i < sortedRows.length && uniqueIds.length < 3; i++){
-      var id = sortedRows[i].__id;
-      if(uniqueIds.indexOf(id) === -1){
-        uniqueIds.push(id);
+    // Only auto-populate on a fresh search (selection is empty AND user hasn't manually edited).
+    // Re-renders from applyFilters or compare button clicks must NOT override user edits.
+    if(SHORTLIST_SELECTION.length === 0 && !SHORTLIST_USER_EDITED){
+      var uniqueIds = [];
+      for(var i = 0; i < sortedRows.length && uniqueIds.length < 3; i++){
+        var id = sortedRows[i].__id;
+        if(uniqueIds.indexOf(id) === -1){ uniqueIds.push(id); }
+      }
+      SHORTLIST_SELECTION = uniqueIds;
+      // Sync compare on fresh search only
+      compare = SHORTLIST_SELECTION.slice();
+      updateCompareCount();
+
+      // Auto-generate report for authenticated users on fresh search
+      if(window.AUTH_STATE && window.AUTH_STATE.authenticated){
+        var newKey = SHORTLIST_SELECTION.slice().sort().join('|');
+        if(newKey && newKey !== LAST_GENERATED_KEY && !REPORT_GENERATING){
+          generateShortlistReport();
+        }
       }
     }
-    SHORTLIST_SELECTION = uniqueIds;
+
+    // Refresh card compare button visuals to match current compare array
+    refreshCompareButtonStates();
 
     // Show the panel
     wrapper.classList.remove('no-panel');
     panel.classList.remove('is-hidden');
 
-    // Render shortlist items
+    // Render whatever is currently in SHORTLIST_SELECTION (fresh or edited)
     renderShortlistItems();
     updateShortlistButton();
+  }
+
+  function refreshCompareButtonStates(){
+    document.querySelectorAll('#tools .tool').forEach(function(card){
+      var id = card.dataset.id;
+      var btn = card.querySelector('.btn-compare');
+      if(!btn || !id) return;
+      var isChosen = compare.indexOf(id) !== -1;
+      btn.textContent = isChosen ? '✓ Added' : 'Add to compare';
+      btn.style.background = isChosen ? '#2EA7A7' : '';
+      btn.style.color = isChosen ? '#ffffff' : '';
+      btn.style.borderColor = isChosen ? 'transparent' : '';
+    });
   }
 
   function renderShortlistItems(){
@@ -16335,7 +16369,7 @@
 
   function toggleEditSelection(id, itemEl){
     var index = TEMP_SELECTION.indexOf(id);
-    var maxItems = 5;
+    var maxItems = 3;
 
     if(index === -1){
       // Add to selection if under max
@@ -16359,7 +16393,7 @@
   }
 
   function updateEditSelectionDisabled(){
-    var maxItems = 5;
+    var maxItems = 3;
     var items = document.querySelectorAll('.edit-selection-item');
 
     items.forEach(function(item){
@@ -16374,36 +16408,99 @@
 
   function applyEditSelection(){
     SHORTLIST_SELECTION = TEMP_SELECTION.slice();
-    compare = SHORTLIST_SELECTION.slice(); // Sync compare with shortlist
+    SHORTLIST_USER_EDITED = true; // Prevent auto-refill on re-renders
+    compare = SHORTLIST_SELECTION.slice();
     updateCompareCount();
+    refreshCompareButtonStates();
+    LAST_GENERATED_KEY = '';
+    LAST_GENERATED_URL = null;
     saveState();
     renderShortlistItems();
     updateShortlistButton();
-    applyFilters(); // Re-render to update "Add to compare" button states
-
     closeEditSelectionModal();
   }
 
-  function generateShortlistReport(){
-    if(SHORTLIST_SELECTION.length === 0){
-      alert('Please select at least one tool for the report.');
+  async function generateShortlistReport(){
+    if(SHORTLIST_SELECTION.length === 0) return;
+
+    var currentKey = SHORTLIST_SELECTION.slice().sort().join('|');
+
+    // If already generated for this exact shortlist, just open it
+    if(currentKey === LAST_GENERATED_KEY && LAST_GENERATED_URL){
+      viewGeneratedReport();
       return;
     }
 
-    compare = SHORTLIST_SELECTION.slice();
-    updateCompareCount();
-    saveState();
-    posthog?.capture('shortlist_report_generated', {
-      query: LAST_QUERY,
-      tools: SHORTLIST_SELECTION.map(id => DATA.find(r=>r.__id===id)?.__display_name || id)
-    });
+    // Don't double-fire if already generating
+    if(REPORT_GENERATING) return;
 
-    // Record which selection was just generated so button hides until selection changes
-    LAST_GENERATED_KEY = SHORTLIST_SELECTION.slice().sort().join('|');
-    var generateBtn = document.getElementById('shortlistGenerateBtn');
-    if(generateBtn){ generateBtn.style.display = 'none'; }
+    REPORT_GENERATING = true;
+    updateShortlistButton();
 
-    openCompareOverlay('ai');
+    try {
+      // Clear any previous error
+      var errEl = document.getElementById('shortlistReportError');
+      if(errEl) errEl.style.display = 'none';
+
+      var tools = SHORTLIST_SELECTION.map(function(id){
+        return DATA.find(function(r){ return r.__id === id; });
+      }).filter(Boolean);
+
+      var today = new Date().toISOString().split('T')[0];
+      var token = (window.AUTH_STATE && window.AUTH_STATE.accessToken) ? window.AUTH_STATE.accessToken : '';
+
+      var response = await fetch('/report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          meta: { query: LAST_QUERY || '', generated_at: today },
+          tools: tools
+        })
+      });
+
+      if(!response.ok){
+        var errText = await response.text().catch(function(){ return ''; });
+        var detail = '';
+        try { detail = JSON.parse(errText).detail; } catch(e) { detail = errText; }
+        throw new Error(detail || ('Report generation failed: ' + response.status));
+      }
+
+      var blob = await response.blob();
+      // Revoke previous blob URL to free memory
+      if(LAST_GENERATED_URL) URL.revokeObjectURL(LAST_GENERATED_URL);
+      LAST_GENERATED_URL = URL.createObjectURL(blob);
+      LAST_GENERATED_KEY = currentKey;
+
+      posthog?.capture('shortlist_report_generated', {
+        query: LAST_QUERY,
+        tools: tools.map(function(t){ return t.__display_name || t['Product Name'] || t['Vendor Name'] || ''; })
+      });
+
+    } catch(err) {
+      console.error('[Report]', err);
+      var errEl = document.getElementById('shortlistReportError');
+      if(errEl){
+        errEl.textContent = err.message || 'Report generation failed. Please try again.';
+        errEl.style.display = 'block';
+      }
+    } finally {
+      REPORT_GENERATING = false;
+      updateShortlistButton();
+    }
+  }
+
+  function viewGeneratedReport(){
+    if(!LAST_GENERATED_URL) return;
+    var today = new Date().toISOString().split('T')[0];
+    var a = document.createElement('a');
+    a.href = LAST_GENERATED_URL;
+    a.download = 'Legal-Tech-Report-' + today + '.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 
   // Mobile shortlist toggle
@@ -16424,7 +16521,16 @@
     var modalOverlay = document.querySelector('.edit-selection-overlay');
 
     if(editBtn) editBtn.addEventListener('click', openEditSelectionModal);
-    if(generateBtn) generateBtn.addEventListener('click', function(){ window.requireAuth(generateShortlistReport); });
+    if(generateBtn) generateBtn.addEventListener('click', function(){
+      var currentKey = SHORTLIST_SELECTION.slice().sort().join('|');
+      if(currentKey === LAST_GENERATED_KEY && LAST_GENERATED_URL){
+        // Report already generated — just open it
+        viewGeneratedReport();
+      } else {
+        // Need to generate — require auth first
+        window.requireAuth(generateShortlistReport);
+      }
+    });
     if(header) header.addEventListener('click', toggleShortlistPanel);
     if(cancelBtn) cancelBtn.addEventListener('click', closeEditSelectionModal);
     if(applyBtn) applyBtn.addEventListener('click', applyEditSelection);
@@ -16515,7 +16621,7 @@
 
     var breakdown = document.createElement('div');
     breakdown.className = 'popularity-breakdown';
-    breakdown.innerHTML = '<div class="popularity-breakdown-header"><span>Popularity Score: '+popScore.toFixed(0)+'</span><span class="popularity-breakdown-toggle">▼</span></div>'+
+    breakdown.innerHTML = '<div class="popularity-breakdown-header"><span>Navigator Score: '+popScore.toFixed(0)+'</span><span class="popularity-breakdown-toggle">▼</span></div>'+
       '<div class="popularity-breakdown-content">'+breakdownItems+'</div>';
 
     var rows='';
@@ -16705,36 +16811,43 @@
   function toggleCompare(id){
     var i=compare.indexOf(id);
     if(i===-1){
-      if(compare.length>=5) return;
+      if(compare.length>=3) return; // Hard cap at 3 (matches shortlist/report limit)
       compare.push(id);
+      if(SHORTLIST_SELECTION.indexOf(id)===-1 && SHORTLIST_SELECTION.length < 3){ SHORTLIST_SELECTION.push(id); }
       var rec = DATA.find(r => r.__id === id);
       posthog?.capture('tool_compared', { tool: rec?.__display_name || id });
     } else {
       compare.splice(i,1);
+      var si = SHORTLIST_SELECTION.indexOf(id);
+      if(si !== -1) SHORTLIST_SELECTION.splice(si, 1);
     }
+    SHORTLIST_USER_EDITED = true; // User manually changed the list
     updateCompareCount();
-    saveState(); // Save state when compare selection changes
+    refreshCompareButtonStates();
+    renderShortlistItems();
+    updateShortlistButton();
+    saveState();
   }
 
   function updateShortlistButton(){
-    var generateBtn = document.getElementById('shortlistGenerateBtn');
-    if(!generateBtn) return;
-    var count = SHORTLIST_SELECTION.length;
-    var currentKey = SHORTLIST_SELECTION.slice().sort().join('|');
-    // Show button only when the current selection differs from last generated
-    if(currentKey === LAST_GENERATED_KEY){
-      generateBtn.style.display = 'none';
+    var btn = document.getElementById('shortlistGenerateBtn');
+    if(!btn) return;
+
+    // Button is always visible
+    btn.style.display = '';
+
+    if(REPORT_GENERATING){
+      btn.textContent = 'Generating...';
+      btn.disabled = true;
       return;
     }
-    generateBtn.style.display = '';
-    if(count === 0){
-      generateBtn.textContent = 'Generate Report';
-    } else if(count === 1){
-      generateBtn.textContent = 'Generate Report (1 tool)';
-    } else if(count < 3){
-      generateBtn.textContent = 'Generate Report (' + count + ' tools)';
+
+    btn.disabled = false;
+    var currentKey = SHORTLIST_SELECTION.slice().sort().join('|');
+    if(currentKey && currentKey === LAST_GENERATED_KEY && LAST_GENERATED_URL){
+      btn.textContent = 'View Report';
     } else {
-      generateBtn.textContent = 'Generate Report';
+      btn.textContent = 'Generate Report';
     }
   }
 
@@ -16962,9 +17075,11 @@
     document.getElementById('aiQuery').value = '';
     LAST_QUERY = '';
     HAS_SEARCHED = false;
-    compare = []; // Clear compare selection
+    compare = [];
+    SHORTLIST_SELECTION = [];
+    updateCompareCount();
     applyFilters();
-    localStorage.removeItem('legaltech_explorer_state'); // Clear saved state
+    localStorage.removeItem('legaltech_explorer_state');
     history.pushState({ view: 'landing' }, '');
   });
   document.getElementById('filtersBtn').onclick=function(){
@@ -17051,9 +17166,10 @@
     if(!q){ aiStatus.textContent="Please type what you need."; return; }
     aiStatus.textContent="Thinking…";
     LAST_QUERY = q; // Store the search query
-    SHORTLIST_SELECTION = []; // Reset shortlist for new search
-    compare = []; // Reset compare so new search always picks fresh top 3
-    LAST_GENERATED_KEY = ''; // Allow report to be generated for new results
+    SHORTLIST_SELECTION = [];
+    compare = [];
+    SHORTLIST_USER_EDITED = false; // Fresh search — allow auto-populate
+    LAST_GENERATED_KEY = '';
 
     // If user is not authenticated, use client-side keyword search
     if(!window.AUTH_STATE || !window.AUTH_STATE.authenticated){
@@ -17138,6 +17254,10 @@
 
   // View All Tools button - shows all tools without any filters
   function viewAllTools(){
+    if (!window.AUTH_STATE || !window.AUTH_STATE.authenticated) {
+      openLoginModal();
+      return;
+    }
     HAS_SEARCHED = true;
     LAST_QUERY = '';
     SHORTLIST_SELECTION = []; // Reset shortlist when viewing all

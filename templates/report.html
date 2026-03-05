@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+{# -----------------------------------------------------------------------
+   Jinja2 macro: returns a conservative font-size (pt) based on total
+   character count of the panel's content. Errs on the side of smaller
+   text to guarantee content fits within the fixed panel height.
+----------------------------------------------------------------------- #}
+{%- macro panel_font(items) -%}
+  {%- set ns = namespace(total=0) -%}
+  {%- for item in items -%}
+    {%- if item is mapping -%}
+      {%- set ns.total = ns.total + (item.get('text', '') | length) + (item.get('tool', '') | length) -%}
+    {%- else -%}
+      {%- set ns.total = ns.total + (item | string | length) -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if ns.total > 900 -%}6.5pt
+  {%- elif ns.total > 700 -%}7pt
+  {%- elif ns.total > 500 -%}7.5pt
+  {%- elif ns.total > 300 -%}8pt
+  {%- elif ns.total > 150 -%}8.5pt
+  {%- else -%}9pt
+  {%- endif -%}
+{%- endmacro -%}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Navigator Snapshot Report</title>
+  <style>
+    @page { size: A4 landscape; margin: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* =====================================================================
+       PAGE CONTAINER
+    ===================================================================== */
+    .page {
+      width: 297mm;
+      height: 210mm;
+      position: relative;
+      overflow: hidden;
+      break-after: page;
+      page-break-after: always;
+    }
+    .page:last-child {
+      break-after: auto;
+      page-break-after: auto;
+    }
+
+    /* =====================================================================
+       PAGE 3 — COMPARISON
+    ===================================================================== */
+    .page-comparison {
+      display: flex;
+      background: #f5f4f0;
+    }
+
+    /* --- Left dark column --- */
+    .comp-left {
+      width: 86mm;
+      min-width: 86mm;
+      background: #0d2040;
+      padding: 14mm 8mm 10mm 10mm;
+      display: flex;
+      flex-direction: column;
+      border-radius: 0 0 40px 0;
+      position: relative;
+    }
+    .big-number {
+      font-size: 80pt;
+      font-weight: 900;
+      color: #2EA7A7;
+      line-height: 1;
+      margin-bottom: 3mm;
+    }
+    .best-fit-label {
+      font-size: 14pt;
+      font-weight: 400;
+      color: #ffffff;
+      line-height: 1.35;
+      margin-bottom: 5mm;
+    }
+    .search-label {
+      font-size: 7.5pt;
+      color: #7ecaca;
+      font-style: italic;
+      margin-bottom: 6mm;
+    }
+    .logo-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 3mm;
+      margin-top: auto;
+    }
+    .logo-card {
+      background: rgba(255,255,255,0.10);
+      border-radius: 8px;
+      padding: 5px 9px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 36px;
+    }
+    .logo-card img {
+      height: 26px;
+      max-width: 80px;
+      object-fit: contain;
+    }
+    .logo-card-initial {
+      width: 26px;
+      height: 26px;
+      background: #2EA7A7;
+      color: #fff;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 10pt;
+      flex-shrink: 0;
+    }
+    .logo-card-name {
+      color: #ffffff;
+      font-size: 8.5pt;
+      font-weight: 600;
+    }
+
+    /* --- Right content area --- */
+    .comp-right {
+      flex: 1;
+      padding: 8mm 8mm 8mm 6mm;
+      display: flex;
+      flex-direction: column;
+    }
+    .panels-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 5mm;
+      height: 100%;
+    }
+    .panel {
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .panel-header {
+      background: #1d3461;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 9pt;
+      text-align: center;
+      padding: 5px 10px;
+      letter-spacing: 0.3px;
+    }
+    .panel-body {
+      background: #e4f0f8;
+      flex: 1;
+      padding: 7px 11px;
+      font-size: 7.5pt;
+      color: #1a2a3a;
+      line-height: 1.45;
+      overflow: hidden;
+    }
+    .panel-body ul {
+      list-style: disc;
+      padding-left: 13px;
+    }
+    .panel-body ul li {
+      margin-bottom: 3px;
+    }
+    .panel-body ul li strong {
+      font-weight: 700;
+    }
+
+    /* Clario logo — bottom-right of comparison page */
+    .comp-branding {
+      position: absolute;
+      bottom: 6mm;
+      right: 7mm;
+    }
+
+    /* =====================================================================
+       PAGE 4 — DETAIL TABLE
+    ===================================================================== */
+    .page-table {
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .table-title-bar {
+      background: #1d3461;
+      color: #ffffff;
+      padding: 7px 14px;
+      font-size: 13pt;
+      font-weight: 400;
+      flex-shrink: 0;
+    }
+    .table-title-bar strong {
+      font-weight: 700;
+      color: #2EA7A7;
+    }
+
+    .logo-header-row {
+      background: #c5e8f5;
+      display: grid;
+      grid-template-columns: 72mm 1fr 1fr 1fr;
+      align-items: center;
+      flex-shrink: 0;
+      padding: 5px 0;
+    }
+    .logo-header-spacer { /* empty first cell */ }
+    .logo-header-cell {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 3px 8px;
+    }
+    .logo-header-cell img {
+      max-height: 38px;
+      max-width: 110px;
+      object-fit: contain;
+    }
+    .logo-header-cell .logo-text-fallback {
+      font-weight: 700;
+      font-size: 9pt;
+      color: #1d3461;
+      text-align: center;
+    }
+
+    .data-table {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .data-row {
+      display: grid;
+      grid-template-columns: 72mm 1fr 1fr 1fr;
+      border-bottom: 1px solid #e8ecf0;
+    }
+    .data-row:nth-child(odd)  { background: #ffffff; }
+    .data-row:nth-child(even) { background: #f0f2f5; }
+
+    .row-label {
+      padding: 4px 10px;
+      font-size: 7pt;
+      color: #4a5568;
+      border-right: 1px solid #dde3e9;
+      display: flex;
+      align-items: center;
+    }
+    .row-val {
+      padding: 4px 8px;
+      font-size: 7pt;
+      color: #1e2535;
+      border-right: 1px solid #dde3e9;
+      display: flex;
+      align-items: center;
+    }
+    .row-val:last-child {
+      border-right: none;
+    }
+    .row-val.ai-check {
+      justify-content: center;
+    }
+    .row-val.ai-check svg {
+      width: 16px;
+      height: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- =====================================================================
+     PAGE 3 — COMPARISON
+===================================================================== -->
+<div class="page page-comparison">
+
+  <!-- Left dark column -->
+  <div class="comp-left">
+    <div class="big-number">{{ tools | length }}</div>
+    <div class="best-fit-label">Best fit legal<br>tech tools</div>
+    {% if meta.query %}
+    <div class="search-label">Search: {{ meta.query }}</div>
+    {% endif %}
+
+    <div class="logo-stack">
+      {% for tool in tools %}
+      <div class="logo-card">
+        {% set lg = logos[loop.index0] if logos and loop.index0 < logos|length else None %}
+        {% if lg %}
+          <img src="{{ lg }}" alt="{{ tool.get('Vendor Name', '') }}">
+        {% else %}
+          <div class="logo-card-initial">{{ (tool.get('Vendor Name', '?') or '?')[0].upper() }}</div>
+        {% endif %}
+        <span class="logo-card-name">{{ tool.get('Product Name') or tool.get('Vendor Name', '') }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Right panels -->
+  <div class="comp-right">
+    <div class="panels-grid">
+
+      <div class="panel">
+        <div class="panel-header">Key Similarities</div>
+        <div class="panel-body" style="font-size:{{ panel_font(comparison.get('similarities', [])) }}">
+          <ul>
+            {% for item in comparison.get('similarities', []) %}
+            <li>{{ item | safe }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">Key Differences</div>
+        <div class="panel-body" style="font-size:{{ panel_font(comparison.get('differences', [])) }}">
+          <ul>
+            {% for item in comparison.get('differences', []) %}
+            <li><strong>{{ item.get('tool', '') }}</strong> {{ item.get('text', '') | safe }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">Strengths</div>
+        <div class="panel-body" style="font-size:{{ panel_font(comparison.get('strengths', [])) }}">
+          <ul>
+            {% for item in comparison.get('strengths', []) %}
+            <li><strong>{{ item.get('tool', '') }}:</strong> {{ item.get('text', '') | safe }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">Best Case</div>
+        <div class="panel-body" style="font-size:{{ panel_font(comparison.get('best_case', [])) }}">
+          <ul>
+            {% for item in comparison.get('best_case', []) %}
+            <li><strong>{{ item.get('tool', '') }}:</strong> {{ item.get('text', '') | safe }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Clario branding -->
+  <div class="comp-branding">
+    <svg width="72" height="22" viewBox="0 0 72 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <text x="0" y="17" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#1d3461">Clario</text>
+      <path d="M56 3 L63 11 L56 19" stroke="#2EA7A7" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+</div>
+
+
+<!-- =====================================================================
+     PAGE 4 — DETAIL TABLE
+===================================================================== -->
+<div class="page page-table">
+
+  <div class="table-title-bar">Top <strong>{{ tools | length }}</strong> legal tech tools in detail</div>
+
+  <!-- Logo header row -->
+  <div class="logo-header-row">
+    <div class="logo-header-spacer"></div>
+    {% for tool in tools %}
+    <div class="logo-header-cell">
+      {% set lg = logos[loop.index0] if logos and loop.index0 < logos|length else None %}
+      {% if lg %}
+        <img src="{{ lg }}" alt="{{ tool.get('Vendor Name', '') }}">
+      {% else %}
+        <span class="logo-text-fallback">{{ tool.get('Vendor Name', '') }}</span>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Data rows -->
+  <div class="data-table">
+    {% set table_fields = [
+      ("Vendor name",         "Vendor Name"),
+      ("Vendor overview",     "Vendor Overview"),
+      ("Product name",        "Product Name"),
+      ("Product description", "Product Description"),
+      ("Language supported",  "Languages Supported"),
+      ("Legal functionality", "Legal Functionality"),
+      ("Main problem solved", "Main problem solved"),
+      ("Primary user segment","Primary User Segment"),
+      ("AI maturity stage",   "Maturity Entry Level"),
+      ("Industry focus",      "Industry Focus"),
+      ("AI powered",          "AI Powered"),
+      ("AI platform",         "AI Platform Type"),
+      ("Ease of purchase",    "Ease of Purchase"),
+      ("Pricing model",       "Pricing Model"),
+    ] %}
+
+    {% for label, key in table_fields %}
+    <div class="data-row">
+      <div class="row-label">{{ label }}</div>
+      {% for tool in tools %}
+        {% if key == "AI Powered" %}
+        <div class="row-val ai-check">
+          {% if tool.get(key, '') in ['Yes', 'Core Feature'] %}
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" fill="#2EA7A7" fill-opacity="0.15" stroke="#2EA7A7" stroke-width="1.5"/>
+            <path d="M7.5 12.5l3 3 6-6.5" stroke="#2EA7A7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          {% endif %}
+        </div>
+        {% else %}
+        <div class="row-val">{{ tool.get(key, '') or '' }}</div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+
+</body>
+</html>
