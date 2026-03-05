@@ -16811,9 +16811,9 @@
   function toggleCompare(id){
     var i=compare.indexOf(id);
     if(i===-1){
-      if(compare.length>=5) return; // Compare allows up to 5; shortlist stays capped at 3
+      if(compare.length>=3) return; // Hard cap at 3 (matches shortlist/report limit)
       compare.push(id);
-      if(SHORTLIST_SELECTION.indexOf(id)===-1){ SHORTLIST_SELECTION.push(id); }
+      if(SHORTLIST_SELECTION.indexOf(id)===-1 && SHORTLIST_SELECTION.length < 3){ SHORTLIST_SELECTION.push(id); }
       var rec = DATA.find(r => r.__id === id);
       posthog?.capture('tool_compared', { tool: rec?.__display_name || id });
     } else {
