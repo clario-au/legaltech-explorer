@@ -81,61 +81,62 @@
     }
     .glance-body {
       flex: 1;
-      padding: 4mm 12mm 3mm 12mm;
+      padding: 5mm 12mm 5mm 12mm;
       display: flex;
       flex-direction: column;
-      gap: 3mm;
+      gap: 5mm;
     }
     .glance-intro {
-      font-size: 7pt;
+      font-size: 9pt;
       color: #1e2535;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
     /* Summary table */
     .glance-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 7pt;
+      font-size: 8.5pt;
     }
     .glance-table thead tr {
       background: #0f2040;
       color: #ffffff;
     }
     .glance-table thead th {
-      padding: 4px 8px;
+      padding: 6px 10px;
       text-align: left;
       font-weight: 600;
-      font-size: 6.5pt;
+      font-size: 8pt;
     }
     .glance-table thead th.center { text-align: center; }
     .glance-table tbody tr:nth-child(odd)  { background: #f5f7fa; }
     .glance-table tbody tr:nth-child(even) { background: #eef1f5; }
     .glance-table td {
-      padding: 5px 8px;
+      padding: 7px 10px;
       color: #1e2535;
       vertical-align: middle;
       border-bottom: 1px solid #e0e4ea;
+      font-size: 8.5pt;
     }
     .glance-table td.score-cell {
       text-align: center;
       font-weight: 800;
-      font-size: 11pt;
+      font-size: 16pt;
       color: #0f2040;
     }
     .tool-name-cell {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
     }
     .tool-name-cell img {
-      height: 18px;
-      max-width: 55px;
+      height: 22px;
+      max-width: 65px;
       object-fit: contain;
     }
     .tool-initial-sm {
-      width: 18px;
-      height: 18px;
+      width: 22px;
+      height: 22px;
       background: #2EA7A7;
       color: #fff;
       border-radius: 4px;
@@ -143,7 +144,7 @@
       align-items: center;
       justify-content: center;
       font-weight: 700;
-      font-size: 7pt;
+      font-size: 8.5pt;
       flex-shrink: 0;
     }
 
@@ -151,46 +152,47 @@
     .glance-cards {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 3mm;
+      gap: 5mm;
     }
     .glance-card {
       background: #f0f4f8;
-      border-left: 3px solid #2EA7A7;
+      border-left: 4px solid #2EA7A7;
       border-radius: 0 6px 6px 0;
-      padding: 4px 8px;
+      padding: 8px 12px;
     }
     .glance-card-name {
-      font-size: 6.5pt;
+      font-size: 9pt;
       font-weight: 700;
       color: #0f2040;
-      margin-bottom: 2px;
+      margin-bottom: 4px;
     }
     .glance-card-text {
-      font-size: 6.5pt;
+      font-size: 8.5pt;
       color: #2a3a50;
-      line-height: 1.45;
+      line-height: 1.55;
     }
 
     /* Suggested next step */
     .glance-next-step {
+      flex: 1;
       background: #e8f5f8;
       border-radius: 6px;
-      padding: 4px 9px;
+      padding: 8px 12px;
       display: flex;
-      gap: 8px;
+      gap: 10px;
       align-items: flex-start;
     }
     .glance-next-step-label {
-      font-size: 6.5pt;
+      font-size: 9pt;
       font-weight: 700;
       color: #0f2040;
       white-space: nowrap;
       margin-top: 1px;
     }
     .glance-next-step-text {
-      font-size: 6.5pt;
+      font-size: 8.5pt;
       color: #2a3a50;
-      line-height: 1.45;
+      line-height: 1.55;
     }
 
     /* =====================================================================
@@ -239,13 +241,13 @@
       padding: 3mm;
     }
     .ov-header-cell img {
-      max-height: 26px;
-      max-width: 80px;
+      max-height: 34px;
+      max-width: 100px;
       object-fit: contain;
     }
     .ov-initial-lg {
-      width: 26px;
-      height: 26px;
+      width: 34px;
+      height: 34px;
       background: #2EA7A7;
       color: #fff;
       border-radius: 6px;
@@ -253,10 +255,10 @@
       align-items: center;
       justify-content: center;
       font-weight: 700;
-      font-size: 10pt;
+      font-size: 13pt;
     }
     .ov-tool-name {
-      font-size: 6.5pt;
+      font-size: 9pt;
       font-weight: 600;
       color: #0f2040;
       text-align: center;
@@ -270,7 +272,7 @@
       display: flex;
       align-items: center;
       padding: 0 6mm;
-      font-size: 6pt;
+      font-size: 8pt;
       font-weight: 600;
       color: #7ecaca;
       text-transform: uppercase;
@@ -285,7 +287,7 @@
       justify-content: center;
     }
     .ov-score-number {
-      font-size: 30pt;
+      font-size: 38pt;
       font-weight: 900;
       color: #2EA7A7;
       line-height: 1;
@@ -293,12 +295,12 @@
 
     /* Content row labels */
     .ov-row-label {
-      font-size: 6.5pt;
+      font-size: 9pt;
       font-weight: 600;
       color: #4a5568;
       display: flex;
       align-items: flex-start;
-      padding: 4mm 5mm;
+      padding: 5mm 6mm;
       border-right: 1px solid #dde3ea;
       border-bottom: 1px solid #e0e4ea;
     }
@@ -308,10 +310,10 @@
 
     /* Content cells */
     .ov-content-cell {
-      padding: 3.5mm 4mm;
-      font-size: 6.5pt;
+      padding: 5mm 6mm;
+      font-size: 9.5pt;
       color: #1e2535;
-      line-height: 1.5;
+      line-height: 1.55;
       border-right: 1px solid #dde3ea;
       border-bottom: 1px solid #e0e4ea;
       overflow: hidden;
@@ -330,10 +332,10 @@
     }
     .tool-body {
       flex: 1;
-      padding: 5mm 12mm 5mm 12mm;
+      padding: 6mm 12mm 6mm 12mm;
       display: flex;
       flex-direction: column;
-      gap: 4mm;
+      gap: 6mm;
     }
 
     /* Top row: logo left, score badge right */
@@ -343,13 +345,13 @@
       justify-content: space-between;
     }
     .tool-logo-wrap img {
-      max-height: 30px;
-      max-width: 100px;
+      max-height: 36px;
+      max-width: 120px;
       object-fit: contain;
     }
     .tool-initial-page {
-      width: 32px;
-      height: 32px;
+      width: 38px;
+      height: 38px;
       background: #2EA7A7;
       color: #fff;
       border-radius: 8px;
@@ -357,25 +359,25 @@
       align-items: center;
       justify-content: center;
       font-weight: 700;
-      font-size: 13pt;
+      font-size: 16pt;
     }
     .tool-score-badge {
       background: #0f2040;
       border-radius: 8px;
-      padding: 3mm 5mm;
+      padding: 4mm 7mm;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
     .badge-label {
-      font-size: 5.5pt;
+      font-size: 7pt;
       color: #7ecaca;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-bottom: 1px;
+      margin-bottom: 2px;
     }
     .badge-number {
-      font-size: 20pt;
+      font-size: 26pt;
       font-weight: 900;
       color: #2EA7A7;
       line-height: 1;
@@ -383,42 +385,43 @@
 
     /* Two-column text sections */
     .tool-text-cols {
+      flex: 1;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 6mm;
+      gap: 8mm;
     }
     .tool-section-label {
-      font-size: 6pt;
+      font-size: 8pt;
       font-weight: 700;
       color: #2EA7A7;
       text-transform: uppercase;
       letter-spacing: 0.8px;
-      margin-bottom: 2px;
+      margin-bottom: 4px;
     }
     .tool-section-text {
-      font-size: 6.5pt;
+      font-size: 9pt;
       color: #1e2535;
-      line-height: 1.55;
+      line-height: 1.6;
     }
 
     /* Data rows */
     .tool-data-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 7pt;
+      font-size: 9pt;
     }
     .tool-data-table tr:nth-child(odd)  { background: #f5f7fa; }
     .tool-data-table tr:nth-child(even) { background: #eef1f5; }
     .tool-data-table td {
-      padding: 5px 10px;
+      padding: 8px 12px;
       border-bottom: 1px solid #e0e4ea;
       vertical-align: top;
-      line-height: 1.45;
+      line-height: 1.5;
     }
     .tool-data-table td:first-child {
       font-weight: 600;
       color: #4a5568;
-      width: 52mm;
+      width: 55mm;
       white-space: nowrap;
       border-right: 1px solid #dde3ea;
     }
