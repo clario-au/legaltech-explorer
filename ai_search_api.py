@@ -775,75 +775,99 @@ def clean_query_text(query: str) -> str:
 
 
 def get_structured_comparison(tools: List[Dict[str, Any]]) -> Dict:
-    """Call OpenAI to produce a 4-section structured comparison for the report."""
+    """Call OpenAI to produce per-tool analysis for the V3 report layout."""
     tool_summaries = ""
     for t in tools:
-        name = t.get('Product Name') or t.get('Vendor Name', '')
-        desc = (t.get('Product Description') or t.get('Vendor Overview', ''))[:250]
-        func = t.get('Legal Functionality', '')
-        ai   = t.get('AI Powered', '')
-        ease = t.get('Ease of Purchase', '')
-        price = t.get('Pricing Model', '')
+        name  = t.get('Product Name') or t.get('Vendor Name', '')
+        desc  = (t.get('Product Description') or t.get('Vendor Overview', ''))[:300]
+        func  = t.get('Legal Functionality', '')
+        ai    = t.get('AI Powered', '')
+        prob  = t.get('Main problem solved', '')
+        mat   = t.get('Maturity Entry Level', '')
         tool_summaries += (
             f"\n**{name}**\n"
             f"- Description: {desc}\n"
             f"- Legal Functionality: {func}\n"
+            f"- Main Problem Solved: {prob}\n"
             f"- AI Powered: {ai}\n"
-            f"- Ease of Purchase: {ease}\n"
-            f"- Pricing: {price}\n"
+            f"- AI Maturity: {mat}\n"
         )
 
     system_msg = (
         "You are an expert legal technology analyst writing a professional shortlist report for in-house legal teams. "
-        "Analyze the provided legal tech tools and return a JSON object with exactly these 4 keys:\n"
-        "- \"similarities\": array of 3-4 strings. Each string should be a substantive observation (2-3 sentences) "
-        "that applies to ALL tools — covering shared capabilities, deployment models, target audiences, or market positioning.\n"
-        "- \"differences\": array of objects {\"tool\": \"<product name>\", \"text\": \"<3-4 sentences>\"}, "
-        "one per tool. Describe in depth what makes each tool functionally and strategically distinct — "
-        "its unique approach, standout features, and how it differs from the others in scope or focus.\n"
-        "- \"strengths\": array of objects {\"tool\": \"<product name>\", \"text\": \"<3-4 sentences>\"}, "
-        "one per tool. Cover the tool's primary strength and the specific value it delivers, "
-        "then note any meaningful limitation or trade-off a buyer should be aware of.\n"
-        "- \"best_case\": array of objects {\"tool\": \"<product name>\", \"text\": \"<2-3 sentences>\"}, "
-        "one per tool. Describe the ideal organisation, team size, maturity level, or use-case scenario "
-        "where this tool would deliver the most value.\n"
-        "Write in a professional, authoritative tone suitable for a C-suite legal audience. "
+        "Analyze the provided legal tech tools and return a JSON object with one key \"tools\" containing an array of objects, "
+        "one per tool in the SAME ORDER as provided. Each object must have exactly these keys:\n"
+        "- \"name\": the tool's product name (string)\n"
+        "- \"best_for\": a 3-6 word phrase describing the primary use case (e.g. 'Legal intake automation')\n"
+        "- \"key_strength\": a 3-6 word phrase describing the standout strength (e.g. 'Strong workflow automation')\n"
+        "- \"consideration\": a 3-8 word phrase describing the main limitation or trade-off (e.g. 'Narrower feature scope')\n"
+        "- \"at_a_glance_blurb\": 1-2 sentences (max 30 words) describing when this tool is best suited. "
+        "Start with 'Best suited where...', 'Most relevant where...' or 'Appropriate where...'\n"
+        "- \"strengths\": 1-2 sentences describing the tool's primary strengths for in-house legal teams\n"
+        "- \"weaknesses\": 1-2 sentences describing the main limitations or trade-offs buyers should consider\n"
+        "- \"best_use_case\": 1-2 sentences describing the ideal team, organisation size, or scenario for this tool\n"
+        "Write in a professional, authoritative tone suitable for senior legal counsel. "
         "Return ONLY valid JSON. No markdown, no code blocks, no prose outside the JSON."
     )
     user_msg = f"Analyze these legal tech tools:\n{tool_summaries}"
 
     try:
         result = call_openai_json(system_msg, user_msg)
-        for key in ('similarities', 'differences', 'strengths', 'best_case'):
-            if key not in result:
-                result[key] = []
+        if 'tools' not in result or not isinstance(result['tools'], list):
+            raise ValueError("Missing 'tools' array in AI response")
         return result
     except Exception as e:
         logger.error(f"[Report] Comparison AI call failed: {e}")
-        tool_names = [t.get('Product Name') or t.get('Vendor Name', '') for t in tools]
-        return {
-            "similarities": ["All tools are designed for legal teams."],
-            "differences": [{"tool": n, "text": ""} for n in tool_names],
-            "strengths":   [{"tool": n, "text": ""} for n in tool_names],
-            "best_case":   [{"tool": n, "text": ""} for n in tool_names],
-        }
+        fallback_tools = []
+        for t in tools:
+            name = t.get('Product Name') or t.get('Vendor Name', '')
+            fallback_tools.append({
+                "name": name,
+                "best_for": "",
+                "key_strength": "",
+                "consideration": "",
+                "at_a_glance_blurb": "",
+                "strengths": "",
+                "weaknesses": "",
+                "best_use_case": "",
+            })
+        return {"tools": fallback_tools}
 
 
 def merge_report_pdfs(dynamic_bytes: bytes) -> bytes:
-    """Merge static pages (1,2,5) with dynamic pages (3,4) into a single PDF."""
+    """Merge V3 static pages with 5 dynamic pages into a 12-page PDF.
+
+    Final page order:
+      1  Cover                  (static[0])
+      2  About the Navigator    (static[1])
+      3  At a glance            (dynamic[0])
+      4  Key Considerations     (static[2])
+      5  How to use this report (static[3])
+      6  Section divider        (static[4])
+      7  Overview table         (dynamic[1])
+      8  Tool 1 detail          (dynamic[2])
+      9  Tool 2 detail          (dynamic[3])
+     10  Tool 3 detail          (dynamic[4])
+     11  Next steps             (static[5])
+     12  Back cover             (static[6])
+    """
     from pypdf import PdfReader, PdfWriter
     writer = PdfWriter()
-    static_path = "static/report_static_pages.pdf"
+    static_path = "static/report_static_pages_v3.pdf"
 
-    static_reader = PdfReader(static_path)
-    writer.add_page(static_reader.pages[0])   # Page 1 — Cover
-    writer.add_page(static_reader.pages[1])   # Page 2 — How Navigator works
+    s = PdfReader(static_path)
+    d = PdfReader(io.BytesIO(dynamic_bytes))
 
-    dynamic_reader = PdfReader(io.BytesIO(dynamic_bytes))
-    for page in dynamic_reader.pages:         # Pages 3 & 4 — dynamic
-        writer.add_page(page)
-
-    writer.add_page(static_reader.pages[2])   # Page 5 — About Clario
+    writer.add_page(s.pages[0])   # 1  Cover
+    writer.add_page(s.pages[1])   # 2  About Navigator
+    writer.add_page(d.pages[0])   # 3  At a glance
+    writer.add_page(s.pages[2])   # 4  Key Considerations
+    writer.add_page(s.pages[3])   # 5  How to use
+    writer.add_page(s.pages[4])   # 6  Section divider
+    for i in range(1, len(d.pages)):  # 7-10  Overview + tool detail pages
+        writer.add_page(d.pages[i])
+    writer.add_page(s.pages[5])   # 11 Next steps
+    writer.add_page(s.pages[6])   # 12 Back cover
 
     out = io.BytesIO()
     writer.write(out)
@@ -880,7 +904,7 @@ async def report_preview(request: Request, user: dict = Depends(require_auth)):
 
 @app.post("/report")
 async def generate_report(req: ReportRequest, user: dict = Depends(require_auth)):
-    """Generate a 5-page PDF report: static pages 1,2,5 merged with dynamic pages 3,4."""
+    """Generate a 12-page PDF report: V3 static pages merged with 5 dynamic pages."""
     if not req.tools:
         raise HTTPException(status_code=400, detail="No tools provided")
 
