@@ -51,12 +51,13 @@
 
     /* Two-column: table (left) + cards (right) */
     .glance-content-row {
-      flex: 1;
+      flex-shrink: 0;
       display: grid;
       grid-template-columns: 1fr 90mm;
       gap: 6mm;
-      min-height: 0;
     }
+    /* Pushes next-step box to the bottom */
+    .glance-spacer { flex: 1; }
 
     /* Summary table */
     .glance-table {
@@ -423,6 +424,8 @@
     </div>
 
   </div>
+
+  <div class="glance-spacer"></div>
 
   <!-- Suggested Next Step -->
   <div class="glance-next-step">
