@@ -34,14 +34,14 @@
        Layout: title → intro → [table left | cards right] → next-step box
     ===================================================================== */
     .glance-title {
-      font-size: 22pt;
+      font-size: 28pt;
       font-weight: 700;
       color: #0f2040;
       margin-bottom: 3mm;
       flex-shrink: 0;
     }
     .glance-intro {
-      font-size: 8.5pt;
+      font-size: 10.5pt;
       color: #2a3a50;
       line-height: 1.6;
       margin-bottom: 4mm;
@@ -66,7 +66,7 @@
       align-self: start;
     }
     .glance-table thead th {
-      background: #e8ecf2;
+      background: #ffffff;
       color: #0f2040;
       font-weight: 700;
       padding: 9px 10px;
@@ -75,8 +75,8 @@
       font-size: 8.5pt;
     }
     .glance-table thead th.score-th { text-align: center; width: 18mm; }
-    .glance-table tbody tr:nth-child(odd)  { background: #ffffff; }
-    .glance-table tbody tr:nth-child(even) { background: #f5f7fa; }
+    .glance-table tbody tr:nth-child(odd)  { background: #eef3f8; }
+    .glance-table tbody tr:nth-child(even) { background: #ffffff; }
     .glance-table td {
       padding: 13px 10px;
       color: #1e2535;
@@ -116,13 +116,13 @@
     .glance-cards {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      gap: 4mm;
     }
     .glance-card-name {
       font-size: 10.5pt;
       font-weight: 700;
       color: #0f2040;
-      margin-bottom: 2mm;
+      margin-bottom: 1mm;
     }
     .glance-card-list {
       padding-left: 4mm;
@@ -131,18 +131,22 @@
     .glance-card-list li {
       font-size: 9pt;
       color: #2a3a50;
-      line-height: 1.6;
+      line-height: 1.55;
     }
 
-    /* Suggested Next Step — full-width dark navy box */
+    /* Suggested Next Step — full-width dark navy box, grows to fill & reaches bottom */
     .glance-next-step {
       background: #0f2040;
       border-radius: 0;
-      padding: 4mm 11mm;
+      padding: 5mm 11mm;
       margin-top: 4mm;
       margin-left: -11mm;
       margin-right: -11mm;
-      flex-shrink: 0;
+      margin-bottom: -8mm;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
     .glance-next-step-label {
       font-size: 9pt;
@@ -347,7 +351,7 @@
     }
     .tool-data-table td:first-child {
       font-weight: 700;
-      color: #0f2040;
+      color: #2EA7A7;
       width: 50mm;
       white-space: nowrap;
       border-right: 1px solid #e0e4ea;
@@ -519,8 +523,20 @@
       {% if tool.get('Main problem solved') %}
       <tr><td>Main problem solved</td><td>{{ tool.get('Main problem solved') }}</td></tr>
       {% endif %}
+      {% if tool.get('Primary User Segment') %}
+      <tr><td>Primary User Segment</td><td>{{ tool.get('Primary User Segment') }}</td></tr>
+      {% endif %}
+      {% if tool.get('Industry Focus') %}
+      <tr><td>Industry Focus</td><td>{{ tool.get('Industry Focus') }}</td></tr>
+      {% endif %}
       {% if tool.get('Maturity Entry Level') %}
       <tr><td>AI Maturity Stage</td><td>{{ tool.get('Maturity Entry Level') }}</td></tr>
+      {% endif %}
+      {% if tool.get('AI Powered') %}
+      <tr><td>AI Powered</td><td>{{ tool.get('AI Powered') }}</td></tr>
+      {% endif %}
+      {% if tool.get('Ease of Purchase') %}
+      <tr><td>Ease of Purchase</td><td>{{ tool.get('Ease of Purchase') }}</td></tr>
       {% endif %}
       <tr><td>Main Language Supported</td><td>English</td></tr>
     </table>
