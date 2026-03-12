@@ -16457,7 +16457,14 @@
   }
 
   async function generateShortlistReport(){
-    if(SHORTLIST_SELECTION.length === 0) return;
+    if(SHORTLIST_SELECTION.length !== 3){
+      var errEl = document.getElementById('shortlistReportError');
+      if(errEl){
+        errEl.textContent = 'Please select 3 tools to generate a report.';
+        errEl.style.display = 'block';
+      }
+      return;
+    }
 
     var currentKey = SHORTLIST_SELECTION.slice().sort().join('|');
 
