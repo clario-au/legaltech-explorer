@@ -69,26 +69,26 @@
       background: #e8ecf2;
       color: #0f2040;
       font-weight: 700;
-      padding: 6px 9px;
+      padding: 9px 10px;
       text-align: left;
       border: 1px solid #cdd5e0;
-      font-size: 7.5pt;
+      font-size: 8.5pt;
     }
     .glance-table thead th.score-th { text-align: center; width: 18mm; }
     .glance-table tbody tr:nth-child(odd)  { background: #ffffff; }
     .glance-table tbody tr:nth-child(even) { background: #f5f7fa; }
     .glance-table td {
-      padding: 7px 9px;
+      padding: 13px 10px;
       color: #1e2535;
       vertical-align: middle;
       border: 1px solid #e0e4ea;
-      font-size: 8pt;
-      line-height: 1.45;
+      font-size: 9pt;
+      line-height: 1.5;
     }
     .glance-table td.score-cell {
       text-align: center;
       font-weight: 800;
-      font-size: 17pt;
+      font-size: 19pt;
       color: #2EA7A7;
       white-space: nowrap;
     }
@@ -116,30 +116,32 @@
     .glance-cards {
       display: flex;
       flex-direction: column;
-      gap: 3mm;
+      justify-content: space-between;
     }
     .glance-card-name {
-      font-size: 9pt;
+      font-size: 10.5pt;
       font-weight: 700;
       color: #0f2040;
-      margin-bottom: 1.5mm;
+      margin-bottom: 2mm;
     }
     .glance-card-list {
       padding-left: 4mm;
       list-style: disc;
     }
     .glance-card-list li {
-      font-size: 8pt;
+      font-size: 9pt;
       color: #2a3a50;
-      line-height: 1.55;
+      line-height: 1.6;
     }
 
-    /* Suggested Next Step — dark navy box */
+    /* Suggested Next Step — full-width dark navy box */
     .glance-next-step {
       background: #0f2040;
-      border-radius: 5px;
-      padding: 4mm 7mm;
+      border-radius: 0;
+      padding: 4mm 11mm;
       margin-top: 4mm;
+      margin-left: -11mm;
+      margin-right: -11mm;
       flex-shrink: 0;
     }
     .glance-next-step-label {
@@ -217,16 +219,17 @@
 
     /* Header row cells */
     .ov-hdr {
-      font-size: 8pt;
+      font-size: 9.5pt;
       font-weight: 700;
       color: #0f2040;
-      padding: 5px 8px;
+      padding: 6px 8px;
       border-bottom: 2px solid #0f2040;
       background: #ffffff;
       display: flex;
       align-items: flex-end;
     }
     .ov-hdr:first-child { border-right: 1px solid #e0e4ea; }
+    .ov-hdr-score { justify-content: center; text-align: center; }
 
     /* Tool rows: alternating background */
     .ov-tool-row-odd  { background: #ffffff; }
@@ -262,7 +265,7 @@
       font-weight: 700; font-size: 13pt;
     }
     .ov-tool-name-label {
-      font-size: 8pt;
+      font-size: 9.5pt;
       font-weight: 700;
       color: #0f2040;
     }
@@ -272,17 +275,17 @@
       justify-content: center;
     }
     .ov-score-number {
-      font-size: 36pt;
+      font-size: 38pt;
       font-weight: 900;
-      color: #0f2040;
+      color: #2EA7A7;
       line-height: 1;
     }
 
     /* Content cells (strengths / weaknesses / best use) */
     .ov-text-cell {
-      font-size: 8pt;
+      font-size: 9.5pt;
       color: #1e2535;
-      line-height: 1.55;
+      line-height: 1.6;
       align-items: flex-start;
     }
 
@@ -307,6 +310,7 @@
       grid-template-columns: 58mm 1fr;
       gap: 8mm;
       min-height: 0;
+      align-items: center;
     }
     .tool-logo-col {
       display: flex;
@@ -331,21 +335,20 @@
     .tool-data-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 8.5pt;
-      align-self: start;
+      font-size: 9.5pt;
     }
     .tool-data-table tr { border-bottom: 1px solid #e0e4ea; }
     .tool-data-table tr:nth-child(odd)  { background: #f5f7fa; }
     .tool-data-table tr:nth-child(even) { background: #ffffff; }
     .tool-data-table td {
-      padding: 6px 10px;
+      padding: 11px 12px;
       vertical-align: top;
       line-height: 1.6;
     }
     .tool-data-table td:first-child {
       font-weight: 700;
       color: #0f2040;
-      width: 48mm;
+      width: 50mm;
       white-space: nowrap;
       border-right: 1px solid #e0e4ea;
     }
@@ -448,7 +451,7 @@
 
     <!-- Header row -->
     <div class="ov-hdr"></div>
-    <div class="ov-hdr">Legal Tech Value Score</div>
+    <div class="ov-hdr ov-hdr-score">Legal Tech Value Score</div>
     <div class="ov-hdr">Strengths</div>
     <div class="ov-hdr">Weaknesses</div>
     <div class="ov-hdr">Best Use Case</div>
