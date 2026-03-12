@@ -134,19 +134,16 @@
       line-height: 1.55;
     }
 
-    /* Suggested Next Step — full-width dark navy box, grows to fill & reaches bottom */
+    /* Suggested Next Step — full-width dark navy box, reaches bottom edge */
     .glance-next-step {
       background: #0f2040;
       border-radius: 0;
-      padding: 5mm 11mm;
+      padding: 5mm 11mm 13mm 11mm;
       margin-top: 4mm;
       margin-left: -11mm;
       margin-right: -11mm;
       margin-bottom: -8mm;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      flex-shrink: 0;
     }
     .glance-next-step-label {
       font-size: 9pt;
