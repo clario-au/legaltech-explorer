@@ -3244,7 +3244,7 @@
   // Init
   document.body.classList.add('has-landing'); // Add landing class on load
   initShortlistPanel();
-  loadToolsFromAPI();  // load tools from Supabase via /tools endpoint
+  // Tools load via loadToolsFromAPI() once auth is confirmed in updateUIForAuthenticatedUser()
 
   // ===== Browser History (back/forward support) =====
   history.replaceState({ view: 'landing' }, '');
@@ -4040,6 +4040,11 @@ void main(){
 
       const user = window.AUTH_STATE.user;
       posthog?.identify(user.id, { email: user.email, role: user.role });
+
+      // Load tools from Supabase now that we're authenticated
+      if (typeof loadToolsFromAPI === 'function' && window.DATA && window.DATA.length === 0) {
+        loadToolsFromAPI();
+      }
 
       // Hide topbar Sign In button, swap it for user email button
       const headerSignInBtn = document.getElementById('headerSignInBtn');
