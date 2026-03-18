@@ -27,7 +27,7 @@ from pdf_renderer import render_pdf
 from supabase_auth import (
     sign_in, sign_out, sign_up, get_user_from_token, refresh_session,
     request_password_reset, update_password, admin_create_user, admin_invite_user,
-    admin_list_users, is_configured as supabase_configured
+    admin_list_users, is_configured as supabase_configured, supabase_admin
 )
 
 # Import usage tracking (still using PostgreSQL)
@@ -722,6 +722,18 @@ def serve_updated_csv(user: dict = Depends(require_auth)):
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "0"
     return response
+
+@app.get("/tools")
+def get_tools(user: dict = Depends(require_auth)):
+    """Return all legal tools from Supabase as JSON."""
+    if not supabase_admin:
+        raise HTTPException(status_code=503, detail="Database not configured")
+    try:
+        response = supabase_admin.table("legal_tools").select("*").execute()
+        return JSONResponse(content={"tools": response.data})
+    except Exception as e:
+        logger.error(f"[Tools] Failed to fetch tools from Supabase: {e}")
+        raise HTTPException(status_code=500, detail="Failed to load tools")
 
 @app.get("/health")
 def health():
