@@ -1375,6 +1375,7 @@
 
   <!-- Compare Overlay (Full Page) -->
   <div id="compareOverlay" class="is-hidden" style="position:fixed;inset:0;z-index:100;background:transparent;display:flex;flex-direction:column;">
+    <button id="closeCompare" aria-label="Close compare" style="position:absolute;top:16px;right:20px;z-index:101;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;line-height:1;color:inherit;transition:background 0.2s;">&times;</button>
     <header>
       <div class="topbar">
         <div class="brand">
@@ -1382,16 +1383,10 @@
           <h1>Compare Tools</h1>
         </div>
         <span class="spacer"></span>
-        <button class="btn" id="closeCompare">Close</button>
       </div>
     </header>
 
     <div style="flex:1;overflow:hidden;display:flex;flex-direction:column;max-width:1400px;width:100%;margin:0 auto;padding:16px;">
-      <div class="tabs" style="margin-bottom:16px;">
-        <button id="tabCompareTable" class="tab active" type="button">Table Comparison</button>
-        <button id="tabCompareAI" class="tab" type="button">AI Recommendation</button>
-      </div>
-
       <!-- Table Comparison View -->
       <div id="compareTableView" class="box" style="flex:1;overflow:hidden;display:flex;flex-direction:column;">
         <div class="compare-controls">
@@ -1399,17 +1394,6 @@
         </div>
         <div class="compare-wrap" style="flex:1;max-height:none;">
           <table class="compare" id="compareTable" style="width:100%;border-collapse:separate;border-spacing:0 8px;font-size:12px"></table>
-        </div>
-      </div>
-
-      <!-- AI Recommendation View -->
-      <div id="compareAIView" class="box is-hidden" style="flex:1;overflow:hidden;display:flex;flex-direction:column;gap:12px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
-          <div class="col-title">AI-Powered Recommendation</div>
-          <button class="btn" id="aiSummaryBtn">Generate Recommendation</button>
-        </div>
-        <div id="aiSummaryBox" style="background:#f8f9fb;border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.6;flex:1;overflow-y:auto;color:#4a5568;">
-          Click "Generate Recommendation" to get AI-powered insights comparing the selected tools.
         </div>
       </div>
     </div>
@@ -2827,16 +2811,6 @@
     renderCompare();
 
     // Switch to specified tab (default to 'table' if not specified)
-    if(startTab === 'ai'){
-      switchCompareTab('ai');
-    } else {
-      switchCompareTab('table');
-    }
-
-    // Auto-generate AI summary when opening compare
-    if(compare.length > 0){
-      setTimeout(generateAISummary, 500);
-    }
   }
 
   function closeCompareOverlay(){
@@ -2856,21 +2830,9 @@
   }
 
   function switchCompareTab(mode){
-    const tTable = document.getElementById('tabCompareTable');
-    const tAI = document.getElementById('tabCompareAI');
+    // AI tab removed — always show table view
     const viewTable = document.getElementById('compareTableView');
-    const viewAI = document.getElementById('compareAIView');
-
-    tTable.classList.toggle('active', mode==='table');
-    tAI.classList.toggle('active', mode==='ai');
-
-    if(mode==='table'){
-      viewTable.classList.remove('is-hidden');
-      viewAI.classList.add('is-hidden');
-    } else {
-      viewTable.classList.add('is-hidden');
-      viewAI.classList.remove('is-hidden');
-    }
+    if(viewTable) viewTable.classList.remove('is-hidden');
   }
 
   // Header buttons
@@ -2920,8 +2882,7 @@
   // Compare overlay controls
   document.getElementById('compareHeaderBtn').addEventListener('click', function(){ window.requireAuth(openCompareOverlay); });
   document.getElementById('closeCompare').addEventListener('click', closeCompareOverlay);
-  document.getElementById('tabCompareTable').addEventListener('click', ()=>switchCompareTab('table'));
-  document.getElementById('tabCompareAI').addEventListener('click', ()=>switchCompareTab('ai'));
+  document.getElementById('tabCompareTable')?.addEventListener('click', ()=>switchCompareTab('table'));
 
   // Expand: Details → wide
   document.getElementById('expandRight').addEventListener('click', ()=>{
@@ -3173,7 +3134,6 @@
   });
 
   // AI Summary button listener
-  document.getElementById('aiSummaryBtn')?.addEventListener('click', generateAISummary);
 
   // More Filters button listener
   var moreFiltersExpanded = false;
