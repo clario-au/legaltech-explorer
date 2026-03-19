@@ -32,7 +32,7 @@ from supabase_auth import (
 )
 
 # Import usage tracking (still using PostgreSQL)
-from auth_models import log_usage, get_user_stats, get_all_users_stats
+from auth_models import log_usage, get_user_stats, get_all_users_stats, set_user_status
 
 # =========================
 # Boot + OpenAI client
@@ -48,17 +48,18 @@ app = FastAPI(title="Legal-Tech Filter API", version="0.2.0")
 # Jinja2 templates for report generation
 templates = Jinja2Templates(directory="templates")
 
-# CORS (dev-friendly)
+# CORS — restrict to known origins only
+ALLOWED_ORIGINS = [
+    "https://legaltech-explorer.onrender.com",
+    "http://127.0.0.1:5500",   # local dev (VS Code Live Server)
+    "http://localhost:5500",
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://127.0.0.1:5500",
-        "http://localhost:5500",
-        "http://0.0.0.0:5500",
-        "*",
-    ],
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=ALLOWED_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 # Mount static files for logos
@@ -495,8 +496,8 @@ async def login(req: LoginRequest, response: Response):
         "user": {
             "email": user["email"],
             "role": user.get("role", "user")
-        },
-        "access_token": session["access_token"]  # Also return for frontend storage
+        }
+        # access_token intentionally omitted — delivered via HTTP-only cookie only
     }
 
 @app.post("/auth/logout")
@@ -769,7 +770,7 @@ def get_tools():
 
 @app.get("/health")
 def health():
-    return {"ok": True, "has_key": bool(OPENAI_API_KEY), "model": OPENAI_MODEL}
+    return {"ok": True}
 
 
 # =========================
@@ -1059,7 +1060,8 @@ async def generate_filters(req: Query, user: dict = Depends(rate_limit_dependenc
         cache_set(cache_key, clean)
         return clean
     except Exception as e:
-        return JSONResponse(status_code=500, content={"error": str(e)})
+        logger.error(f"[Query] Failed: {e}")
+        return JSONResponse(status_code=500, content={"error": "Query processing failed. Please try again."})
 
 @app.post("/summarize")
 async def summarize_comparison(req: ComparisonRequest, user: dict = Depends(rate_limit_dependency)):
@@ -1117,4 +1119,5 @@ async def summarize_comparison(req: ComparisonRequest, user: dict = Depends(rate
         cache_set(summarize_cache_key, response)
         return response
     except Exception as e:
-        return JSONResponse(status_code=500, content={"error": str(e)})
+        logger.error(f"[Summarize] Failed: {e}")
+        return JSONResponse(status_code=500, content={"error": "Summary generation failed. Please try again."})

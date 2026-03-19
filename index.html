@@ -1417,6 +1417,7 @@
 
   <!-- libs -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
 
   <!-- === App logic === -->
   <script>
@@ -2266,13 +2267,12 @@
       }).filter(Boolean);
 
       var today = new Date().toISOString().split('T')[0];
-      var token = (window.AUTH_STATE && window.AUTH_STATE.accessToken) ? window.AUTH_STATE.accessToken : '';
 
       var response = await fetch('/report', {
         method: 'POST',
+        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + token
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           meta: { query: LAST_QUERY || '', generated_at: today },
@@ -2617,10 +2617,10 @@
       }
 
       const data = await res.json();
-      summaryBox.innerHTML = data.summary || 'No summary generated.';
+      summaryBox.innerHTML = DOMPurify.sanitize(data.summary || 'No summary generated.');
     }catch(err){
       console.error("AI Summary failed:", err);
-      summaryBox.innerHTML = `<div style="color:#e57373">Could not generate summary: ${err.message || err}.<br><br>Note: This requires a /summarize endpoint on the backend.</div>`;
+      summaryBox.innerHTML = DOMPurify.sanitize(`<div style="color:#e57373">Could not generate summary: ${err.message || err}.<br><br>Note: This requires a /summarize endpoint on the backend.</div>`);
     }finally{
       btn.textContent = 'Generate Recommendation';
       btn.disabled = false;
@@ -4066,19 +4066,13 @@ void main(){
 
     // requireAuth and AUTH_PENDING_ACTION are defined in the main script above
 
-    // Store access token in memory for API calls
+    // Store access token in memory only — never persisted to sessionStorage/localStorage
     function setAccessToken(token) {
-      window.AUTH_STATE.accessToken = token;
-      // Also store in sessionStorage for page refreshes
-      if (token) {
-        sessionStorage.setItem('sb_access_token', token);
-      } else {
-        sessionStorage.removeItem('sb_access_token');
-      }
+      window.AUTH_STATE.accessToken = token || null;
     }
 
     function getAccessToken() {
-      return window.AUTH_STATE.accessToken || sessionStorage.getItem('sb_access_token');
+      return window.AUTH_STATE.accessToken;
     }
 
     // Check authentication status on page load
@@ -4090,12 +4084,17 @@ void main(){
         const data = await response.json();
 
         if (data.authenticated) {
-          window.AUTH_STATE = {
-            user: data.user,
-            authenticated: true,
-            accessToken: getAccessToken()
-          };
-          updateUIForAuthenticatedUser();
+          // If no token in memory (e.g. page refresh), silently get a fresh one via the refresh cookie
+          if (!getAccessToken()) {
+            await tryRefreshToken();
+          } else {
+            window.AUTH_STATE = {
+              user: data.user,
+              authenticated: true,
+              accessToken: getAccessToken()
+            };
+            updateUIForAuthenticatedUser();
+          }
         } else {
           // Try to refresh token
           const refreshResult = await tryRefreshToken();
@@ -4318,13 +4317,11 @@ void main(){
         const result = await response.json();
 
         if (response.ok) {
-          // Store access token
-          setAccessToken(result.access_token);
-
+          // Token is delivered via HTTP-only cookie — no token in response body
           window.AUTH_STATE = {
             user: result.user,
             authenticated: true,
-            accessToken: result.access_token
+            accessToken: null
           };
           posthog?.capture('sign_in');
           closeLoginModal();
@@ -4774,8 +4771,8 @@ void main(){
         return;
       }
 
-      // Local dev bypass — never runs on real server (hostname will never be localhost there)
-      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      // Local dev bypass — only active when backend explicitly sets window.DEV_MODE = true
+      if (window.DEV_MODE === true) {
         window.AUTH_STATE.authenticated = true;
         return;
       }
@@ -4789,7 +4786,7 @@ void main(){
     // If the JWT has expired and refresh fails, show the login modal immediately
     // rather than leaving the user in a broken "logged-in" state.
     setInterval(async function() {
-      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') return;
+      if (window.DEV_MODE === true) return;
       if (!window.AUTH_STATE || !window.AUTH_STATE.authenticated) return;
       var wasAuthenticated = window.AUTH_STATE.authenticated;
       await checkAuthStatus();
