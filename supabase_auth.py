@@ -175,6 +175,24 @@ def refresh_session(refresh_token: str) -> dict:
 
 # ===== Password Reset =====
 
+def resend_verification(email: str) -> dict:
+    """
+    Resend email verification to a user
+    Returns: {"success": True} or {"error": "..."}
+    """
+    if not supabase:
+        return {"error": "Supabase not configured"}
+
+    try:
+        supabase.auth.resend({
+            "type": "signup",
+            "email": email
+        })
+        return {"success": True}
+    except Exception as e:
+        return {"error": str(e)}
+
+
 def request_password_reset(email: str, redirect_url: str) -> dict:
     """
     Send a password reset email

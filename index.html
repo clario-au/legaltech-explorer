@@ -3740,7 +3740,7 @@ void main(){
     }
 
     .auth-link a {
-      color: #2EA7A7;
+      color: #ec4899;
       text-decoration: none;
       font-weight: 500;
     }
@@ -3902,7 +3902,9 @@ void main(){
           <div style="font-size:40px;margin-bottom:16px;">✉️</div>
           <p style="font-weight:600;font-size:16px;margin-bottom:8px;">Check your email</p>
           <p id="signUpSuccessMsg" style="color:#6b7280;font-size:14px;margin-bottom:12px;"></p>
-          <p style="color:#9ca3af;font-size:12px;margin-bottom:24px;">Can't find it? Check your <strong>junk or spam folder</strong> — the verification email sometimes ends up there.</p>
+          <p style="color:#9ca3af;font-size:12px;margin-bottom:20px;">Can't find it? Check your <strong style="color:#ec4899;">junk or spam folder</strong> — the verification email sometimes ends up there.</p>
+          <button id="resendVerificationBtn" style="width:100%;padding:11px 24px;background:transparent;border:1px solid #ec4899;border-radius:8px;color:#ec4899;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:16px;transition:all 0.2s ease;">Resend verification email</button>
+          <div id="resendMsg" style="font-size:13px;margin-bottom:16px;display:none;"></div>
           <a href="#" id="backToSignInFromSuccess" style="color:#2EA7A7;font-size:14px;font-weight:600;text-decoration:none;">Back to Sign In</a>
         </div>
       </div>
@@ -4380,6 +4382,39 @@ void main(){
     document.getElementById('backToSignInFromSuccess').addEventListener('click', (e) => {
       e.preventDefault();
       showLoginView();
+    });
+
+    document.getElementById('resendVerificationBtn').addEventListener('click', async () => {
+      const btn = document.getElementById('resendVerificationBtn');
+      const msgDiv = document.getElementById('resendMsg');
+      const email = document.getElementById('signUpEmail').value;
+
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+      msgDiv.style.display = 'none';
+
+      try {
+        const response = await fetch('/auth/resend-verification', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const result = await response.json();
+        if (response.ok) {
+          msgDiv.textContent = 'Verification email resent! Check your inbox (and junk folder).';
+          msgDiv.style.color = '#ec4899';
+        } else {
+          msgDiv.textContent = result.detail || 'Failed to resend. Please try again.';
+          msgDiv.style.color = '#fca5a5';
+        }
+      } catch {
+        msgDiv.textContent = 'Network error. Please try again.';
+        msgDiv.style.color = '#fca5a5';
+      } finally {
+        msgDiv.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Resend verification email';
+      }
     });
 
     // Sign Up form submission

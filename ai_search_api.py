@@ -26,7 +26,8 @@ from pdf_renderer import render_pdf
 # Import Supabase authentication
 from supabase_auth import (
     sign_in, sign_out, sign_up, get_user_from_token, refresh_session,
-    request_password_reset, update_password, admin_create_user, admin_invite_user,
+    request_password_reset, update_password, resend_verification,
+    admin_create_user, admin_invite_user,
     admin_list_users, is_configured as supabase_configured, supabase_admin
 )
 
@@ -600,6 +601,19 @@ async def signup(req: SignUpRequest):
         "success": True,
         "message": "Account created. Please check your email to verify your account before signing in."
     }
+
+
+class ResendVerificationRequest(BaseModel):
+    email: str
+
+@app.post("/auth/resend-verification")
+async def resend_verification_endpoint(req: ResendVerificationRequest):
+    """Resend email verification"""
+    result = resend_verification(req.email)
+    if "error" in result:
+        raise HTTPException(status_code=400, detail=result["error"])
+    return {"success": True, "message": "Verification email resent. Please check your inbox."}
+
 
 class UpdatePasswordRequest(BaseModel):
     password: str

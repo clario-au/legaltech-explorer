@@ -4,7 +4,7 @@ openai==1.57.2
 python-dotenv==1.0.1
 aiofiles==24.1.0
 passlib==1.7.4
-bcrypt==4.1.2
+bcrypt==3.2.2
 python-multipart==0.0.9
 psycopg2-binary==2.9.9
 supabase==2.10.0
