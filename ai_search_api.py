@@ -43,7 +43,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-app = FastAPI(title="Legal-Tech Filter API", version="0.2.0")
+app = FastAPI(title="Legal-Tech Filter API", version="0.2.0", docs_url=None, redoc_url=None, openapi_url=None)
 
 # Jinja2 templates for report generation
 templates = Jinja2Templates(directory="templates")
