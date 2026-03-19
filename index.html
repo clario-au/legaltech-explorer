@@ -3502,11 +3502,85 @@ void main(){
       background: #ffffff;
       border: 1px solid var(--border);
       border-radius: 12px;
-      max-width: 450px;
+      max-width: 820px;
       width: 100%;
-      padding: 40px;
+      padding: 0;
       box-shadow: 0 8px 32px rgba(0,0,0,0.12);
       z-index: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    .auth-modal-benefits {
+      background: linear-gradient(160deg, #0F3B45 0%, #1a5a6a 100%);
+      color: #fff;
+      padding: 40px 32px;
+      width: 260px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .auth-modal-benefits h3 {
+      margin: 0 0 6px 0;
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .auth-modal-benefits .benefits-free {
+      display: inline-block;
+      background: #2EA7A7;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border-radius: 999px;
+      padding: 2px 10px;
+      margin-bottom: 24px;
+    }
+
+    .auth-modal-benefits ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .auth-modal-benefits ul li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      line-height: 1.4;
+      color: rgba(255,255,255,0.9);
+    }
+
+    .auth-modal-benefits ul li .benefit-icon {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      background: rgba(46,167,167,0.25);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      margin-top: 1px;
+    }
+
+    .auth-modal-form-side {
+      flex: 1;
+      padding: 40px;
+      min-width: 0;
+    }
+
+    @media (max-width: 600px) {
+      .auth-modal-benefits { display: none; }
+      .auth-modal-form-side { padding: 32px 24px; }
     }
 
     .auth-modal-close {
@@ -3698,108 +3772,143 @@ void main(){
   <div id="loginModal" class="auth-modal">
     <div class="auth-modal-overlay"></div>
     <div class="auth-modal-content">
-      <button id="loginModalClose" class="auth-modal-close" aria-label="Close">&times;</button>
-      <h2>Sign In</h2>
-      <p class="subtitle">Access the Legal Tech Navigator</p>
 
-      <form id="loginForm">
-        <div class="auth-form-group">
-          <label for="loginEmail">Email</label>
-          <input type="email" id="loginEmail" name="email" required autocomplete="email">
-        </div>
-
-        <div class="auth-form-group">
-          <label for="loginPassword">Password</label>
-          <div class="password-input-wrapper">
-            <input type="password" id="loginPassword" name="password" required autocomplete="current-password">
-            <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">
-              <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                <circle cx="12" cy="12" r="3"></circle>
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <button type="submit" class="auth-submit-btn" id="loginSubmitBtn">Sign In</button>
-
-        <div id="loginError" class="auth-error" style="display: none;"></div>
-
-        <div class="auth-link" style="margin-top: 20px;">
-          <a href="#" id="forgotPasswordLink">Forgot your password?</a>
-        </div>
-        <div class="auth-link" style="margin-top: 8px;">
-          <a href="#" id="signUpLink">Don't have an account? Sign up</a>
-        </div>
-      </form>
-
-      <!-- Forgot Password Form (hidden by default) -->
-      <form id="forgotPasswordForm" style="display: none;">
-        <div class="auth-form-group">
-          <label for="forgotEmail">Email</label>
-          <input type="email" id="forgotEmail" name="email" required autocomplete="email">
-        </div>
-
-        <button type="submit" class="auth-submit-btn" id="forgotSubmitBtn">Send Reset Link</button>
-
-        <div id="forgotError" class="auth-error" style="display: none;"></div>
-        <div id="forgotSuccess" class="auth-success" style="display: none;"></div>
-
-        <div class="auth-link" style="margin-top: 20px;">
-          <a href="#" id="backToLoginLink">Back to Sign In</a>
-        </div>
-      </form>
-
-      <!-- Sign Up Form (hidden by default) -->
-      <form id="signUpForm" style="display: none;">
-        <div class="auth-form-group">
-          <label for="signUpEmail">Email</label>
-          <input type="email" id="signUpEmail" name="email" required autocomplete="email">
-        </div>
-
-        <div class="auth-form-group">
-          <label for="signUpPassword">Password</label>
-          <div class="password-input-wrapper">
-            <input type="password" id="signUpPassword" name="password" required autocomplete="new-password" minlength="8">
-            <button type="button" class="password-toggle" onclick="togglePassword('signUpPassword', this)">
-              <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                <circle cx="12" cy="12" r="3"></circle>
-              </svg>
-            </button>
-          </div>
-          <small style="color:#6b7280;font-size:12px;margin-top:4px;display:block">Minimum 8 characters</small>
-        </div>
-
-        <div class="auth-form-group">
-          <label for="signUpPasswordConfirm">Confirm Password</label>
-          <div class="password-input-wrapper">
-            <input type="password" id="signUpPasswordConfirm" name="passwordConfirm" required autocomplete="new-password" minlength="8">
-            <button type="button" class="password-toggle" onclick="togglePassword('signUpPasswordConfirm', this)">
-              <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                <circle cx="12" cy="12" r="3"></circle>
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <button type="submit" class="auth-submit-btn" id="signUpSubmitBtn">Create Account</button>
-
-        <div id="signUpError" class="auth-error" style="display: none;"></div>
-
-        <div class="auth-link" style="margin-top: 20px;">
-          <a href="#" id="backToSignInLink">Already have an account? Sign in</a>
-        </div>
-      </form>
-
-      <!-- Success screen shown after sign-up (replaces the form) -->
-      <div id="signUpSuccessScreen" style="display:none;text-align:center;padding:8px 0;">
-        <div style="font-size:40px;margin-bottom:16px;">✉️</div>
-        <p style="font-weight:600;font-size:16px;margin-bottom:8px;">Check your email</p>
-        <p id="signUpSuccessMsg" style="color:#6b7280;font-size:14px;margin-bottom:24px;"></p>
-        <a href="#" id="backToSignInFromSuccess" style="color:#2EA7A7;font-size:14px;font-weight:600;text-decoration:none;">Back to Sign In</a>
+      <!-- Benefits panel -->
+      <div class="auth-modal-benefits">
+        <h3>What you'll get</h3>
+        <span class="benefits-free">100% Free</span>
+        <ul>
+          <li>
+            <span class="benefit-icon">✦</span>
+            <span>Full tool profiles — pricing, deployment, certifications &amp; more</span>
+          </li>
+          <li>
+            <span class="benefit-icon">✦</span>
+            <span>Side-by-side tool comparison across any criteria</span>
+          </li>
+          <li>
+            <span class="benefit-icon">✦</span>
+            <span>AI-powered search tailored to your legal team's needs</span>
+          </li>
+          <li>
+            <span class="benefit-icon">✦</span>
+            <span>Generate a shortlist report to share with stakeholders</span>
+          </li>
+          <li>
+            <span class="benefit-icon">✦</span>
+            <span>Curated for Australian in-house legal teams</span>
+          </li>
+        </ul>
       </div>
+
+      <!-- Form side -->
+      <div class="auth-modal-form-side">
+        <button id="loginModalClose" class="auth-modal-close" aria-label="Close">&times;</button>
+        <h2>Create Account</h2>
+        <p class="subtitle">Join Legal Tech Navigator</p>
+
+        <!-- Sign Up Form (shown by default) -->
+        <form id="signUpForm">
+          <div class="auth-form-group">
+            <label for="signUpEmail">Email</label>
+            <input type="email" id="signUpEmail" name="email" required autocomplete="email">
+          </div>
+
+          <div class="auth-form-group">
+            <label for="signUpPassword">Password</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="signUpPassword" name="password" required autocomplete="new-password" minlength="8">
+              <button type="button" class="password-toggle" onclick="togglePassword('signUpPassword', this)">
+                <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+            <small style="color:#6b7280;font-size:12px;margin-top:4px;display:block">Minimum 8 characters</small>
+          </div>
+
+          <div class="auth-form-group">
+            <label for="signUpPasswordConfirm">Confirm Password</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="signUpPasswordConfirm" name="passwordConfirm" required autocomplete="new-password" minlength="8">
+              <button type="button" class="password-toggle" onclick="togglePassword('signUpPasswordConfirm', this)">
+                <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="auth-submit-btn" id="signUpSubmitBtn">Create Free Account</button>
+
+          <div id="signUpError" class="auth-error" style="display: none;"></div>
+
+          <div class="auth-link" style="margin-top: 20px;">
+            <a href="#" id="backToSignInLink">Already have an account? Sign in</a>
+          </div>
+        </form>
+
+        <!-- Sign In Form (hidden by default) -->
+        <form id="loginForm" style="display: none;">
+          <div class="auth-form-group">
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail" name="email" required autocomplete="email">
+          </div>
+
+          <div class="auth-form-group">
+            <label for="loginPassword">Password</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="loginPassword" name="password" required autocomplete="current-password">
+              <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">
+                <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="auth-submit-btn" id="loginSubmitBtn">Sign In</button>
+
+          <div id="loginError" class="auth-error" style="display: none;"></div>
+
+          <div class="auth-link" style="margin-top: 20px;">
+            <a href="#" id="forgotPasswordLink">Forgot your password?</a>
+          </div>
+          <div class="auth-link" style="margin-top: 8px;">
+            <a href="#" id="signUpLink">Don't have an account? Sign up free</a>
+          </div>
+        </form>
+
+        <!-- Forgot Password Form (hidden by default) -->
+        <form id="forgotPasswordForm" style="display: none;">
+          <div class="auth-form-group">
+            <label for="forgotEmail">Email</label>
+            <input type="email" id="forgotEmail" name="email" required autocomplete="email">
+          </div>
+
+          <button type="submit" class="auth-submit-btn" id="forgotSubmitBtn">Send Reset Link</button>
+
+          <div id="forgotError" class="auth-error" style="display: none;"></div>
+          <div id="forgotSuccess" class="auth-success" style="display: none;"></div>
+
+          <div class="auth-link" style="margin-top: 20px;">
+            <a href="#" id="backToLoginLink">Back to Sign In</a>
+          </div>
+        </form>
+
+        <!-- Success screen shown after sign-up -->
+        <div id="signUpSuccessScreen" style="display:none;text-align:center;padding:8px 0;">
+          <div style="font-size:40px;margin-bottom:16px;">✉️</div>
+          <p style="font-weight:600;font-size:16px;margin-bottom:8px;">Check your email</p>
+          <p id="signUpSuccessMsg" style="color:#6b7280;font-size:14px;margin-bottom:12px;"></p>
+          <p style="color:#9ca3af;font-size:12px;margin-bottom:24px;">Can't find it? Check your <strong>junk or spam folder</strong> — the verification email sometimes ends up there.</p>
+          <a href="#" id="backToSignInFromSuccess" style="color:#2EA7A7;font-size:14px;font-weight:600;text-decoration:none;">Back to Sign In</a>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -4105,21 +4214,23 @@ void main(){
     // Login modal functions — exposed on window so requireAuth (in main script) can call it
     function openLoginModal() {
       document.getElementById('loginModal').classList.add('active');
-      document.getElementById('loginEmail').focus();
+      showSignUpView();
     }
     window.openLoginModal = openLoginModal;
 
     function closeLoginModal() {
       document.getElementById('loginModal').classList.remove('active');
       document.getElementById('loginForm').reset();
+      document.getElementById('signUpForm').reset();
       document.getElementById('loginError').style.display = 'none';
-      // Reset to sign-in view in case user had switched to sign-up
-      showLoginView();
+      document.getElementById('signUpError').style.display = 'none';
+      showSignUpView();
     }
 
     function showSignUpView() {
       document.getElementById('loginForm').style.display = 'none';
       document.getElementById('forgotPasswordForm').style.display = 'none';
+      document.getElementById('signUpSuccessScreen').style.display = 'none';
       document.getElementById('signUpForm').style.display = 'block';
       document.querySelector('#loginModal h2').textContent = 'Create Account';
       document.querySelector('#loginModal .subtitle').textContent = 'Join Legal Tech Navigator';
@@ -4132,7 +4243,8 @@ void main(){
       document.getElementById('forgotPasswordForm').style.display = 'none';
       document.getElementById('loginForm').style.display = 'block';
       document.querySelector('#loginModal h2').textContent = 'Sign In';
-      document.querySelector('#loginModal .subtitle').textContent = 'Access the Legal Tech Navigator';
+      document.querySelector('#loginModal .subtitle').textContent = 'Welcome back';
+      document.getElementById('loginEmail').focus();
     }
 
     // Register modal functions
