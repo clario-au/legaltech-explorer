@@ -1914,17 +1914,15 @@
       searchQueryEl.textContent = '';
     }
 
-    // Sort by popularity score (highest to lowest), then alphabetically
+    // If rows carry a semantic similarity score, sort by that; otherwise by popularity
+    const hasSemScore = rows.length > 0 && rows[0].__sem_score != null;
     rows = rows.slice().sort((a, b) => {
+      if(hasSemScore){
+        return (b.__sem_score || 0) - (a.__sem_score || 0);
+      }
       const scoreA = parseFloat(a['popularity_score']) || 0;
       const scoreB = parseFloat(b['popularity_score']) || 0;
-
-      // Primary sort: by popularity (descending)
-      if (scoreB !== scoreA) {
-        return scoreB - scoreA;
-      }
-
-      // Secondary sort: alphabetically
+      if (scoreB !== scoreA) return scoreB - scoreA;
       const nameA = (a.__display_name || a['Product Name'] || '').toLowerCase();
       const nameB = (b.__display_name || b['Product Name'] || '').toLowerCase();
       return nameA.localeCompare(nameB);
@@ -2946,6 +2944,62 @@
     }
 
     try{
+      // Try semantic search first
+      const semRes = await fetch("/search", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({ query:q, limit:25 })
+      });
+
+      if(semRes.status === 401){
+        window.AUTH_STATE.authenticated = false;
+        runClientSideSearch(q);
+        return;
+      }
+
+      if(semRes.ok){
+        const semData = await semRes.json();
+        const results = semData.results || [];
+
+        if(results.length > 0){
+          // Build lookup: "Vendor|Product" -> similarity score
+          const simMap = new Map();
+          results.forEach(r => {
+            const key = (r['Vendor Name']||'') + '|' + (r['Product Name']||'');
+            simMap.set(key, r.similarity || 0);
+          });
+
+          // Find matching records in DATA, stamp similarity score, preserve order
+          const orderedRows = [];
+          results.forEach(r => {
+            const match = DATA.find(d =>
+              (d['Vendor Name']||'') === (r['Vendor Name']||'') &&
+              (d['Product Name']||'') === (r['Product Name']||'')
+            );
+            if(match){
+              orderedRows.push(Object.assign({}, match, { __sem_score: r.similarity || 0 }));
+            }
+          });
+
+          // Show top similarity score for confidence indicator
+          const topSim = results[0]?.similarity || 0;
+          const confidence = topSim >= 0.55 ? 'High' : topSim >= 0.35 ? 'Medium' : 'Low';
+          const confColor = topSim >= 0.55 ? '#10b981' : topSim >= 0.35 ? '#f59e0b' : '#ef4444';
+
+          aiStatus.innerHTML = `<span style="color:${confColor};font-weight:600">${confidence} match confidence</span> — ${orderedRows.length} tools ranked by relevance`;
+          HAS_SEARCHED = true;
+          document.getElementById('aiLanding').style.display="none";
+          document.body.classList.remove('has-landing');
+          posthog?.capture('search', { query: q, method: 'semantic' });
+          renderList(orderedRows);
+          updateCompareCount();
+          updateDimming();
+          history.pushState({ view: 'search', query: q }, '');
+          return;
+        }
+      }
+
+      // Fallback: keyword filter approach via /query
       const res = await fetch("/query", {
         method:"POST",
         headers:{ "Content-Type":"application/json" },
@@ -2953,7 +3007,6 @@
       });
       if(!res.ok){
         if(res.status === 401){
-          // Session expired mid-flight — fall back to client-side search
           window.AUTH_STATE.authenticated = false;
           runClientSideSearch(q);
           return;

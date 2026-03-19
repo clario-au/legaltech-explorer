@@ -1029,6 +1029,51 @@ async def generate_report(req: ReportRequest, user: dict = Depends(require_auth)
         headers={"Content-Disposition": f"attachment; filename={filename}"}
     )
 
+class SearchRequest(BaseModel):
+    query: str
+    limit: int = 25
+
+@app.post("/search")
+async def semantic_search(req: SearchRequest, user: dict = Depends(rate_limit_dependency)):
+    """Semantic search using pgvector embeddings stored in Supabase."""
+    if not supabase_admin:
+        raise HTTPException(status_code=503, detail="Database not configured")
+
+    try:
+        log_usage(user['id'], user['email'], '/search', req.query)
+
+        cache_key = f"search:{req.query.strip().lower()}:{req.limit}"
+        cached = cache_get(cache_key)
+        if cached is not None:
+            logger.info(f"[Cache] /search hit: {req.query[:60]}")
+            return cached
+
+        # Embed the query
+        embed_response = client.embeddings.create(
+            model="text-embedding-3-small",
+            input=req.query.strip()
+        )
+        query_vector = embed_response.data[0].embedding
+
+        # Call pgvector RPC
+        rpc_result = supabase_admin.rpc("match_tools", {
+            "query_embedding": query_vector,
+            "match_threshold": 0.2,
+            "match_count": min(req.limit, 50)
+        }).execute()
+
+        response_data = {
+            "results": rpc_result.data,
+            "query": req.query
+        }
+        cache_set(cache_key, response_data)
+        return response_data
+
+    except Exception as e:
+        logger.error(f"[Search] Semantic search failed: {e}")
+        raise HTTPException(status_code=500, detail="Search failed. Please try again.")
+
+
 @app.post("/query")
 async def generate_filters(req: Query, user: dict = Depends(rate_limit_dependency)):
     system_msg = (
