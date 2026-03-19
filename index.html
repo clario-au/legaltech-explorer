@@ -3782,7 +3782,7 @@ void main(){
         <ul>
           <li>
             <span class="benefit-icon">✦</span>
-            <span>Ability to generate a professional comparison report of your shortlisted tools, ready to present to stakeholders</span>
+            <span>Ability to generate a professional comparison report of your shortlisted tools</span>
           </li>
           <li>
             <span class="benefit-icon">✦</span>
@@ -4232,6 +4232,7 @@ void main(){
       document.getElementById('signUpForm').style.display = 'block';
       document.querySelector('#loginModal h2').textContent = 'Create Account';
       document.querySelector('#loginModal .subtitle').textContent = 'Join Legal Tech Navigator';
+      document.querySelector('.auth-modal-benefits').style.display = '';
       document.getElementById('signUpEmail').focus();
     }
 
@@ -4242,6 +4243,7 @@ void main(){
       document.getElementById('loginForm').style.display = 'block';
       document.querySelector('#loginModal h2').textContent = 'Sign In';
       document.querySelector('#loginModal .subtitle').textContent = 'Welcome back';
+      document.querySelector('.auth-modal-benefits').style.display = 'none';
       document.getElementById('loginEmail').focus();
     }
 
