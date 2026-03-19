@@ -62,6 +62,40 @@ app.add_middleware(
     allow_headers=["Content-Type", "Authorization"],
 )
 
+# Security headers middleware
+from starlette.middleware.base import BaseHTTPMiddleware
+
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        # Clickjacking protection (also covered by CSP frame-ancestors below)
+        response.headers["X-Frame-Options"] = "DENY"
+        # Prevent MIME-type sniffing
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        # Limit referrer info sent to third parties
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        # Enforce HTTPS for 1 year (only meaningful in production)
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+        # Content Security Policy:
+        # - script-src: self + jsdelivr CDN (PapaParse + DOMPurify); unsafe-inline required for
+        #   existing inline <script> blocks — blocks unknown remote script sources
+        # - connect-src self: even if XSS fires, it cannot exfiltrate data to external servers
+        # - frame-ancestors none: secondary clickjacking protection
+        response.headers["Content-Security-Policy"] = (
+            "default-src 'self'; "
+            "script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; "
+            "style-src 'self' 'unsafe-inline'; "
+            "img-src 'self' data: blob:; "
+            "connect-src 'self'; "
+            "font-src 'self'; "
+            "frame-ancestors 'none'; "
+            "object-src 'none'; "
+            "base-uri 'self';"
+        )
+        return response
+
+app.add_middleware(SecurityHeadersMiddleware)
+
 # Mount static files for logos
 app.mount("/logos", StaticFiles(directory="logos"), name="logos")
 
@@ -681,16 +715,6 @@ async def create_user_endpoint(req: LoginRequest, admin: dict = Depends(require_
         "success": True,
         "user": result["user"]
     }
-
-@app.get("/admin/users")
-async def list_users_endpoint(admin: dict = Depends(require_admin)):
-    """Admin endpoint to list all users"""
-    result = admin_list_users()
-
-    if "error" in result:
-        raise HTTPException(status_code=500, detail=result["error"])
-
-    return result
 
 @app.get("/admin/users")
 async def list_users_endpoint(admin: dict = Depends(require_admin)):
