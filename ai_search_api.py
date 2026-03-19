@@ -64,6 +64,24 @@ app.add_middleware(
 app.mount("/logos", StaticFiles(directory="logos"), name="logos")
 
 # =========================
+# In-Memory Cache
+# =========================
+# Structure: { cache_key: {"data": ..., "expires": timestamp} }
+_cache: Dict[str, dict] = {}
+CACHE_TTL = 60 * 60 * 24  # 24 hours
+
+def cache_get(key: str):
+    entry = _cache.get(key)
+    if entry and time.time() < entry["expires"]:
+        return entry["data"]
+    if entry:
+        del _cache[key]
+    return None
+
+def cache_set(key: str, data):
+    _cache[key] = {"data": data, "expires": time.time() + CACHE_TTL}
+
+# =========================
 # Rate Limiting
 # =========================
 # Store request timestamps per user: {user_email: [timestamp1, timestamp2, ...]}
@@ -927,6 +945,18 @@ async def generate_report(req: ReportRequest, user: dict = Depends(require_auth)
         "generated_at": req.meta.generated_at or today,
     }
 
+    # Check cache — key is sorted vendor names + query
+    tool_names = sorted(t.get('Vendor Name', '') for t in tools)
+    report_cache_key = f"report:{':'.join(tool_names)}:{meta['query']}"
+    cached_pdf = cache_get(report_cache_key)
+    if cached_pdf is not None:
+        logger.info(f"[Cache] /report hit: {tool_names}")
+        return StreamingResponse(
+            iter([cached_pdf]),
+            media_type="application/pdf",
+            headers={"Content-Disposition": f"attachment; filename=Navigator-Snapshot-Report-{today}.pdf"}
+        )
+
     # Load logos as base64 data URIs so Playwright doesn't need HTTP requests
     logos = [get_logo_b64(t.get('Vendor Name', '')) for t in tools]
 
@@ -949,8 +979,9 @@ async def generate_report(req: ReportRequest, user: dict = Depends(require_auth)
         merged_bytes = merge_report_pdfs(dynamic_pdf_bytes)
     except Exception as e:
         logger.error(f"[Report] PDF merge failed: {e}")
-        # Fall back to dynamic-only if merge fails
         merged_bytes = dynamic_pdf_bytes
+
+    cache_set(report_cache_key, merged_bytes)
 
     filename = f"Navigator-Snapshot-Report-{today}.pdf"
     return StreamingResponse(
@@ -1002,8 +1033,16 @@ async def generate_filters(req: Query, user: dict = Depends(rate_limit_dependenc
         # Log the query
         log_usage(user['id'], user['email'], '/query', req.query)
 
+        # Check cache first
+        cache_key = f"query:{req.query.strip().lower()}"
+        cached = cache_get(cache_key)
+        if cached is not None:
+            logger.info(f"[Cache] /query hit: {req.query[:60]}")
+            return cached
+
         model_obj = call_openai_json(system_msg, user_msg)
         clean = normalize_to_schema(model_obj)
+        cache_set(cache_key, clean)
         return clean
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
@@ -1048,11 +1087,20 @@ async def summarize_comparison(req: ComparisonRequest, user: dict = Depends(rate
         tool_names = [t.get('name', 'Unknown') for t in req.tools]
         log_usage(user['id'], user['email'], '/summarize', f"Comparing: {', '.join(tool_names)}")
 
+        # Check cache
+        summarize_cache_key = f"summarize:{':'.join(sorted(tool_names))}"
+        cached = cache_get(summarize_cache_key)
+        if cached is not None:
+            logger.info(f"[Cache] /summarize hit: {tool_names}")
+            return cached
+
         result = call_openai_json(system_msg, user_msg)
         if isinstance(result, dict) and 'summary' in result:
-            return {"summary": result['summary']}
+            response = {"summary": result['summary']}
         else:
-            # Fallback if the response doesn't have expected format
-            return {"summary": str(result)}
+            response = {"summary": str(result)}
+
+        cache_set(summarize_cache_key, response)
+        return response
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
