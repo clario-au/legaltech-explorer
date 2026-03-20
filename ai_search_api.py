@@ -810,15 +810,38 @@ def health():
 # Report Generation
 # =========================
 
+# Build a lookup of vendor_name -> logo URL once at startup to avoid
+# repeated filesystem scans on every /tools request
+_LOGO_URL_CACHE: Dict[str, Optional[str]] = {}
+
+def _build_logo_cache():
+    """Walk the logos directory once and populate _LOGO_URL_CACHE."""
+    if not os.path.isdir("logos"):
+        return
+    files = set(os.listdir("logos"))
+    # Cache is populated on-demand per vendor but we pre-scan the dir
+    # so os.path.exists calls are replaced by a set lookup
+    _LOGO_URL_CACHE["__files__"] = files  # type: ignore
+
+_build_logo_cache()
+
 def get_logo_url(vendor_name: str) -> Optional[str]:
     """Return the URL path to the vendor logo if it exists on disk, or None."""
+    if vendor_name in _LOGO_URL_CACHE:
+        return _LOGO_URL_CACHE[vendor_name]
+    files = _LOGO_URL_CACHE.get("__files__") or set()
     name_raw = re.sub(r'\s+', '', vendor_name)
     name_slug = re.sub(r'[^a-z0-9]', '', vendor_name.lower())
+    result = None
     for name in [name_raw, name_slug]:
         for ext in ['png', 'jpg', 'jpeg', 'webp']:
-            if os.path.exists(f"logos/{name}.{ext}"):
-                return f"/logos/{name}.{ext}"
-    return None
+            if f"{name}.{ext}" in files:
+                result = f"/logos/{name}.{ext}"
+                break
+        if result:
+            break
+    _LOGO_URL_CACHE[vendor_name] = result
+    return result
 
 
 def get_logo_b64(vendor_name: str) -> Optional[str]:

@@ -2272,8 +2272,13 @@
       if(!response.ok){
         var errText = await response.text().catch(function(){ return ''; });
         var detail = '';
-        try { detail = JSON.parse(errText).detail; } catch(e) { detail = errText; }
-        throw new Error(detail || ('Report generation failed: ' + response.status));
+        try {
+          detail = JSON.parse(errText).detail || '';
+        } catch(e) {
+          // Don't display raw HTML (e.g. Render 502 gateway page)
+          if(!errText.includes('<') && errText.length < 200){ detail = errText; }
+        }
+        throw new Error(detail || 'Report generation failed (' + response.status + '). Please try again in a moment.');
       }
 
       var blob = await response.blob();
