@@ -1101,7 +1101,7 @@ async def semantic_search(req: SearchRequest, user: dict = Depends(rate_limit_de
         # Call pgvector RPC
         rpc_result = supabase_admin.rpc("match_tools", {
             "query_embedding": query_vector,
-            "match_threshold": 0.2,
+            "match_threshold": 0.35,
             "match_count": min(req.limit, 50)
         }).execute()
 

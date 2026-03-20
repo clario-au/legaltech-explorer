@@ -1938,6 +1938,16 @@
     countEl.textContent = rows.length + ' tools';
     container.innerHTML = '';
 
+    if(rows.length === 0 && LAST_QUERY){
+      var emptyMsg = document.createElement('div');
+      emptyMsg.style.cssText = 'padding:48px 24px;text-align:center;color:#6b7280;font-size:15px;';
+      emptyMsg.innerHTML = '<div style="font-size:32px;margin-bottom:12px;">🔍</div>'
+        + '<div style="font-weight:600;color:#374151;margin-bottom:6px;">No matching tools found</div>'
+        + '<div>Try a different search — e.g. <em>contract management</em>, <em>compliance risk</em>, or <em>legal research</em>.</div>';
+      container.appendChild(emptyMsg);
+      return;
+    }
+
     var totalResults = rows.length;
 
     // Only use ranked layout when there's an active search query
@@ -3028,6 +3038,12 @@
       }
 
       // Fallback: keyword filter approach via /query
+      // Clear old filter state first so previous search results don't bleed through
+      document.querySelectorAll('.filters select').forEach(sel => sel.value = '');
+      document.querySelectorAll('.filters input[type="checkbox"]').forEach(cb => {
+        if(cb.id !== 'dedupeVendor') cb.checked = false;
+      });
+
       const res = await fetch("/query", {
         method:"POST",
         headers:{ "Content-Type":"application/json" },
