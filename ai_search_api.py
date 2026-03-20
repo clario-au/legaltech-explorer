@@ -81,6 +81,9 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         #   existing inline <script> blocks — blocks unknown remote script sources
         # - connect-src self: even if XSS fires, it cannot exfiltrate data to external servers
         # - frame-ancestors none: secondary clickjacking protection
+        # Logos are static assets — cache aggressively in browser
+        if request.url.path.startswith("/logos/"):
+            response.headers["Cache-Control"] = "public, max-age=86400, stale-while-revalidate=604800"
         response.headers["Content-Security-Policy"] = (
             "default-src 'self'; "
             "script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; "
@@ -787,7 +790,13 @@ def get_tools(user: dict = Depends(require_auth)):
         raise HTTPException(status_code=503, detail="Database not configured")
     try:
         response = supabase_admin.table("legal_tools").select("*").execute()
-        return JSONResponse(content={"tools": response.data})
+        # Strip embedding vectors (server-side only) and resolve logo URLs
+        tools = []
+        for t in response.data:
+            tool = {k: v for k, v in t.items() if k != "embedding"}
+            tool["__logo_url"] = get_logo_url(t.get("Vendor Name", ""))
+            tools.append(tool)
+        return JSONResponse(content={"tools": tools})
     except Exception as e:
         logger.error(f"[Tools] Failed to fetch tools from Supabase: {e}")
         raise HTTPException(status_code=500, detail="Failed to load tools")
@@ -800,6 +809,40 @@ def health():
 # =========================
 # Report Generation
 # =========================
+
+# Build a lookup of vendor_name -> logo URL once at startup to avoid
+# repeated filesystem scans on every /tools request
+_LOGO_URL_CACHE: Dict[str, Optional[str]] = {}
+
+def _build_logo_cache():
+    """Walk the logos directory once and populate _LOGO_URL_CACHE."""
+    if not os.path.isdir("logos"):
+        return
+    files = set(os.listdir("logos"))
+    # Cache is populated on-demand per vendor but we pre-scan the dir
+    # so os.path.exists calls are replaced by a set lookup
+    _LOGO_URL_CACHE["__files__"] = files  # type: ignore
+
+_build_logo_cache()
+
+def get_logo_url(vendor_name: str) -> Optional[str]:
+    """Return the URL path to the vendor logo if it exists on disk, or None."""
+    if vendor_name in _LOGO_URL_CACHE:
+        return _LOGO_URL_CACHE[vendor_name]
+    files = _LOGO_URL_CACHE.get("__files__") or set()
+    name_raw = re.sub(r'\s+', '', vendor_name)
+    name_slug = re.sub(r'[^a-z0-9]', '', vendor_name.lower())
+    result = None
+    for name in [name_raw, name_slug]:
+        for ext in ['png', 'jpg', 'jpeg', 'webp']:
+            if f"{name}.{ext}" in files:
+                result = f"/logos/{name}.{ext}"
+                break
+        if result:
+            break
+    _LOGO_URL_CACHE[vendor_name] = result
+    return result
+
 
 def get_logo_b64(vendor_name: str) -> Optional[str]:
     """Load a vendor logo from disk and return a base64 data URI, or None."""
@@ -1028,6 +1071,51 @@ async def generate_report(req: ReportRequest, user: dict = Depends(require_auth)
         media_type="application/pdf",
         headers={"Content-Disposition": f"attachment; filename={filename}"}
     )
+
+class SearchRequest(BaseModel):
+    query: str
+    limit: int = 25
+
+@app.post("/search")
+async def semantic_search(req: SearchRequest, user: dict = Depends(rate_limit_dependency)):
+    """Semantic search using pgvector embeddings stored in Supabase."""
+    if not supabase_admin:
+        raise HTTPException(status_code=503, detail="Database not configured")
+
+    try:
+        log_usage(user['id'], user['email'], '/search', req.query)
+
+        cache_key = f"search:{req.query.strip().lower()}:{req.limit}"
+        cached = cache_get(cache_key)
+        if cached is not None:
+            logger.info(f"[Cache] /search hit: {req.query[:60]}")
+            return cached
+
+        # Embed the query
+        embed_response = client.embeddings.create(
+            model="text-embedding-3-small",
+            input=req.query.strip()
+        )
+        query_vector = embed_response.data[0].embedding
+
+        # Call pgvector RPC
+        rpc_result = supabase_admin.rpc("match_tools", {
+            "query_embedding": query_vector,
+            "match_threshold": 0.35,
+            "match_count": min(req.limit, 50)
+        }).execute()
+
+        response_data = {
+            "results": rpc_result.data,
+            "query": req.query
+        }
+        cache_set(cache_key, response_data)
+        return response_data
+
+    except Exception as e:
+        logger.error(f"[Search] Semantic search failed: {e}")
+        raise HTTPException(status_code=500, detail="Search failed. Please try again.")
+
 
 @app.post("/query")
 async def generate_filters(req: Query, user: dict = Depends(rate_limit_dependency)):
