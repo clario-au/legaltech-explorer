@@ -11,11 +11,13 @@ Requires SUPABASE_URL, SUPABASE_SERVICE_KEY, and OPENAI_API_KEY in .env
 
 import os
 import time
+from pathlib import Path
 from dotenv import load_dotenv
 from openai import OpenAI
 from supabase import create_client
 
-load_dotenv()
+# Load .env from the same directory as this script, regardless of CWD
+load_dotenv(dotenv_path=Path(__file__).parent / ".env", override=True)
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
