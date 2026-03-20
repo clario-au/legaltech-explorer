@@ -4106,6 +4106,13 @@ void main(){
       // Cancel any pending switch to anonymous state
       if (_anonUITimer) { clearTimeout(_anonUITimer); _anonUITimer = null; }
 
+      // If tools haven't loaded yet (page init ran before session was established),
+      // load them now. This covers: login after page load, token refresh, and
+      // the initial auth-check path when the cookie was already valid.
+      if (!DATA || DATA.length === 0) {
+        loadToolsFromAPI();
+      }
+
       const user = window.AUTH_STATE.user;
       posthog?.identify(user.id, { email: user.email, role: user.role });
 
