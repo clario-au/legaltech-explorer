@@ -81,6 +81,9 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         #   existing inline <script> blocks — blocks unknown remote script sources
         # - connect-src self: even if XSS fires, it cannot exfiltrate data to external servers
         # - frame-ancestors none: secondary clickjacking protection
+        # Logos are static assets — cache aggressively in browser
+        if request.url.path.startswith("/logos/"):
+            response.headers["Cache-Control"] = "public, max-age=86400, stale-while-revalidate=604800"
         response.headers["Content-Security-Policy"] = (
             "default-src 'self'; "
             "script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; "
@@ -787,8 +790,12 @@ def get_tools(user: dict = Depends(require_auth)):
         raise HTTPException(status_code=503, detail="Database not configured")
     try:
         response = supabase_admin.table("legal_tools").select("*").execute()
-        # Strip embedding vectors — they are only needed server-side for /search
-        tools = [{k: v for k, v in t.items() if k != "embedding"} for t in response.data]
+        # Strip embedding vectors (server-side only) and resolve logo URLs
+        tools = []
+        for t in response.data:
+            tool = {k: v for k, v in t.items() if k != "embedding"}
+            tool["__logo_url"] = get_logo_url(t.get("Vendor Name", ""))
+            tools.append(tool)
         return JSONResponse(content={"tools": tools})
     except Exception as e:
         logger.error(f"[Tools] Failed to fetch tools from Supabase: {e}")
@@ -802,6 +809,17 @@ def health():
 # =========================
 # Report Generation
 # =========================
+
+def get_logo_url(vendor_name: str) -> Optional[str]:
+    """Return the URL path to the vendor logo if it exists on disk, or None."""
+    name_raw = re.sub(r'\s+', '', vendor_name)
+    name_slug = re.sub(r'[^a-z0-9]', '', vendor_name.lower())
+    for name in [name_raw, name_slug]:
+        for ext in ['png', 'jpg', 'jpeg', 'webp']:
+            if os.path.exists(f"logos/{name}.{ext}"):
+                return f"/logos/{name}.{ext}"
+    return None
+
 
 def get_logo_b64(vendor_name: str) -> Optional[str]:
     """Load a vendor logo from disk and return a base64 data URI, or None."""

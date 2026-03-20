@@ -1542,10 +1542,17 @@
   function vendorSlug(name){ return String(name||'').toLowerCase().replace(/[^a-z0-9]/g,''); }
   function vendorNoSpace(name){ return String(name||'').replace(/\s+/g,''); }
   function logoCandidates(name){ var a=[], raw=vendorNoSpace(name), slug=vendorSlug(name); ['png','jpg','jpeg','webp'].forEach(ext=>{ a.push('logos/'+raw+'.'+ext); a.push('logos/'+slug+'.'+ext); }); return a; }
-  function makeLogoEl(name){
+  function makeLogoEl(name, resolvedUrl){
     var img=document.createElement('img'); img.className='logo';
+    img.alt=name+' logo';
+    if(resolvedUrl){
+      // Server already resolved the correct path — no guessing needed
+      img.src=resolvedUrl;
+      img.onerror=function(){ var badge=initialsBadge(name); img.replaceWith(badge); };
+      return img;
+    }
     var tries=logoCandidates(name); if(!tries.length){ return initialsBadge(name); }
-    img.dataset.tries=JSON.stringify(tries); img.dataset.try='0'; img.alt=name+' logo'; img.src=tries[0];
+    img.dataset.tries=JSON.stringify(tries); img.dataset.try='0'; img.src=tries[0];
     img.onerror=function(){ var idx=+img.dataset.try+1, arr=JSON.parse(img.dataset.tries); if(idx<arr.length){ img.dataset.try=String(idx); img.src=arr[idx]; } else { var badge=initialsBadge(name); img.replaceWith(badge); } };
     return img;
   }
@@ -1840,7 +1847,7 @@
     }
 
     var head = document.createElement('div'); head.className='tool-head';
-    head.appendChild(makeLogoEl(rec['Vendor Name']||rec['Vendor']||''));
+    head.appendChild(makeLogoEl(rec['Vendor Name']||rec['Vendor']||'', rec['__logo_url']));
 
     var titleWrap = document.createElement('div');
 
@@ -2345,7 +2352,7 @@
     rightTitle.textContent = 'Details';
 
     var top=document.createElement('div'); top.style.display='flex'; top.style.gap='10px'; top.style.alignItems='center'; top.style.marginBottom='8px';
-    top.appendChild(makeLogoEl(rec['Vendor Name']||''));
+    top.appendChild(makeLogoEl(rec['Vendor Name']||'', rec['__logo_url']));
     var name=document.createElement('div'); name.innerHTML='<div class="title">'+esc(rec.__display_name||'')+'</div>';
     top.appendChild(name);
 
@@ -2453,8 +2460,8 @@
     var tbl=document.createElement('table'); tbl.style.width='100%'; tbl.style.borderCollapse='separate'; tbl.style.borderSpacing='0 8px'; tbl.innerHTML=rows; details.appendChild(tbl);
   }
 
-  function smallHeaderLogoEl(name){
-    const el = makeLogoEl(name);
+  function smallHeaderLogoEl(name, resolvedUrl){
+    const el = makeLogoEl(name, resolvedUrl);
     if(el.tagName === 'IMG'){ el.classList.remove('logo'); el.classList.add('head-logo'); return el; }
     else { el.classList.remove('logo-badge'); el.classList.add('head-badge'); return el; }
   }
@@ -2484,7 +2491,7 @@
       const th = document.createElement('th');
       th.style.textAlign='left'; th.style.padding='6px 10px'; th.style.background='#f8f9fb'; th.style.border='1px solid var(--border)'; th.style.color='#1e2535';
       const wrap = document.createElement('div'); wrap.className='head-cell';
-      wrap.appendChild(smallHeaderLogoEl(rec['Vendor Name']||''));
+      wrap.appendChild(smallHeaderLogoEl(rec['Vendor Name']||'', rec['__logo_url']));
       const label = document.createElement('span'); label.textContent = rec.__display_name || '';
       wrap.appendChild(label);
       th.appendChild(wrap);
@@ -2761,6 +2768,11 @@
       const json = await res.json();
       DATA = normalizeRows(json.tools);
       console.log('DATA loaded from Supabase, records:', DATA.length);
+      // Prefetch all logos in the background so they're cached before first search
+      DATA.forEach(function(t){
+        var url = t['__logo_url'];
+        if(url){ var i = new Image(); i.src = url; }
+      });
       buildFilters();
       var savedState = loadState();
       if(savedState){ restoreState(savedState); }
