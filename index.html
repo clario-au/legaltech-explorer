@@ -2981,7 +2981,7 @@
             simMap.set(key, r.similarity || 0);
           });
 
-          // Find matching records in DATA, stamp similarity score, preserve order
+          // Find matching records in DATA, stamp similarity score
           const orderedRows = [];
           results.forEach(r => {
             const match = DATA.find(d =>
@@ -2993,7 +2993,18 @@
             }
           });
 
-          // Show top similarity score for confidence indicator
+          // Blend similarity (65%) with normalised popularity (35%)
+          // This preferences popular tools when relevance is equal (e.g. "contract management")
+          // while still surfacing niche but highly-relevant tools above popular but off-topic ones
+          const maxPop = DATA.reduce((m, t) => Math.max(m, parseFloat(t['popularity_score']) || 0), 1);
+          orderedRows.forEach(r => {
+            const sim = r.__sem_score;
+            const pop = (parseFloat(r['popularity_score']) || 0) / maxPop;
+            r.__sem_score = 0.65 * sim + 0.35 * pop;
+          });
+          orderedRows.sort((a, b) => (b.__sem_score || 0) - (a.__sem_score || 0));
+
+          // Confidence indicator uses the raw similarity of the top result before blending
           const topSim = results[0]?.similarity || 0;
           const confidence = topSim >= 0.55 ? 'High' : topSim >= 0.35 ? 'Medium' : 'Low';
           const confColor = topSim >= 0.55 ? '#10b981' : topSim >= 0.35 ? '#f59e0b' : '#ef4444';
