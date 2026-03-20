@@ -787,7 +787,9 @@ def get_tools(user: dict = Depends(require_auth)):
         raise HTTPException(status_code=503, detail="Database not configured")
     try:
         response = supabase_admin.table("legal_tools").select("*").execute()
-        return JSONResponse(content={"tools": response.data})
+        # Strip embedding vectors — they are only needed server-side for /search
+        tools = [{k: v for k, v in t.items() if k != "embedding"} for t in response.data]
+        return JSONResponse(content={"tools": tools})
     except Exception as e:
         logger.error(f"[Tools] Failed to fetch tools from Supabase: {e}")
         raise HTTPException(status_code=500, detail="Failed to load tools")
