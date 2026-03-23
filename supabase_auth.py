@@ -140,7 +140,7 @@ def get_user_from_token(access_token: str) -> Optional[dict]:
             return {
                 "id": response.user.id,
                 "email": response.user.email,
-                "role": app_metadata.get("role", user_metadata.get("role", "user")),
+                "role": app_metadata.get("role", "user"),
                 "created_at": str(response.user.created_at)
             }
         return None
@@ -294,7 +294,7 @@ def admin_invite_user(email: str, role: str = "user", redirect_url: str = None) 
 
     try:
         options = {
-            "data": {"role": role}
+            "data": {}
         }
         if redirect_url:
             options["redirect_to"] = redirect_url
@@ -305,6 +305,11 @@ def admin_invite_user(email: str, role: str = "user", redirect_url: str = None) 
         )
 
         if response.user:
+            # Write role into app_metadata (admin-controlled) — never user_metadata
+            supabase_admin.auth.admin.update_user_by_id(
+                response.user.id,
+                {"app_metadata": {"role": role}}
+            )
             return {"success": True, "user_id": response.user.id}
         return {"error": "Failed to send invite"}
     except Exception as e:
