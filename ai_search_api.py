@@ -784,8 +784,8 @@ def serve_updated_csv(user: dict = Depends(require_auth)):
     return response
 
 @app.get("/tools")
-def get_tools(user: dict = Depends(require_auth)):
-    """Return all legal tools from Supabase as JSON. Requires authentication."""
+def get_tools(user: Optional[dict] = Depends(get_current_user)):
+    """Return all legal tools from Supabase as JSON. Public endpoint — no auth required."""
     if not supabase_admin:
         raise HTTPException(status_code=503, detail="Database not configured")
     try:
