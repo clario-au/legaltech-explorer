@@ -133,9 +133,11 @@ def get_user_from_token(access_token: str) -> Optional[dict]:
         response = supabase.auth.get_user(access_token)
 
         if response and response.user:
-            # Get user metadata for role
-            user_metadata = response.user.user_metadata or {}
             app_metadata = response.user.app_metadata or {}
+
+            # Reject disabled accounts — checked against admin-controlled app_metadata
+            if app_metadata.get("disabled"):
+                return None
 
             return {
                 "id": response.user.id,
@@ -355,6 +357,40 @@ def admin_list_users() -> dict:
             })
 
         return {"users": users}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def admin_set_user_status(email: str, status: str) -> dict:
+    """
+    Enable or disable a user account in Supabase.
+    Writes disabled flag to app_metadata so get_user_from_token enforces it
+    on every authenticated request without a separate DB lookup.
+    Returns: {"success": True} or {"error": "..."}
+    """
+    if not supabase_admin:
+        return {"error": "Supabase admin not configured"}
+
+    if status not in ("active", "disabled"):
+        return {"error": "Status must be 'active' or 'disabled'"}
+
+    try:
+        # Find the user by email
+        all_users = supabase_admin.auth.admin.list_users()
+        target = next((u for u in all_users if u.email == email), None)
+        if not target:
+            return {"error": "User not found in Supabase"}
+
+        disabled = status == "disabled"
+        # Preserve existing app_metadata fields while updating disabled flag
+        existing = target.app_metadata or {}
+        updated_metadata = {**existing, "disabled": disabled}
+
+        supabase_admin.auth.admin.update_user_by_id(
+            target.id,
+            {"app_metadata": updated_metadata}
+        )
+        return {"success": True}
     except Exception as e:
         return {"error": str(e)}
 

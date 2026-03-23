@@ -27,7 +27,7 @@ from pdf_renderer import render_pdf
 from supabase_auth import (
     sign_in, sign_out, sign_up, get_user_from_token, refresh_session,
     request_password_reset, update_password, resend_verification,
-    admin_create_user, admin_invite_user,
+    admin_create_user, admin_invite_user, admin_set_user_status,
     admin_list_users, is_configured as supabase_configured, supabase_admin
 )
 
@@ -743,6 +743,12 @@ async def set_user_status_endpoint(email: str, req: UserStatusRequest, admin: di
     success = set_user_status(email, req.status)
     if not success:
         raise HTTPException(status_code=404, detail="User not found")
+
+    # Mirror the status to Supabase app_metadata so get_user_from_token
+    # enforces it on every authenticated request, even with a live session
+    sb_result = admin_set_user_status(email, req.status)
+    if "error" in sb_result:
+        print(f"[Auth] Warning: failed to sync status to Supabase for {email}: {sb_result['error']}")
 
     return {
         "success": True,
