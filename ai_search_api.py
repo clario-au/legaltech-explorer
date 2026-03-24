@@ -604,10 +604,49 @@ async def refresh_token_endpoint(
         max_age=86400 * 7
     )
 
-    return {
-        "success": True,
-        "access_token": session["access_token"]
-    }
+    return {"success": True}
+
+@app.post("/auth/exchange-token")
+async def exchange_token_endpoint(req: Request, response: Response):
+    """
+    Exchange tokens from a Supabase email link (recovery/invite) for HTTP-only cookies.
+    The frontend posts {access_token, refresh_token} from the URL hash so they never
+    need to be stored in JS memory or sent as Authorization headers.
+    """
+    try:
+        body = await req.json()
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid request body")
+
+    access_token = body.get("access_token")
+    refresh_token = body.get("refresh_token")
+
+    if not access_token:
+        raise HTTPException(status_code=400, detail="access_token required")
+
+    user = get_user_from_token(access_token)
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+    response.set_cookie(
+        key="sb_access_token",
+        value=access_token,
+        httponly=True,
+        secure=get_cookie_secure(),
+        samesite="lax",
+        max_age=3600
+    )
+    if refresh_token:
+        response.set_cookie(
+            key="sb_refresh_token",
+            value=refresh_token,
+            httponly=True,
+            secure=get_cookie_secure(),
+            samesite="lax",
+            max_age=86400 * 7
+        )
+
+    return {"success": True}
 
 @app.post("/auth/forgot-password")
 async def forgot_password(req: LoginRequest):
@@ -659,16 +698,9 @@ class UpdatePasswordRequest(BaseModel):
 @app.post("/auth/update-password")
 async def update_password_endpoint(
     req: UpdatePasswordRequest,
-    access_token: Optional[str] = Cookie(None),
-    authorization: Optional[str] = Header(None)
+    token: Optional[str] = Cookie(None, alias="sb_access_token")
 ):
-    """Update user's password (requires valid recovery session)"""
-    # Get token from cookie or header
-    token = access_token
-    if not token and authorization:
-        if authorization.startswith("Bearer "):
-            token = authorization[7:]
-
+    """Update user's password (requires valid recovery session via HTTP-only cookie)"""
     if not token:
         raise HTTPException(status_code=401, detail="Not authenticated")
 

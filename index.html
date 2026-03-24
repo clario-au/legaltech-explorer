@@ -4117,20 +4117,8 @@ void main(){
     // Global auth state
     window.AUTH_STATE = {
       user: null,
-      authenticated: false,
-      accessToken: null
+      authenticated: false
     };
-
-    // requireAuth and AUTH_PENDING_ACTION are defined in the main script above
-
-    // Store access token in memory only — never persisted to sessionStorage/localStorage
-    function setAccessToken(token) {
-      window.AUTH_STATE.accessToken = token || null;
-    }
-
-    function getAccessToken() {
-      return window.AUTH_STATE.accessToken;
-    }
 
     // Check authentication status on page load
     async function checkAuthStatus() {
@@ -4141,17 +4129,11 @@ void main(){
         const data = await response.json();
 
         if (data.authenticated) {
-          // If no token in memory (e.g. page refresh), silently get a fresh one via the refresh cookie
-          if (!getAccessToken()) {
-            await tryRefreshToken();
-          } else {
-            window.AUTH_STATE = {
-              user: data.user,
-              authenticated: true,
-              accessToken: getAccessToken()
-            };
-            updateUIForAuthenticatedUser();
-          }
+          window.AUTH_STATE = {
+            user: data.user,
+            authenticated: true
+          };
+          updateUIForAuthenticatedUser();
         } else {
           // Try to refresh token
           const refreshResult = await tryRefreshToken();
@@ -4174,16 +4156,13 @@ void main(){
         });
 
         if (response.ok) {
-          const data = await response.json();
-          setAccessToken(data.access_token);
-          // Re-check auth status with new token
+          // Token is now in HTTP-only cookie — read user state from /auth/me
           const meResponse = await fetch('/auth/me', { credentials: 'include' });
           const meData = await meResponse.json();
           if (meData.authenticated) {
             window.AUTH_STATE = {
               user: meData.user,
-              authenticated: true,
-              accessToken: data.access_token
+              authenticated: true
             };
             updateUIForAuthenticatedUser();
             return true;
@@ -4381,11 +4360,10 @@ void main(){
         const result = await response.json();
 
         if (response.ok) {
-          // Token is delivered via HTTP-only cookie — no token in response body
+          // Token is delivered via HTTP-only cookie — not stored in JS
           window.AUTH_STATE = {
             user: result.user,
-            authenticated: true,
-            accessToken: null
+            authenticated: true
           };
           posthog?.capture('sign_in');
           closeLoginModal();
@@ -4666,10 +4644,8 @@ void main(){
       try {
         const response = await fetch('/auth/update-password', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getAccessToken()}`
-          },
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
           body: JSON.stringify({ password })
         });
 
@@ -4727,10 +4703,8 @@ void main(){
       try {
         const response = await fetch('/auth/update-password', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getAccessToken()}`
-          },
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
           body: JSON.stringify({ password })
         });
 
@@ -4795,31 +4769,30 @@ void main(){
       const type = hashParams.get('type');
 
       if (accessToken) {
-        // User came from Supabase email link (invite or password reset)
-        setAccessToken(accessToken);
+        // Exchange tokens for HTTP-only cookies — never stored in JS
+        await fetch('/auth/exchange-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ access_token: accessToken, refresh_token: refreshToken })
+        });
 
-        // Clear the hash from URL
+        // Clear the hash from URL so tokens are not visible in history
         window.history.replaceState(null, '', window.location.pathname);
 
         if (type === 'recovery') {
-          // Password reset flow - show password update modal
           openResetPasswordModal();
-          return;  // Don't proceed with normal auth flow
+          return;
         }
 
         if (type === 'invite') {
-          // Invite flow - user needs to set their password
           openSetPasswordModal();
-          return;  // Don't proceed with normal auth flow
+          return;
         }
-        // type === 'signup' means email verification for self-registered user
-        // password already set — just authenticate normally
-
-        // Check auth status with new token
+        // type === 'signup' — email verified, cookie set, proceed normally
         await checkAuthStatus();
 
         if (window.AUTH_STATE.authenticated) {
-          return;  // Successfully authenticated
+          return;
         }
       }
 
