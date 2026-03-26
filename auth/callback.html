@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authenticating...</title>
+  <style>
+    body { margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #0f1117; font-family: sans-serif; color: #ccc; }
+    .msg { text-align: center; }
+    .msg p { margin-top: 12px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="msg">
+    <p>Verifying your link&hellip;</p>
+  </div>
+  <script>
+    (async function () {
+      var hash = window.location.hash.substring(1);
+      var params = new URLSearchParams(hash);
+      var accessToken = params.get('access_token');
+      var refreshToken = params.get('refresh_token');
+      var type = params.get('type'); // 'recovery' | 'invite' | 'signup'
+
+      // Clear the hash immediately so no other script can read it
+      window.history.replaceState(null, '', window.location.pathname);
+
+      if (!accessToken) {
+        // Nothing to do — send back to home
+        window.location.replace('/');
+        return;
+      }
+
+      try {
+        var res = await fetch('/auth/exchange-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ access_token: accessToken, refresh_token: refreshToken })
+        });
+
+        if (!res.ok) {
+          // Token exchange failed — go home, user will be prompted to log in
+          window.location.replace('/');
+          return;
+        }
+      } catch (e) {
+        window.location.replace('/');
+        return;
+      }
+
+      // Redirect to main app with a query param so it knows which modal to open.
+      // We use a query param (not a hash) so the sensitive token never travels with it.
+      if (type === 'recovery') {
+        window.location.replace('/?auth_action=recovery');
+      } else if (type === 'invite') {
+        window.location.replace('/?auth_action=invite');
+      } else {
+        window.location.replace('/');
+      }
+    })();
+  </script>
+</body>
+</html>

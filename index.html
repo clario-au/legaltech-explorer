@@ -4760,35 +4760,25 @@ void main(){
       closeRegisterModal();
     });
 
-    // Check for Supabase auth tokens in URL (from invite/reset emails)
+    // Check for auth_action query param set by /auth/callback after token exchange
     window.addEventListener('DOMContentLoaded', async () => {
-      // Check for hash params (Supabase redirects with tokens in hash)
-      const hashParams = new URLSearchParams(window.location.hash.substring(1));
-      const accessToken = hashParams.get('access_token');
-      const refreshToken = hashParams.get('refresh_token');
-      const type = hashParams.get('type');
+      const urlParams = new URLSearchParams(window.location.search);
+      const authAction = urlParams.get('auth_action');
 
-      if (accessToken) {
-        // Exchange tokens for HTTP-only cookies — never stored in JS
-        await fetch('/auth/exchange-token', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ access_token: accessToken, refresh_token: refreshToken })
-        });
-
-        // Clear the hash from URL so tokens are not visible in history
+      if (authAction) {
+        // Remove the query param from the URL immediately
         window.history.replaceState(null, '', window.location.pathname);
 
-        if (type === 'recovery') {
+        if (authAction === 'recovery') {
           openResetPasswordModal();
           return;
         }
 
-        if (type === 'invite') {
+        if (authAction === 'invite') {
           openSetPasswordModal();
           return;
         }
-        // type === 'signup' — email verified, cookie set, proceed normally
+        // Any other auth_action — session was set by callback, check status
         await checkAuthStatus();
 
         if (window.AUTH_STATE.authenticated) {

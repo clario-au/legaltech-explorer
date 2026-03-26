@@ -653,7 +653,7 @@ async def forgot_password(req: LoginRequest):
     """Request password reset email"""
     # Get the site URL for redirect - redirect to main page, frontend handles token
     site_url = os.getenv("SITE_URL", "https://legaltech-explorer.onrender.com")
-    redirect_url = site_url  # Redirect to main page, not /reset-password
+    redirect_url = site_url.rstrip('/') + '/auth/callback'
 
     result = request_password_reset(req.email, redirect_url)
 
@@ -804,6 +804,15 @@ async def root(user: Optional[dict] = Depends(get_current_user)):
 async def login_page():
     """Serve login page"""
     response = FileResponse("login.html")
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
+
+@app.get("/auth/callback")
+async def auth_callback():
+    """Minimal auth callback page — no analytics, handles Supabase token exchange"""
+    response = FileResponse("auth/callback.html")
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "0"
