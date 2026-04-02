@@ -1937,6 +1937,14 @@
       return nameA.localeCompare(nameB);
     });
 
+    // Cap results for AI search queries — showing 200+ tools for a specific
+    // query is not useful and signals the search is too broad.
+    // Browse mode (no query) shows all tools.
+    const MAX_SEARCH_RESULTS = 20;
+    if(LAST_QUERY && rows.length > MAX_SEARCH_RESULTS){
+      rows = rows.slice(0, MAX_SEARCH_RESULTS);
+    }
+
     countEl.textContent = rows.length + ' tools';
     container.innerHTML = '';
 
