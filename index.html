@@ -1862,10 +1862,12 @@
                           '<div class="meta">'+metaLine+'</div>';
     head.appendChild(titleWrap);
 
-    // Add popularity bar
+    // Add popularity bar — labelled "Market Presence" during search to avoid
+    // being misread as a match/relevance score
     var popScore = parseFloat(rec['popularity_score']) || 0;
+    var popBarLabel = HAS_SEARCHED ? 'Market Presence' : 'Navigator Score';
     var popBar = document.createElement('div'); popBar.className='popularity-bar';
-    popBar.innerHTML = '<span class="popularity-bar-label">Navigator Score</span>'+
+    popBar.innerHTML = '<span class="popularity-bar-label">'+popBarLabel+'</span>'+
                        '<div class="popularity-bar-track"><div class="popularity-bar-fill" style="width:'+popScore+'%"></div></div>'+
                        '<span class="popularity-score">'+popScore.toFixed(0)+'</span>';
 
@@ -2447,15 +2449,23 @@
     breakdown.innerHTML = '<div class="popularity-breakdown-header"><span>Navigator Score: '+popScore.toFixed(0)+'</span><span class="popularity-breakdown-toggle">▼</span></div>'+
       '<div class="popularity-breakdown-content">'+breakdownItems+'</div>';
 
-    var rows='';
+    var tbl=document.createElement('table'); tbl.style.width='100%'; tbl.style.borderCollapse='separate'; tbl.style.borderSpacing='0 8px';
     Object.keys(rec).forEach(function(k){
       if(/^_/.test(k) || /^__/.test(k)) return;
       if(k === 'Vendor Contact Details') return;
       if(k === 'popularity_score') return;
       if(k === 'google_trends_score') return;
       var v=rec[k]; if(v==null || v==='') return;
-      var val=esc(v); if(/^https?:\/\//i.test(String(v))) val='<a href="'+v+'" target="_blank" rel="noopener">'+esc(v)+'</a>';
-      rows+='<tr><th style="text-align:left;padding:6px 10px;background:#f8f9fb;border:1px solid var(--border);color:#1e2535">'+esc(k)+'</th><td style="padding:6px 10px;background:#ffffff;border:1px solid var(--border);color:#4a5568">'+val+'</td></tr>';
+      var tr=document.createElement('tr');
+      var th=document.createElement('th'); th.style.cssText='text-align:left;padding:6px 10px;background:#f8f9fb;border:1px solid var(--border);color:#1e2535'; th.textContent=k; tr.appendChild(th);
+      var td=document.createElement('td'); td.style.cssText='padding:6px 10px;background:#ffffff;border:1px solid var(--border);color:#4a5568';
+      var s=String(v);
+      if(/^https?:\/\//i.test(s)){
+        var a=document.createElement('a');
+        a.href=s; a.target='_blank'; a.rel='noopener'; a.textContent=s;
+        td.appendChild(a);
+      } else { td.textContent=s; }
+      tr.appendChild(td); tbl.appendChild(tr);
     });
     details.innerHTML=''; details.appendChild(top); details.appendChild(breakdown);
 
@@ -2472,7 +2482,7 @@
       }
     });
 
-    var tbl=document.createElement('table'); tbl.style.width='100%'; tbl.style.borderCollapse='separate'; tbl.style.borderSpacing='0 8px'; tbl.innerHTML=rows; details.appendChild(tbl);
+    details.appendChild(tbl);
   }
 
   function smallHeaderLogoEl(name, resolvedUrl){
@@ -2931,27 +2941,57 @@
   const aiStatus=document.getElementById('aiStatus');
 
   function runClientSideSearch(q){
-    // Keyword search against DATA for unauthenticated users
-    var tokens = q.toLowerCase().split(/\s+/).filter(Boolean);
+    // Keyword search against DATA for unauthenticated / offline users.
+    // Meaningful tokens only — strip short stop-words so "for", "an", "in" don't
+    // match every tool and inflate scores.
+    var stopWords = new Set(['a','an','the','for','of','in','to','and','or','is',
+                             'with','that','this','on','at','by','as','be','it',
+                             'its','are','was','has','have','we','our','your','not']);
+    var tokens = q.toLowerCase().split(/\s+/)
+                  .map(function(t){ return t.replace(/[^a-z0-9-]/g,''); })
+                  .filter(function(t){ return t.length > 2 && !stopWords.has(t); });
+
+    if(!tokens.length){
+      aiStatus.textContent = 'Please enter a more specific search.';
+      return;
+    }
+
     var scored = DATA.map(function(rec){
       var blob = quickBlob(rec).toLowerCase();
       var score = 0;
       tokens.forEach(function(tok){ if(blob.indexOf(tok) !== -1) score++; });
       return { rec: rec, score: score };
     });
-    // Keep only records that match at least one token, sorted best-first
-    var matched = scored.filter(function(s){ return s.score > 0; })
-                        .sort(function(a,b){ return b.score - a.score; })
-                        .map(function(s){ return s.rec; });
-    // If nothing matched, show all tools
-    if(!matched.length){ matched = DATA.slice(); }
+
+    // Only show tools that match at least 2 tokens (or 1 if query is short)
+    var minScore = tokens.length >= 3 ? 2 : 1;
+    var matched = scored.filter(function(s){ return s.score >= minScore; })
+                        .sort(function(a,b){ return b.score - a.score; });
+
+    if(!matched.length){
+      // Nothing meaningful — show a no-results message, NOT all tools
+      HAS_SEARCHED = true;
+      document.getElementById('aiLanding').style.display="none";
+      document.body.classList.remove('has-landing');
+      aiStatus.textContent = 'No matching tools found. Try different keywords, or sign in for AI-powered search.';
+      renderList([]);
+      history.pushState({ view: 'search', query: q }, '');
+      return;
+    }
+
+    // Stamp __sem_score so renderList sorts by keyword relevance, not popularity
+    matched.forEach(function(s){
+      s.rec.__sem_score = s.score / tokens.length;
+    });
+    var rows = matched.map(function(s){ return s.rec; });
+
     HAS_SEARCHED = true;
     document.getElementById('aiLanding').style.display="none";
     document.body.classList.remove('has-landing');
-    posthog?.capture('search', { query: q, result_count: matched.length, method: 'keyword' });
-    renderList(matched);
+    posthog?.capture('search', { query: q, result_count: rows.length, method: 'keyword' });
+    renderList(rows);
     history.pushState({ view: 'search', query: q }, '');
-    aiStatus.textContent = '';
+    aiStatus.textContent = 'Showing keyword matches — sign in for AI-powered search.';
   }
 
   async function runAISearch(){
@@ -2963,6 +3003,12 @@
     compare = [];
     SHORTLIST_USER_EDITED = false; // Fresh search — allow auto-populate
     LAST_GENERATED_KEY = '';
+
+    // Wait for the initial auth check to finish before deciding which path to use.
+    // Without this, a fast search fires before the session cookie is verified,
+    // AUTH_STATE.authenticated is still false, and the user gets client-side
+    // keyword results (sorted by popularity) instead of AI search.
+    if(window.AUTH_READY){ await window.AUTH_READY; }
 
     // If user is not authenticated, use client-side keyword search
     if(!window.AUTH_STATE || !window.AUTH_STATE.authenticated){
@@ -2996,26 +3042,70 @@
             simMap.set(key, r.similarity || 0);
           });
 
-          // Find matching records in DATA, stamp similarity score
+          // Find matching records in DATA, stamp similarity score.
+          // Use case-insensitive matching to avoid silent misses from capitalisation
+          // differences between Supabase and the local CSV.
           const orderedRows = [];
           results.forEach(r => {
+            const rVendor  = (r['Vendor Name']||'').trim().toLowerCase();
+            const rProduct = (r['Product Name']||'').trim().toLowerCase();
             const match = DATA.find(d =>
-              (d['Vendor Name']||'') === (r['Vendor Name']||'') &&
-              (d['Product Name']||'') === (r['Product Name']||'')
+              (d['Vendor Name']||'').trim().toLowerCase() === rVendor &&
+              (d['Product Name']||'').trim().toLowerCase() === rProduct
+            ) || DATA.find(d =>
+              // Fallback: vendor name only match (handles slight product name differences)
+              (d['Vendor Name']||'').trim().toLowerCase() === rVendor
             );
             if(match){
               orderedRows.push(Object.assign({}, match, { __sem_score: r.similarity || 0 }));
             }
           });
 
-          // Blend similarity (65%) with normalised popularity (35%)
-          // This preferences popular tools when relevance is equal (e.g. "contract management")
-          // while still surfacing niche but highly-relevant tools above popular but off-topic ones
+          // Safety: if name matching produced nothing, use Supabase results directly
+          if(orderedRows.length === 0 && results.length > 0){
+            results.forEach(r => {
+              orderedRows.push(Object.assign({}, r, { __sem_score: r.similarity || 0 }));
+            });
+          }
+
+          // Detect query intent for category gating
+          const qLower = (q || '').toLowerCase();
+          const isDMSQuery     = /document management|dms|knowledge management|precedent|filing system/.test(qLower);
+          const isEsignQuery   = /e-?sign|electronic sign|signature|signing/.test(qLower);
+          const isCLMQuery     = /\bclm\b|contract lifecycle|contract management|contract automation/.test(qLower);
+          const isSpendQuery   = /spend|invoice|billing guideline|e-billing|ebilling/.test(qLower);
+          const isOpsQuery     = /legal ops|legal operations|operations management|matter management|intake/.test(qLower);
+          const isPanelQuery   = /panel|rfp|\btendering\b|competitive tender|outside counsel/.test(qLower);
+          const isKYCQuery     = /kyc|kyb|onboarding|compliance|aml|sfc|financial crime/.test(qLower);
+
+          // Category penalty: demote tools whose primary category clearly mismatches the query intent
+          function getCategoryPenalty(tool) {
+            const cat    = (tool['Legal Functionality'] || '').toLowerCase();
+            const subcat = (tool['Functionality Sub-Category'] || '').toLowerCase();
+            const isDMS   = cat.includes('knowledge, search');
+            const isEsign = subcat.includes('esignature') || subcat.includes('e-sign') || subcat.includes('pdf management');
+            const isCLM   = subcat.includes('contract lifecycle management');
+
+            // DMS tools (NetDocuments) should only surface for DMS queries
+            if (isDMS && !isDMSQuery) return 0.15;
+
+            // Pure e-sign tools (Adobe Sign) should only surface for signing queries
+            if (isEsign && !isEsignQuery && !isCLMQuery) return 0.10;
+
+            // CLM tools (Agiloft) should not surface for spend, panel, or pure ops queries
+            if (isCLM && (isSpendQuery || isPanelQuery)) return 0.20;
+            if (isCLM && isOpsQuery && !isCLMQuery) return 0.40;
+
+            return 1.0;
+          }
+
+          // Blend similarity (85%) with normalised popularity (15%)
+          // Popularity is a weak tiebreaker only — capability fit drives ranking
           const maxPop = DATA.reduce((m, t) => Math.max(m, parseFloat(t['popularity_score']) || 0), 1);
           orderedRows.forEach(r => {
             const sim = r.__sem_score;
             const pop = (parseFloat(r['popularity_score']) || 0) / maxPop;
-            r.__sem_score = 0.65 * sim + 0.35 * pop;
+            r.__sem_score = (0.85 * sim + 0.15 * pop) * getCategoryPenalty(r);
           });
           orderedRows.sort((a, b) => (b.__sem_score || 0) - (a.__sem_score || 0));
 
@@ -4120,6 +4210,13 @@ void main(){
       authenticated: false
     };
 
+    // Promise that resolves once the initial auth check is complete.
+    // runAISearch awaits this before deciding which search path to use,
+    // preventing the race condition where a fast search fires before
+    // the session cookie has been verified.
+    var _authReadyResolve;
+    window.AUTH_READY = new Promise(function(resolve){ _authReadyResolve = resolve; });
+
     // Check authentication status on page load
     async function checkAuthStatus() {
       try {
@@ -4144,6 +4241,9 @@ void main(){
       } catch (error) {
         console.error('Auth check failed:', error);
         updateUIForAnonymousUser();
+      } finally {
+        // Signal that auth state is now known — unblocks any queued searches
+        if (_authReadyResolve) { _authReadyResolve(); _authReadyResolve = null; }
       }
     }
 
