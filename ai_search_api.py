@@ -27,7 +27,7 @@ from pdf_renderer import render_pdf
 from supabase_auth import (
     sign_in, sign_out, sign_up, get_user_from_token, refresh_session,
     request_password_reset, update_password, resend_verification,
-    admin_create_user, admin_invite_user,
+    admin_create_user, admin_invite_user, admin_set_user_status,
     admin_list_users, is_configured as supabase_configured, supabase_admin
 )
 
@@ -150,6 +150,81 @@ def check_rate_limit(user_email: str) -> bool:
     # Add current timestamp
     rate_limit_store[user_email].append(now)
     return True
+
+# =========================
+# Auth Rate Limiting
+# =========================
+# Store: {(ip, endpoint): [timestamp, ...]}
+auth_rate_limit_store: Dict[str, List[float]] = defaultdict(list)
+# Store: {(ip, email): [failure_timestamp, ...]}
+login_failure_store: Dict[str, List[float]] = defaultdict(list)
+
+# Per-endpoint limits: (max_requests, window_seconds)
+AUTH_RATE_LIMITS = {
+    "login":               (5,  60),   # 5 attempts / minute
+    "signup":              (3,  600),  # 3 attempts / 10 minutes
+    "forgot-password":     (3,  3600), # 3 emails / hour
+    "resend-verification": (3,  3600), # 3 emails / hour
+    "refresh":             (10, 60),   # 10 refreshes / minute
+    "exchange-token":      (5,  60),   # 5 exchanges / minute
+    "update-password":     (5,  60),   # 5 attempts / minute
+}
+
+# Login lockout: block IP+email after this many failures within the window
+LOGIN_LOCKOUT_MAX    = 10
+LOGIN_LOCKOUT_WINDOW = 900  # 15 minutes
+
+
+def get_client_ip(request: Request) -> str:
+    """Extract client IP, respecting X-Forwarded-For from reverse proxies."""
+    forwarded = request.headers.get("X-Forwarded-For")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    return request.client.host if request.client else "unknown"
+
+
+def check_auth_rate_limit(ip: str, endpoint: str) -> bool:
+    """
+    Sliding-window rate check for auth endpoints keyed by IP + endpoint name.
+    Returns True if within limit, False if exceeded.
+    """
+    limit, window = AUTH_RATE_LIMITS.get(endpoint, (5, 60))
+    key = f"{ip}:{endpoint}"
+    now = time.time()
+
+    auth_rate_limit_store[key] = [
+        ts for ts in auth_rate_limit_store[key] if now - ts < window
+    ]
+
+    if len(auth_rate_limit_store[key]) >= limit:
+        return False
+
+    auth_rate_limit_store[key].append(now)
+    return True
+
+
+def check_login_lockout(ip: str, email: str) -> bool:
+    """
+    Returns True (allow) if the IP+email combination has not exceeded the
+    failure threshold within LOGIN_LOCKOUT_WINDOW seconds.
+    """
+    key = f"{ip}:{email}"
+    now = time.time()
+    login_failure_store[key] = [
+        ts for ts in login_failure_store[key] if now - ts < LOGIN_LOCKOUT_WINDOW
+    ]
+    return len(login_failure_store[key]) < LOGIN_LOCKOUT_MAX
+
+
+def record_login_failure(ip: str, email: str) -> None:
+    key = f"{ip}:{email}"
+    login_failure_store[key].append(time.time())
+
+
+def clear_login_failures(ip: str, email: str) -> None:
+    key = f"{ip}:{email}"
+    login_failure_store.pop(key, None)
+
 
 # =========================
 # Schema your UI understands
@@ -498,15 +573,25 @@ def get_cookie_secure():
     return os.getenv("ENVIRONMENT", "development") == "production"
 
 @app.post("/auth/login")
-async def login(req: LoginRequest, response: Response):
+async def login(req: LoginRequest, response: Response, request: Request):
     """Login endpoint - authenticates user via Supabase"""
+    ip = get_client_ip(request)
+    if not check_auth_rate_limit(ip, "login"):
+        raise HTTPException(status_code=429, detail="Too many login attempts. Please wait before trying again.")
+    if not check_login_lockout(ip, req.email):
+        raise HTTPException(status_code=429, detail="Account temporarily locked due to repeated failures. Please try again later.")
+
     result = sign_in(req.email, req.password)
 
     if "error" in result:
+        record_login_failure(ip, req.email)
         raise HTTPException(status_code=401, detail=result["error"])
 
     user = result["user"]
     session = result["session"]
+
+    # Successful login — clear any recorded failures for this IP+email
+    clear_login_failures(ip, req.email)
 
     # Set access token as HTTP-only cookie
     response.set_cookie(
@@ -569,9 +654,14 @@ async def get_me(user: Optional[dict] = Depends(get_current_user)):
 @app.post("/auth/refresh")
 async def refresh_token_endpoint(
     response: Response,
+    request: Request,
     refresh_token: Optional[str] = Cookie(None, alias="sb_refresh_token")
 ):
     """Refresh access token using refresh token"""
+    ip = get_client_ip(request)
+    if not check_auth_rate_limit(ip, "refresh"):
+        raise HTTPException(status_code=429, detail="Too many refresh attempts. Please wait before trying again.")
+
     if not refresh_token:
         raise HTTPException(status_code=401, detail="No refresh token")
 
@@ -604,17 +694,67 @@ async def refresh_token_endpoint(
         max_age=86400 * 7
     )
 
-    return {
-        "success": True,
-        "access_token": session["access_token"]
-    }
+    return {"success": True}
+
+@app.post("/auth/exchange-token")
+async def exchange_token_endpoint(req: Request, response: Response):
+    """
+    Exchange tokens from a Supabase email link (recovery/invite) for HTTP-only cookies.
+    The frontend posts {access_token, refresh_token} from the URL hash so they never
+    need to be stored in JS memory or sent as Authorization headers.
+    """
+    ip = get_client_ip(req)
+    if not check_auth_rate_limit(ip, "exchange-token"):
+        raise HTTPException(status_code=429, detail="Too many requests. Please wait before trying again.")
+
+    try:
+        body = await req.json()
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid request body")
+
+    access_token = body.get("access_token")
+    refresh_token = body.get("refresh_token")
+
+    if not access_token:
+        raise HTTPException(status_code=400, detail="access_token required")
+
+    user = get_user_from_token(access_token)
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+    response.set_cookie(
+        key="sb_access_token",
+        value=access_token,
+        httponly=True,
+        secure=get_cookie_secure(),
+        samesite="lax",
+        max_age=3600
+    )
+    if refresh_token:
+        response.set_cookie(
+            key="sb_refresh_token",
+            value=refresh_token,
+            httponly=True,
+            secure=get_cookie_secure(),
+            samesite="lax",
+            max_age=86400 * 7
+        )
+
+    return {"success": True}
 
 @app.post("/auth/forgot-password")
-async def forgot_password(req: LoginRequest):
+async def forgot_password(req: LoginRequest, request: Request):
     """Request password reset email"""
+    ip = get_client_ip(request)
+    if not check_auth_rate_limit(ip, "forgot-password"):
+        raise HTTPException(status_code=429, detail="Too many reset requests. Please wait before trying again.")
+    # Also throttle per email to prevent using different IPs to spam one address
+    if not check_auth_rate_limit(req.email, "forgot-password"):
+        raise HTTPException(status_code=429, detail="Too many reset requests. Please wait before trying again.")
+
     # Get the site URL for redirect - redirect to main page, frontend handles token
     site_url = os.getenv("SITE_URL", "https://legaltech-explorer.onrender.com")
-    redirect_url = site_url  # Redirect to main page, not /reset-password
+    redirect_url = site_url.rstrip('/') + '/auth/callback'
 
     result = request_password_reset(req.email, redirect_url)
 
@@ -622,8 +762,12 @@ async def forgot_password(req: LoginRequest):
     return {"success": True, "message": "If an account exists, a reset email has been sent"}
 
 @app.post("/auth/signup")
-async def signup(req: SignUpRequest):
+async def signup(req: SignUpRequest, request: Request):
     """Public sign-up — Supabase sends a verification email automatically"""
+    ip = get_client_ip(request)
+    if not check_auth_rate_limit(ip, "signup"):
+        raise HTTPException(status_code=429, detail="Too many signup attempts. Please wait before trying again.")
+
     if len(req.password) < 8:
         raise HTTPException(status_code=400, detail="Password must be at least 8 characters")
 
@@ -645,8 +789,14 @@ class ResendVerificationRequest(BaseModel):
     email: str
 
 @app.post("/auth/resend-verification")
-async def resend_verification_endpoint(req: ResendVerificationRequest):
+async def resend_verification_endpoint(req: ResendVerificationRequest, request: Request):
     """Resend email verification"""
+    ip = get_client_ip(request)
+    if not check_auth_rate_limit(ip, "resend-verification"):
+        raise HTTPException(status_code=429, detail="Too many requests. Please wait before trying again.")
+    if not check_auth_rate_limit(req.email, "resend-verification"):
+        raise HTTPException(status_code=429, detail="Too many requests. Please wait before trying again.")
+
     result = resend_verification(req.email)
     if "error" in result:
         raise HTTPException(status_code=400, detail=result["error"])
@@ -659,15 +809,13 @@ class UpdatePasswordRequest(BaseModel):
 @app.post("/auth/update-password")
 async def update_password_endpoint(
     req: UpdatePasswordRequest,
-    access_token: Optional[str] = Cookie(None),
-    authorization: Optional[str] = Header(None)
+    request: Request,
+    token: Optional[str] = Cookie(None, alias="sb_access_token")
 ):
-    """Update user's password (requires valid recovery session)"""
-    # Get token from cookie or header
-    token = access_token
-    if not token and authorization:
-        if authorization.startswith("Bearer "):
-            token = authorization[7:]
+    """Update user's password (requires valid recovery session via HTTP-only cookie)"""
+    ip = get_client_ip(request)
+    if not check_auth_rate_limit(ip, "update-password"):
+        raise HTTPException(status_code=429, detail="Too many attempts. Please wait before trying again.")
 
     if not token:
         raise HTTPException(status_code=401, detail="Not authenticated")
@@ -744,6 +892,12 @@ async def set_user_status_endpoint(email: str, req: UserStatusRequest, admin: di
     if not success:
         raise HTTPException(status_code=404, detail="User not found")
 
+    # Mirror the status to Supabase app_metadata so get_user_from_token
+    # enforces it on every authenticated request, even with a live session
+    sb_result = admin_set_user_status(email, req.status)
+    if "error" in sb_result:
+        print(f"[Auth] Warning: failed to sync status to Supabase for {email}: {sb_result['error']}")
+
     return {
         "success": True,
         "email": email,
@@ -766,6 +920,15 @@ async def root(user: Optional[dict] = Depends(get_current_user)):
 async def login_page():
     """Serve login page"""
     response = FileResponse("login.html")
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
+
+@app.get("/auth/callback")
+async def auth_callback():
+    """Minimal auth callback page — no analytics, handles Supabase token exchange"""
+    response = FileResponse("auth/callback.html")
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "0"
@@ -1101,7 +1264,7 @@ async def semantic_search(req: SearchRequest, user: dict = Depends(rate_limit_de
         # Call pgvector RPC
         rpc_result = supabase_admin.rpc("match_tools", {
             "query_embedding": query_vector,
-            "match_threshold": 0.35,
+            "match_threshold": 0.45,
             "match_count": min(req.limit, 50)
         }).execute()
 
