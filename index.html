@@ -3099,13 +3099,36 @@
             return 1.0;
           }
 
+          // Category relevance boost: lift tools whose primary category matches the query intent.
+          // This counteracts the embedding pool being too large for broad queries (e.g. 150+
+          // tools above 0.45 threshold for "legal ops"), where on-category tools rank too low.
+          function getCategoryBoost(tool) {
+            const cat    = (tool['Legal Functionality'] || '').toLowerCase();
+            const subcat = (tool['Functionality Sub-Category'] || '').toLowerCase();
+            if (isOpsQuery) {
+              if (cat.includes('legal operations')) return 1.18;
+              if (cat.includes('matter, workflow')) return 1.10;
+            }
+            if (isPanelQuery) {
+              if (subcat.includes('outside counsel') || subcat.includes('spend management') ||
+                  subcat.includes('panel') || subcat.includes('tendering')) return 1.20;
+              if (cat.includes('legal operations')) return 1.10;
+            }
+            if (isSpendQuery) {
+              if (subcat.includes('e-billing') || subcat.includes('spend management') ||
+                  subcat.includes('ebilling') || subcat.includes('invoice')) return 1.18;
+              if (cat.includes('legal operations')) return 1.08;
+            }
+            return 1.0;
+          }
+
           // Blend similarity (85%) with normalised popularity (15%)
           // Popularity is a weak tiebreaker only — capability fit drives ranking
           const maxPop = DATA.reduce((m, t) => Math.max(m, parseFloat(t['popularity_score']) || 0), 1);
           orderedRows.forEach(r => {
             const sim = r.__sem_score;
             const pop = (parseFloat(r['popularity_score']) || 0) / maxPop;
-            r.__sem_score = (0.85 * sim + 0.15 * pop) * getCategoryPenalty(r);
+            r.__sem_score = (0.85 * sim + 0.15 * pop) * getCategoryPenalty(r) * getCategoryBoost(r);
           });
           orderedRows.sort((a, b) => (b.__sem_score || 0) - (a.__sem_score || 0));
 
