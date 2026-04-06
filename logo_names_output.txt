@@ -1,0 +1,728 @@
+================================================================================
+LOGO FILENAME REFERENCE
+================================================================================
+
+Total unique vendors: 431
+Existing logos: 191
+Missing logos: 240
+
+
+================================================================================
+ALL VENDORS - Required Logo Filenames
+================================================================================
+Vendor Name                                        Logo Filename                  Status
+--------------------------------------------------------------------------------
+12New.ai                                           12newai.png                      ✗ MISSING
+273 Ventures                                       273ventures.png                      ✓ EXISTS
+2nd Chair                                          2ndchair.png                      ✗ MISSING
+A&O Shearman                                       aoshearman.png                      ✗ MISSING
+A-dapt International Ltd                           adaptinternationalltd.png                      ✗ MISSING
+AI Legal Assistant                                 ailegalassistant.png                      ✗ MISSING
+AI.Law                                             ailaw.png                      ✓ EXISTS
+AI4Discovery                                       ai4discovery.png                      ✗ MISSING
+Abstract                                           abstract.png                      ✓ EXISTS
+Ace4 AI                                            ace4ai.png                      ✓ EXISTS
+AcroDocz                                           acrodocz.png                      ✓ EXISTS
+Actionstep                                         actionstep.png                      ✓ EXISTS
+Added Matter                                       addedmatter.png                      ✗ MISSING
+Adobe                                              adobe.png                      ✓ EXISTS
+Agiloft                                            agiloft.png                      ✓ EXISTS
+AirCounsel                                         aircounsel.png                      ✗ MISSING
+Airia                                              airia.png                      ✗ MISSING
+Alegi                                              alegi.png                      ✗ MISSING
+Alexi                                              alexi.png                      ✓ EXISTS
+Aloi                                               aloi.png                      ✗ MISSING
+AlphaSense                                         alphasense.png                      ✓ EXISTS
+Altumatim                                          altumatim.png                      ✓ EXISTS
+American Arbitration Association                   americanarbitrationassociation.png                      ✗ MISSING
+Amplified AI, Inc.                                 amplifiedaiinc.png                      ✓ EXISTS
+Amtolit Inc.                                       amtolitinc.png                      ✓ EXISTS
+AndAI Inc.                                         andaiinc.png                      ✓ EXISTS
+Andri.ai                                           andriai.png                      ✓ EXISTS
+Annature                                           annature.png                      ✓ EXISTS
+Antidote Legal                                     antidotelegal.png                      ✓ EXISTS
+Anylaw                                             anylaw.png                      ✗ MISSING
+Anytime AI                                         anytimeai.png                      ✓ EXISTS
+Apprvd                                             apprvd.png                      ✓ EXISTS
+ArrowLex                                           arrowlex.png                      ✗ MISSING
+Arteria AI                                         arteriaai.png                      ✓ EXISTS
+AssetDivide                                        assetdivide.png                      ✓ EXISTS
+AtlasAI                                            atlasai.png                      ✗ MISSING
+Atticus                                            atticus.png                      ✓ EXISTS
+August                                             august.png                      ✗ MISSING
+AutoLex                                            autolex.png                      ✓ EXISTS
+Autologyx                                          autologyx.png                      ✓ EXISTS
+Avantia                                            avantia.png                      ✓ EXISTS
+Avokaado                                           avokaado.png                      ✓ EXISTS
+Avvoka                                             avvoka.png                      ✓ EXISTS
+Axsar                                              axsar.png                      ✓ EXISTS
+BRYTER                                             bryter.png                      ✗ MISSING
+BRYTER GmbH                                        brytergmbh.png                      ✓ EXISTS
+Beagle                                             beagle.png                      ✓ EXISTS
+Bering Lab                                         beringlab.png                      ✗ MISSING
+Betty Blocks                                       bettyblocks.png                      ✓ EXISTS
+BigHand                                            bighand.png                      ✓ EXISTS
+Bigle Iberia, S.L.                                 bigleiberiasl.png                      ✓ EXISTS
+Billables AI                                       billablesai.png                      ✓ EXISTS
+Black Hills AI                                     blackhillsai.png                      ✗ MISSING
+BlackBoiler                                        blackboiler.png                      ✓ EXISTS
+Blee                                               blee.png                      ✓ EXISTS
+Booke.ai                                           bookeai.png                      ✗ MISSING
+Boutiq AI                                          boutiqai.png                      ✓ EXISTS
+Brackets AI                                        bracketsai.png                      ✗ MISSING
+Braithwate Ltd                                     braithwateltd.png                      ✓ EXISTS
+BriefBox                                           briefbox.png                      ✓ EXISTS
+BriefCatch                                         briefcatch.png                      ✓ EXISTS
+Brightflag                                         brightflag.png                      ✓ EXISTS
+Bundledocs                                         bundledocs.png                      ✓ EXISTS
+CORTO                                              corto.png                      ✓ EXISTS
+CTRL AI Global Ltd.                                ctrlaigloballtd.png                      ✗ MISSING
+CallidusAI, Inc.                                   callidusaiinc.png                      ✗ MISSING
+CamoText LLC                                       camotextllc.png                      ✓ EXISTS
+Candle AI                                          candleai.png                      ✗ MISSING
+Canotera                                           canotera.png                      ✓ EXISTS
+CarefulAI                                          carefulai.png                      ✓ EXISTS
+Case Compass                                       casecompass.png                      ✗ MISSING
+CaseBlink                                          caseblink.png                      ✗ MISSING
+CaseFox                                            casefox.png                      ✗ MISSING
+CaseFox Inc.                                       casefoxinc.png                      ✓ EXISTS
+CaseGuild                                          caseguild.png                      ✗ MISSING
+CaseMark                                           casemark.png                      ✓ EXISTS
+Casepal                                            casepal.png                      ✓ EXISTS
+Caseway                                            caseway.png                      ✓ EXISTS
+Casey                                              casey.png                      ✗ MISSING
+Catylex                                            catylex.png                      ✓ EXISTS
+Centari                                            centari.png                      ✗ MISSING
+Cequence                                           cequence.png                      ✓ EXISTS
+Chamelio                                           chamelio.png                      ✗ MISSING
+ChapsVision                                        chapsvision.png                      ✗ MISSING
+Checkbox                                           checkbox.png                      ✓ EXISTS
+CircleUp Technologies Pty Ltd                      circleuptechnologiesptyltd.png                      ✗ MISSING
+Clarilis                                           clarilis.png                      ✓ EXISTS
+ClauseBase                                         clausebase.png                      ✗ MISSING
+ClauseBase 9                                       clausebase9.png                      ✗ MISSING
+ClearPeople                                        clearpeople.png                      ✗ MISSING
+Clearbrief                                         clearbrief.png                      ✓ EXISTS
+Cleardocs                                          cleardocs.png                      ✓ EXISTS
+Clearlaw Inc.                                      clearlawinc.png                      ✓ EXISTS
+Clio                                               clio.png                      ✗ MISSING
+Cloudficient                                       cloudficient.png                      ✗ MISSING
+Cobblestone Software                               cobblestonesoftware.png                      ✗ MISSING
+Coheso                                             coheso.png                      ✓ EXISTS
+Coingeit                                           coingeit.png                      ✗ MISSING
+Competition AI                                     competitionai.png                      ✗ MISSING
+Consilio                                           consilio.png                      ✗ MISSING
+Contract Logix by LegalSifter                      contractlogixbylegalsifter.png                      ✗ MISSING
+ContractKen                                        contractken.png                      ✗ MISSING
+ContractPodAI                                      contractpodai.png                      ✗ MISSING
+ContractSafe                                       contractsafe.png                      ✓ EXISTS
+ContractZen                                        contractzen.png                      ✓ EXISTS
+Contractify                                        contractify.png                      ✓ EXISTS
+Contractzy                                         contractzy.png                      ✓ EXISTS
+Contraqto by Swiss GRC                             contraqtobyswissgrc.png                      ✗ MISSING
+Corpora                                            corpora.png                      ✓ EXISTS
+Counsel Stack                                      counselstack.png                      ✗ MISSING
+CounselPro, Inc.                                   counselproinc.png                      ✓ EXISTS
+CourtAid                                           courtaid.png                      ✓ EXISTS
+Crimson                                            crimson.png                      ✓ EXISTS
+Curvestone                                         curvestone.png                      ✓ EXISTS
+DISCO                                              disco.png                      ✗ MISSING
+Darrow                                             darrow.png                      ✓ EXISTS
+Data Pro                                           datapro.png                      ✓ EXISTS
+DealCloser Inc.                                    dealcloserinc.png                      ✓ EXISTS
+DecoverAI                                          decoverai.png                      ✓ EXISTS
+DeepIP                                             deepip.png                      ✓ EXISTS
+DeepJudge AG                                       deepjudgeag.png                      ✓ EXISTS
+Deliberately.ai                                    deliberatelyai.png                      ✗ MISSING
+Deposely                                           deposely.png                      ✓ EXISTS
+Descrybe                                           descrybe.png                      ✓ EXISTS
+Deus Group                                         deusgroup.png                      ✗ MISSING
+DigitalOwl                                         digitalowl.png                      ✗ MISSING
+DiliTrust                                          dilitrust.png                      ✗ MISSING
+Dimension AI                                       dimensionai.png                      ✗ MISSING
+Dioptra                                            dioptra.png                      ✓ EXISTS
+Discrepancy AI                                     discrepancyai.png                      ✓ EXISTS
+DocDraft                                           docdraft.png                      ✗ MISSING
+DocJuris                                           docjuris.png                      ✓ EXISTS
+Doctrine                                           doctrine.png                      ✓ EXISTS
+DocuSign                                           docusign.png                      ✓ EXISTS
+Document Drafter                                   documentdrafter.png                      ✓ EXISTS
+Dodonai                                            dodonai.png                      ✓ EXISTS
+DraftCheck                                         draftcheck.png                      ✗ MISSING
+DraftLex                                           draftlex.png                      ✗ MISSING
+DraftPilot Ltd.                                    draftpilotltd.png                      ✗ MISSING
+Draftwise                                          draftwise.png                      ✓ EXISTS
+DueCourse                                          duecourse.png                      ✓ EXISTS
+ELTEMATE A Hogan Lovells Technology Company        eltemateahoganlovellstechnologycompany.png                      ✗ MISSING
+Edge                                               edge.png                      ✗ MISSING
+EisphorIA                                          eisphoria.png                      ✗ MISSING
+Element Standard                                   elementstandard.png                      ✗ MISSING
+Emma Legal                                         emmalegal.png                      ✗ MISSING
+Emmi                                               emmi.png                      ✗ MISSING
+Erbis                                              erbis.png                      ✗ MISSING
+Eskwai                                             eskwai.png                      ✗ MISSING
+EsquireTek                                         esquiretek.png                      ✗ MISSING
+Eudia                                              eudia.png                      ✗ MISSING
+Eve                                                eve.png                      ✗ MISSING
+EvenUp                                             evenup.png                      ✗ MISSING
+Everlaw                                            everlaw.png                      ✓ EXISTS
+Evisort                                            evisort.png                      ✗ MISSING
+EyeLevel                                           eyelevel.png                      ✗ MISSING
+Fern AI                                            fernai.png                      ✗ MISSING
+FilePro                                            filepro.png                      ✓ EXISTS
+Filevine                                           filevine.png                      ✗ MISSING
+Finamotion                                         finamotion.png                      ✗ MISSING
+Finch                                              finch.png                      ✗ MISSING
+Fireflies.ai                                       firefliesai.png                      ✗ MISSING
+FirmPilot                                          firmpilot.png                      ✗ MISSING
+FirmProfit                                         firmprofit.png                      ✗ MISSING
+FirstRead                                          firstread.png                      ✗ MISSING
+Flank                                              flank.png                      ✗ MISSING
+Fledger                                            fledger.png                      ✗ MISSING
+GC AI                                              gcai.png                      ✓ EXISTS
+GDPR Register                                      gdprregister.png                      ✓ EXISTS
+Gatekeeper                                         gatekeeper.png                      ✓ EXISTS
+Gavel                                              gavel.png                      ✗ MISSING
+Gemini Legal                                       geminilegal.png                      ✗ MISSING
+Genie AI                                           genieai.png                      ✓ EXISTS
+Gino LegalTech                                     ginolegaltech.png                      ✗ MISSING
+Goodfact                                           goodfact.png                      ✓ EXISTS
+HIKE2                                              hike2.png                      ✗ MISSING
+Habeas                                             habeas.png                      ✓ EXISTS
+Hanzo                                              hanzo.png                      ✗ MISSING
+Happy Curious Lawyer LLP                           happycuriouslawyerllp.png                      ✗ MISSING
+Harvey                                             harvey.png                      ✓ EXISTS
+HaystackID                                         haystackid.png                      ✗ MISSING
+Hebbia                                             hebbia.png                      ✓ EXISTS
+Hercules AI                                        herculesai.png                      ✓ EXISTS
+HerculesAI                                         herculesai.png                      ✓ EXISTS
+IP Mind                                            ipmind.png                      ✓ EXISTS
+Icertis                                            icertis.png                      ✗ MISSING
+Ideagen ConvergePoint                              ideagenconvergepoint.png                      ✗ MISSING
+Immediation                                        immediation.png                      ✓ EXISTS
+Imprima                                            imprima.png                      ✗ MISSING
+InfoTrack                                          infotrack.png                      ✓ EXISTS
+IntelAgree                                         intelagree.png                      ✗ MISSING
+Introhive                                          introhive.png                      ✗ MISSING
+Ironclad                                           ironclad.png                      ✗ MISSING
+Ironclad, Inc.                                     ironcladinc.png                      ✓ EXISTS
+Ivo                                                ivo.png                      ✓ EXISTS
+JUNE GmbH                                          junegmbh.png                      ✓ EXISTS
+JibuDocs                                           jibudocs.png                      ✗ MISSING
+Jigsaw                                             jigsaw.png                      ✗ MISSING
+Join GmbH                                          joingmbh.png                      ✗ MISSING
+Josef                                              josef.png                      ✓ EXISTS
+Junior Associate                                   juniorassociate.png                      ✗ MISSING
+Jurimesh                                           jurimesh.png                      ✗ MISSING
+Juris AI                                           jurisai.png                      ✗ MISSING
+Jurisage                                           jurisage.png                      ✗ MISSING
+JuristAI                                           juristai.png                      ✗ MISSING
+Juristic ApS                                       juristicaps.png                      ✓ EXISTS
+Juro                                               juro.png                      ✗ MISSING
+Jury-X                                             juryx.png                      ✗ MISSING
+Justee AI                                          justeeai.png                      ✗ MISSING
+Juztina                                            juztina.png                      ✗ MISSING
+Jylo                                               jylo.png                      ✓ EXISTS
+KLoBot Inc                                         klobotinc.png                      ✗ MISSING
+Kaitongo                                           kaitongo.png                      ✗ MISSING
+Karnov Group                                       karnovgroup.png                      ✗ MISSING
+Kelsen Legal Technologies Inc.                     kelsenlegaltechnologiesinc.png                      ✓ EXISTS
+Knool                                              knool.png                      ✗ MISSING
+LEAP Legal Software                                leaplegalsoftware.png                      ✓ EXISTS
+LEGALFLY                                           legalfly.png                      ✗ MISSING
+LSG                                                lsg.png                      ✗ MISSING
+Laine Neural Network SA                            laineneuralnetworksa.png                      ✓ EXISTS
+Laurel                                             laurel.png                      ✓ EXISTS
+Law In Order                                       lawinorder.png                      ✓ EXISTS
+LawDroid                                           lawdroid.png                      ✗ MISSING
+LawQi                                              lawqi.png                      ✗ MISSING
+LawVu                                              lawvu.png                      ✓ EXISTS
+Lawcadia                                           lawcadia.png                      ✓ EXISTS
+Lawdify                                            lawdify.png                      ✗ MISSING
+Lawformer                                          lawformer.png                      ✓ EXISTS
+Lawhive Ltd                                        lawhiveltd.png                      ✓ EXISTS
+Lawline                                            lawline.png                      ✓ EXISTS
+Lawpath                                            lawpath.png                      ✓ EXISTS
+Lawrissa                                           lawrissa.png                      ✗ MISSING
+Layerup                                            layerup.png                      ✓ EXISTS
+Legal Engine                                       legalengine.png                      ✓ EXISTS
+LegalGraph                                         legalgraph.png                      ✗ MISSING
+LegalMike                                          legalmike.png                      ✓ EXISTS
+LegalOn                                            legalon.png                      ✗ MISSING
+LegalSifter, Inc.                                  legalsifterinc.png                      ✓ EXISTS
+Legau                                              legau.png                      ✗ MISSING
+Legion                                             legion.png                      ✗ MISSING
+Legistify                                          legistify.png                      ✓ EXISTS
+Legora                                             legora.png                      ✗ MISSING
+LexCheck                                           lexcheck.png                      ✗ MISSING
+Lexidesk                                           lexidesk.png                      ✗ MISSING
+LexisNexis                                         lexisnexis.png                      ✓ EXISTS
+Lexitas                                            lexitas.png                      ✗ MISSING
+Lexlink AI                                         lexlinkai.png                      ✗ MISSING
+Lext                                               lext.png                      ✗ MISSING
+Libra                                              libra.png                      ✗ MISSING
+LinkSquares                                        linksquares.png                      ✓ EXISTS
+LitAgility                                         litagility.png                      ✗ MISSING
+Litigaze                                           litigaze.png                      ✗ MISSING
+Logical Construct                                  logicalconstruct.png                      ✗ MISSING
+Logol AG                                           logolag.png                      ✗ MISSING
+Lopti                                              lopti.png                      ✓ EXISTS
+Lucio                                              lucio.png                      ✗ MISSING
+Luminance Technologies Ltd.                        luminancetechnologiesltd.png                      ✓ EXISTS
+Luminos.AI                                         luminosai.png                      ✗ MISSING
+Lysp                                               lysp.png                      ✗ MISSING
+M-Files                                            mfiles.png                      ✗ MISSING
+MINDSET Integrated Co                              mindsetintegratedco.png                      ✗ MISSING
+Macro                                              macro.png                      ✗ MISSING
+MagNet Agents                                      magnetagents.png                      ✗ MISSING
+MagicMirror Security                               magicmirrorsecurity.png                      ✗ MISSING
+Maite.ai                                           maiteai.png                      ✓ EXISTS
+Mantle                                             mantle.png                      ✗ MISSING
+Marveri                                            marveri.png                      ✗ MISSING
+Mary Technology                                    marytechnology.png                      ✗ MISSING
+Matey AI                                           mateyai.png                      ✓ EXISTS
+Merlin Search Technologies                         merlinsearchtechnologies.png                      ✗ MISSING
+Metamorf                                           metamorf.png                      ✗ MISSING
+MineOS                                             mineos.png                      ✗ MISSING
+Minerva26                                          minerva26.png                      ✗ MISSING
+MinuteBox Inc.                                     minuteboxinc.png                      ✓ EXISTS
+Moonlit.ai                                         moonlitai.png                      ✗ MISSING
+MyMai                                              mymai.png                      ✗ MISSING
+NLPatent                                           nlpatent.png                      ✓ EXISTS
+Navys                                              navys.png                      ✗ MISSING
+Nebula Legal                                       nebulalegal.png                      ✓ EXISTS
+Negotiagent B.V.                                   negotiagentbv.png                      ✓ EXISTS
+Neota                                              neota.png                      ✓ EXISTS
+NetDocuments                                       netdocuments.png                      ✓ EXISTS
+NewLaw                                             newlaw.png                      ✓ EXISTS
+Newcode.ai                                         newcodeai.png                      ✗ MISSING
+No More Screenshots, Inc.                          nomorescreenshotsinc.png                      ✗ MISSING
+Norm Ai                                            normai.png                      ✓ EXISTS
+NowInfinity                                        nowinfinity.png                      ✓ EXISTS
+Nuix                                               nuix.png                      ✓ EXISTS
+Nymiz                                              nymiz.png                      ✓ EXISTS
+Obviate.ai                                         obviateai.png                      ✓ EXISTS
+Oddr                                               oddr.png                      ✗ MISSING
+Onit                                               onit.png                      ✗ MISSING
+Onit, Inc.                                         onitinc.png                      ✓ EXISTS
+Ontra                                              ontra.png                      ✗ MISSING
+OpenText                                           opentext.png                      ✗ MISSING
+Opus 2                                             opus2.png                      ✗ MISSING
+Oratio Technologies                                oratiotechnologies.png                      ✓ EXISTS
+Otter.ai                                           otterai.png                      ✓ EXISTS
+PEXA                                               pexa.png                      ✓ EXISTS
+Parambil                                           parambil.png                      ✗ MISSING
+Parley                                             parley.png                      ✓ EXISTS
+PatentPal                                          patentpal.png                      ✗ MISSING
+Patentext, Inc.                                    patentextinc.png                      ✗ MISSING
+Patently                                           patently.png                      ✓ EXISTS
+Patlytics                                          patlytics.png                      ✓ EXISTS
+Patsnap                                            patsnap.png                      ✓ EXISTS
+Pax AI                                             paxai.png                      ✓ EXISTS
+Paximal                                            paximal.png                      ✓ EXISTS
+Paxton AI                                          paxtonai.png                      ✓ EXISTS
+Persuit                                            persuit.png                      ✗ MISSING
+Phaselab                                           phaselab.png                      ✗ MISSING
+Pincites                                           pincites.png                      ✓ EXISTS
+Pitchly                                            pitchly.png                      ✓ EXISTS
+Plexus                                             plexus.png                      ✓ EXISTS
+Plural Policy, Inc.                                pluralpolicyinc.png                      ✓ EXISTS
+PointOne                                           pointone.png                      ✗ MISSING
+Poppy Legal                                        poppylegal.png                      ✓ EXISTS
+Pramata                                            pramata.png                      ✗ MISSING
+Precedent                                          precedent.png                      ✗ MISSING
+Precisely AB                                       preciselyab.png                      ✗ MISSING
+Predictice                                         predictice.png                      ✓ EXISTS
+ProCounsel                                         procounsel.png                      ✗ MISSING
+Propense.ai                                        propenseai.png                      ✓ EXISTS
+Qanooni                                            qanooni.png                      ✓ EXISTS
+QorusDocs                                          qorusdocs.png                      ✓ EXISTS
+Querious                                           querious.png                      ✓ EXISTS
+Qura                                               qura.png                      ✓ EXISTS
+RWS                                                rws.png                      ✗ MISSING
+Rain Intelligence                                  rainintelligence.png                      ✓ EXISTS
+ReVia                                              revia.png                      ✗ MISSING
+Recital                                            recital.png                      ✓ EXISTS
+Regology                                           regology.png                      ✓ EXISTS
+Relativity                                         relativity.png                      ✓ EXISTS
+Relaw                                              relaw.png                      ✓ EXISTS
+Responsiv                                          responsiv.png                      ✓ EXISTS
+Rev                                                rev.png                      ✓ EXISTS
+Reveal                                             reveal.png                      ✓ EXISTS
+RightHub by Anaqua                                 righthubbyanaqua.png                      ✗ MISSING
+Robin AI Limited                                   robinailimited.png                      ✓ EXISTS
+RoboLex                                            robolex.png                      ✗ MISSING
+Root Signals                                       rootsignals.png                      ✗ MISSING
+Ruli, Inc.                                         ruliinc.png                      ✗ MISSING
+Saga International B.V.                            sagainternationalbv.png                      ✓ EXISTS
+Sahel AI                                           sahelai.png                      ✗ MISSING
+Sandbox                                            sandbox.png                      ✗ MISSING
+Scissero                                           scissero.png                      ✗ MISSING
+Second Chair                                       secondchair.png                      ✗ MISSING
+Secured Signing                                    securedsigning.png                      ✓ EXISTS
+Seedless                                           seedless.png                      ✗ MISSING
+SimpleDocs                                         simpledocs.png                      ✗ MISSING
+SimpleLegal                                        simplelegal.png                      ✓ EXISTS
+SimpliContract                                     simplicontract.png                      ✓ EXISTS
+SimplyAgree                                        simplyagree.png                      ✓ EXISTS
+SingleDraft                                        singledraft.png                      ✓ EXISTS
+SingleSource Technologies                          singlesourcetechnologies.png                      ✗ MISSING
+Sitomatica                                         sitomatica.png                      ✗ MISSING
+Skribe                                             skribe.png                      ✓ EXISTS
+Sky Discovery                                      skydiscovery.png                      ✓ EXISTS
+SlataDoc                                           slatadoc.png                      ✓ EXISTS
+SmartEsq                                           smartesq.png                      ✗ MISSING
+Smarter Drafter                                    smarterdrafter.png                      ✓ EXISTS
+Smokeball                                          smokeball.png                      ✗ MISSING
+Solve Intelligence                                 solveintelligence.png                      ✗ MISSING
+Sonar Legal                                        sonarlegal.png                      ✗ MISSING
+Soutron                                            soutron.png                      ✗ MISSING
+Spellbook                                          spellbook.png                      ✗ MISSING
+Splitifi                                           splitifi.png                      ✗ MISSING
+SquadBox                                           squadbox.png                      ✗ MISSING
+Standd                                             standd.png                      ✗ MISSING
+Streamline AI                                      streamlineai.png                      ✗ MISSING
+StructureFlow                                      structureflow.png                      ✗ MISSING
+Summize                                            summize.png                      ✗ MISSING
+Supio                                              supio.png                      ✗ MISSING
+SurePath AI                                        surepathai.png                      ✗ MISSING
+Syllo                                              syllo.png                      ✗ MISSING
+Syntheia                                           syntheia.png                      ✗ MISSING
+SyntheticJuror                                     syntheticjuror.png                      ✗ MISSING
+Syntracts                                          syntracts.png                      ✗ MISSING
+Talking Tree                                       talkingtree.png                      ✗ MISSING
+Tangibly                                           tangibly.png                      ✗ MISSING
+The Legal AI Consultancy by Simplexico             thelegalaiconsultancybysimplexico.png                      ✗ MISSING
+The Legal Monitoring Company BV                    thelegalmonitoringcompanybv.png                      ✗ MISSING
+The Precedent                                      theprecedent.png                      ✗ MISSING
+The Simple Associate, Inc., dba Briefpoint         thesimpleassociateincdbabriefpoint.png                      ✗ MISSING
+Theo AI                                            theoai.png                      ✗ MISSING
+Thomson Reuters                                    thomsonreuters.png                      ✓ EXISTS
+ThoughtRiver                                       thoughtriver.png                      ✗ MISSING
+TimeSentry                                         timesentry.png                      ✗ MISSING
+TirLegal Inc.                                      tirlegalinc.png                      ✗ MISSING
+Tonkean                                            tonkean.png                      ✗ MISSING
+Tower                                              tower.png                      ✗ MISSING
+Traveling Coaches                                  travelingcoaches.png                      ✗ MISSING
+Trellis                                            trellis.png                      ✗ MISSING
+TrialKit                                           trialkit.png                      ✗ MISSING
+TrialView                                          trialview.png                      ✗ MISSING
+Truth Systems                                      truthsystems.png                      ✗ MISSING
+U.S. Legal Support                                 uslegalsupport.png                      ✗ MISSING
+Unplex                                             unplex.png                      ✗ MISSING
+Unwildered                                         unwildered.png                      ✗ MISSING
+Upland Software                                    uplandsoftware.png                      ✗ MISSING
+Vallor AI                                          vallorai.png                      ✗ MISSING
+Vals AI                                            valsai.png                      ✗ MISSING
+Vendor Name                                        vendorname.png                      ✗ MISSING
+Verbit                                             verbit.png                      ✗ MISSING
+Veritext                                           veritext.png                      ✗ MISSING
+Veritone                                           veritone.png                      ✗ MISSING
+Vesence                                            vesence.png                      ✗ MISSING
+Volody                                             volody.png                      ✗ MISSING
+Warrant                                            warrant.png                      ✗ MISSING
+Wequity                                            wequity.png                      ✗ MISSING
+Wexler                                             wexler.png                      ✗ MISSING
+Whispli                                            whispli.png                      ✓ EXISTS
+Wilson AI                                          wilsonai.png                      ✗ MISSING
+Wisetax                                            wisetax.png                      ✗ MISSING
+Wolters Kluwer                                     wolterskluwer.png                      ✗ MISSING
+Wordsmith AI                                       wordsmithai.png                      ✗ MISSING
+Xakia                                              xakia.png                      ✓ EXISTS
+Xapien                                             xapien.png                      ✗ MISSING
+XpressDox                                          xpressdox.png                      ✗ MISSING
+Zeno                                               zeno.png                      ✗ MISSING
+askLisa                                            asklisa.png                      ✗ MISSING
+ayora                                              ayora.png                      ✗ MISSING
+docassemble                                        docassemble.png                      ✓ EXISTS
+eBrevia                                            ebrevia.png                      ✓ EXISTS
+eDiscovery AI                                      ediscoveryai.png                      ✓ EXISTS
+esumry                                             esumry.png                      ✗ MISSING
+fileread                                           fileread.png                      ✗ MISSING
+goHeather                                          goheather.png                      ✗ MISSING
+iManage                                            imanage.png                      ✓ EXISTS
+midpage AI Inc.                                    midpageaiinc.png                      ✗ MISSING
+vLex                                               vlex.png                      ✗ MISSING
+
+================================================================================
+MISSING LOGOS ONLY
+================================================================================
+Vendor Name                                        Required Filename
+--------------------------------------------------------------------------------
+12New.ai                                           12newai.png
+2nd Chair                                          2ndchair.png
+A&O Shearman                                       aoshearman.png
+A-dapt International Ltd                           adaptinternationalltd.png
+AI Legal Assistant                                 ailegalassistant.png
+AI4Discovery                                       ai4discovery.png
+Added Matter                                       addedmatter.png
+AirCounsel                                         aircounsel.png
+Airia                                              airia.png
+Alegi                                              alegi.png
+Aloi                                               aloi.png
+American Arbitration Association                   americanarbitrationassociation.png
+Anylaw                                             anylaw.png
+ArrowLex                                           arrowlex.png
+AtlasAI                                            atlasai.png
+August                                             august.png
+BRYTER                                             bryter.png
+Bering Lab                                         beringlab.png
+Black Hills AI                                     blackhillsai.png
+Booke.ai                                           bookeai.png
+Brackets AI                                        bracketsai.png
+CTRL AI Global Ltd.                                ctrlaigloballtd.png
+CallidusAI, Inc.                                   callidusaiinc.png
+Candle AI                                          candleai.png
+Case Compass                                       casecompass.png
+CaseBlink                                          caseblink.png
+CaseFox                                            casefox.png
+CaseGuild                                          caseguild.png
+Casey                                              casey.png
+Centari                                            centari.png
+Chamelio                                           chamelio.png
+ChapsVision                                        chapsvision.png
+CircleUp Technologies Pty Ltd                      circleuptechnologiesptyltd.png
+ClauseBase                                         clausebase.png
+ClauseBase 9                                       clausebase9.png
+ClearPeople                                        clearpeople.png
+Clio                                               clio.png
+Cloudficient                                       cloudficient.png
+Cobblestone Software                               cobblestonesoftware.png
+Coingeit                                           coingeit.png
+Competition AI                                     competitionai.png
+Consilio                                           consilio.png
+Contract Logix by LegalSifter                      contractlogixbylegalsifter.png
+ContractKen                                        contractken.png
+ContractPodAI                                      contractpodai.png
+Contraqto by Swiss GRC                             contraqtobyswissgrc.png
+Counsel Stack                                      counselstack.png
+DISCO                                              disco.png
+Deliberately.ai                                    deliberatelyai.png
+Deus Group                                         deusgroup.png
+DigitalOwl                                         digitalowl.png
+DiliTrust                                          dilitrust.png
+Dimension AI                                       dimensionai.png
+DocDraft                                           docdraft.png
+DraftCheck                                         draftcheck.png
+DraftLex                                           draftlex.png
+DraftPilot Ltd.                                    draftpilotltd.png
+ELTEMATE A Hogan Lovells Technology Company        eltemateahoganlovellstechnologycompany.png
+Edge                                               edge.png
+EisphorIA                                          eisphoria.png
+Element Standard                                   elementstandard.png
+Emma Legal                                         emmalegal.png
+Emmi                                               emmi.png
+Erbis                                              erbis.png
+Eskwai                                             eskwai.png
+EsquireTek                                         esquiretek.png
+Eudia                                              eudia.png
+Eve                                                eve.png
+EvenUp                                             evenup.png
+Evisort                                            evisort.png
+EyeLevel                                           eyelevel.png
+Fern AI                                            fernai.png
+Filevine                                           filevine.png
+Finamotion                                         finamotion.png
+Finch                                              finch.png
+Fireflies.ai                                       firefliesai.png
+FirmPilot                                          firmpilot.png
+FirmProfit                                         firmprofit.png
+FirstRead                                          firstread.png
+Flank                                              flank.png
+Fledger                                            fledger.png
+Gavel                                              gavel.png
+Gemini Legal                                       geminilegal.png
+Gino LegalTech                                     ginolegaltech.png
+HIKE2                                              hike2.png
+Hanzo                                              hanzo.png
+Happy Curious Lawyer LLP                           happycuriouslawyerllp.png
+HaystackID                                         haystackid.png
+Icertis                                            icertis.png
+Ideagen ConvergePoint                              ideagenconvergepoint.png
+Imprima                                            imprima.png
+IntelAgree                                         intelagree.png
+Introhive                                          introhive.png
+Ironclad                                           ironclad.png
+JibuDocs                                           jibudocs.png
+Jigsaw                                             jigsaw.png
+Join GmbH                                          joingmbh.png
+Junior Associate                                   juniorassociate.png
+Jurimesh                                           jurimesh.png
+Juris AI                                           jurisai.png
+Jurisage                                           jurisage.png
+JuristAI                                           juristai.png
+Juro                                               juro.png
+Jury-X                                             juryx.png
+Justee AI                                          justeeai.png
+Juztina                                            juztina.png
+KLoBot Inc                                         klobotinc.png
+Kaitongo                                           kaitongo.png
+Karnov Group                                       karnovgroup.png
+Knool                                              knool.png
+LEGALFLY                                           legalfly.png
+LSG                                                lsg.png
+LawDroid                                           lawdroid.png
+LawQi                                              lawqi.png
+Lawdify                                            lawdify.png
+Lawrissa                                           lawrissa.png
+LegalGraph                                         legalgraph.png
+LegalOn                                            legalon.png
+Legau                                              legau.png
+Legion                                             legion.png
+Legora                                             legora.png
+LexCheck                                           lexcheck.png
+Lexidesk                                           lexidesk.png
+Lexitas                                            lexitas.png
+Lexlink AI                                         lexlinkai.png
+Lext                                               lext.png
+Libra                                              libra.png
+LitAgility                                         litagility.png
+Litigaze                                           litigaze.png
+Logical Construct                                  logicalconstruct.png
+Logol AG                                           logolag.png
+Lucio                                              lucio.png
+Luminos.AI                                         luminosai.png
+Lysp                                               lysp.png
+M-Files                                            mfiles.png
+MINDSET Integrated Co                              mindsetintegratedco.png
+Macro                                              macro.png
+MagNet Agents                                      magnetagents.png
+MagicMirror Security                               magicmirrorsecurity.png
+Mantle                                             mantle.png
+Marveri                                            marveri.png
+Mary Technology                                    marytechnology.png
+Merlin Search Technologies                         merlinsearchtechnologies.png
+Metamorf                                           metamorf.png
+MineOS                                             mineos.png
+Minerva26                                          minerva26.png
+Moonlit.ai                                         moonlitai.png
+MyMai                                              mymai.png
+Navys                                              navys.png
+Newcode.ai                                         newcodeai.png
+No More Screenshots, Inc.                          nomorescreenshotsinc.png
+Oddr                                               oddr.png
+Onit                                               onit.png
+Ontra                                              ontra.png
+OpenText                                           opentext.png
+Opus 2                                             opus2.png
+Parambil                                           parambil.png
+PatentPal                                          patentpal.png
+Patentext, Inc.                                    patentextinc.png
+Persuit                                            persuit.png
+Phaselab                                           phaselab.png
+PointOne                                           pointone.png
+Pramata                                            pramata.png
+Precedent                                          precedent.png
+Precisely AB                                       preciselyab.png
+ProCounsel                                         procounsel.png
+RWS                                                rws.png
+ReVia                                              revia.png
+RightHub by Anaqua                                 righthubbyanaqua.png
+RoboLex                                            robolex.png
+Root Signals                                       rootsignals.png
+Ruli, Inc.                                         ruliinc.png
+Sahel AI                                           sahelai.png
+Sandbox                                            sandbox.png
+Scissero                                           scissero.png
+Second Chair                                       secondchair.png
+Seedless                                           seedless.png
+SimpleDocs                                         simpledocs.png
+SingleSource Technologies                          singlesourcetechnologies.png
+Sitomatica                                         sitomatica.png
+SmartEsq                                           smartesq.png
+Smokeball                                          smokeball.png
+Solve Intelligence                                 solveintelligence.png
+Sonar Legal                                        sonarlegal.png
+Soutron                                            soutron.png
+Spellbook                                          spellbook.png
+Splitifi                                           splitifi.png
+SquadBox                                           squadbox.png
+Standd                                             standd.png
+Streamline AI                                      streamlineai.png
+StructureFlow                                      structureflow.png
+Summize                                            summize.png
+Supio                                              supio.png
+SurePath AI                                        surepathai.png
+Syllo                                              syllo.png
+Syntheia                                           syntheia.png
+SyntheticJuror                                     syntheticjuror.png
+Syntracts                                          syntracts.png
+Talking Tree                                       talkingtree.png
+Tangibly                                           tangibly.png
+The Legal AI Consultancy by Simplexico             thelegalaiconsultancybysimplexico.png
+The Legal Monitoring Company BV                    thelegalmonitoringcompanybv.png
+The Precedent                                      theprecedent.png
+The Simple Associate, Inc., dba Briefpoint         thesimpleassociateincdbabriefpoint.png
+Theo AI                                            theoai.png
+ThoughtRiver                                       thoughtriver.png
+TimeSentry                                         timesentry.png
+TirLegal Inc.                                      tirlegalinc.png
+Tonkean                                            tonkean.png
+Tower                                              tower.png
+Traveling Coaches                                  travelingcoaches.png
+Trellis                                            trellis.png
+TrialKit                                           trialkit.png
+TrialView                                          trialview.png
+Truth Systems                                      truthsystems.png
+U.S. Legal Support                                 uslegalsupport.png
+Unplex                                             unplex.png
+Unwildered                                         unwildered.png
+Upland Software                                    uplandsoftware.png
+Vallor AI                                          vallorai.png
+Vals AI                                            valsai.png
+Vendor Name                                        vendorname.png
+Verbit                                             verbit.png
+Veritext                                           veritext.png
+Veritone                                           veritone.png
+Vesence                                            vesence.png
+Volody                                             volody.png
+Warrant                                            warrant.png
+Wequity                                            wequity.png
+Wexler                                             wexler.png
+Wilson AI                                          wilsonai.png
+Wisetax                                            wisetax.png
+Wolters Kluwer                                     wolterskluwer.png
+Wordsmith AI                                       wordsmithai.png
+Xapien                                             xapien.png
+XpressDox                                          xpressdox.png
+Zeno                                               zeno.png
+askLisa                                            asklisa.png
+ayora                                              ayora.png
+esumry                                             esumry.png
+fileread                                           fileread.png
+goHeather                                          goheather.png
+midpage AI Inc.                                    midpageaiinc.png
+vLex                                               vlex.png
+
+✓ Created MISSING_LOGOS.txt with list of missing logos
+
+================================================================================
+NAMING CONVENTION EXAMPLES
+================================================================================
+
+Original Name                            → Logo Filename
+--------------------------------------------------------------------------------
+Ace4 AI                                  → ace4ai.png
+Ironclad, Inc.                           → ironcladinc.png
+CircleUp Technologies Pty Ltd            → circleuptechnologiesptyltd.png
+DeepJudge AG                             → deepjudgeag.png
+Kelsen Legal Technologies Inc.           → kelsenlegaltechnologiesinc.png
+
+================================================================================
+QUICK TIPS
+================================================================================
+
+1. Filename = vendor name in lowercase, alphanumeric only
+2. Remove ALL spaces, dots, commas, hyphens, etc.
+3. Keep numbers (e.g., "Ace4 AI" → "ace4ai")
+4. Preferred format: .png with transparent background
+5. Size: 256x256 pixels (will auto-scale)
+6. Place in the logos/ folder
+
+Example workflow:
+1. Find missing vendor in list above
+2. Search Google: "[Vendor Name] logo png"
+3. Download logo
+4. Rename to the slug format shown above
+5. Save to logos/ folder
+    

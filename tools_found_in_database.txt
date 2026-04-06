@@ -1,0 +1,222 @@
+Vendors/Tools in legal_tools_all.xlsx FOUND in merged_pref_top50.csv
+(Please review for false positives)
+Total: 217
+================================================================================
+
+1. &AI
+2. 273 Ventures
+3. AI.Law
+4. Abstract
+5. Ace4 AI
+6. AcroDocz
+7. Agiloft Contract Lifecycle Management ~= Agiloft
+8. Alexi
+9. AlphaSense ~= AlphaSense Platform
+10. Altumatim
+11. Amplified
+12. Amto
+13. Andri.ai ~= Andri
+14. Antidote
+15. Anytime AI
+16. Apprvd
+17. Arteria AI
+18. AssetDivide
+19. Atticus
+20. August
+21. AutoLex
+22. Autologyx ~= Autologyx Platform
+23. Avantia Law ~= Avantia
+24. Avokaado
+25. Avvoka
+26. Axsar CLM
+27. BRYTER Workflows ~= BRYTER GmbH
+28. Beagle
+29. Betty Blocks
+30. Bigle ~= Bigle Iberia, S.L.
+31. Billables AI
+32. BlackBoiler
+33. Blee
+34. Boutiq AI
+35. BriefBox
+36. BriefCatch
+37. Briefpoint ~= The Simple Associate, Inc., dba Briefpoint
+38. Brightflag by Wolters Kluwer
+39. CORTO
+40. CamoText
+41. Canotera
+42. CarefulAI
+43. Case Compass
+44. CaseFox
+45. CaseMark
+46. Casepal
+47. Caseway
+48. Catylex ~= Catylex Contract Analytics
+49. Cequence
+50. Checkbox.ai ~= Checkbox
+51. Clarilis ~= Clarilis Platform
+52. ClearLaw AI CLEARLAW Contracting Intelligence AI ~= Clearlaw Inc.
+53. Clearbrief
+54. Coheso
+55. CompetitionAI
+56. Contract Intelligence by Workday CONTRACT INTELLIGENCE ~= AI Contract Intelligence Layer
+57. ContractKen
+58. ContractSafe
+59. ContractZen
+60. Contractify
+61. Contractzy
+62. ConvergePoint ~= Ideagen ConvergePoint
+63. Copilot by LawDroid ~= Word Copilot
+64. Corpora
+65. Counsel Stack
+66. CounselPro
+67. CourtAid ~= CourtAid.ai
+68. Crimson
+69. Ctrl AI ~= CTRL AI Global Ltd.
+70. Curvestone AI ~= Curvestone
+71. Darrow
+72. DealCloser
+73. DecoverAI ~= DecoverAI Legal Intelligence Platform
+74. DeepIP
+75. DeepJudge
+76. Deliberately.ai
+77. Deposely
+78. Descrybe.ai ~= Descrybe
+79. Dioptra
+80. Discrepancy AI
+81. DocJuris
+82. Docassemble
+83. Doctrine
+84. Document Drafter
+85. Docusign
+86. Dodonai
+87. DraftPilot
+88. DraftPro by eBrevia ~= Contract Analyzer, DraftPro
+89. DraftWise
+90. DueCourse ~= DueCourse Coaching Platform
+91. Everlaw ~= Everlaw Platform
+92. GC AI
+93. GDPR Register
+94. Gavel
+95. Gavel Exec by Gavel ~= Gavel
+96. Genie AI
+97. GoCircl
+98. Goodfact
+99. Habeas
+100. Harvey
+101. Hearsay
+102. Hebbia
+103. HighQ Transaction Management by Thomson Reuters HighQ Transaction Management ~= HighQ
+104. IP Mind
+105. IntelAgree
+106. Ironclad ~= Ironclad CLM
+107. Ivo
+108. JUNE
+109. Jigsaw
+110. Josef Q by Josef
+111. Junior ~= Junior Associate
+112. Junior Associate
+113. Jurimesh
+114. Juristic ~= Juristic Platform
+115. Juro
+116. Jylo
+117. Kelsen Legal Technologies
+118. Kelvin Legal Data OS by 273 Ventures Kelvin Legal Data OS ~= Kelvin Legal Data OS KL3M
+119. LEAP US by LEAP ~= LEAP
+120. LEGALFLY
+121. Laine
+122. Laurel
+123. Lawformer
+124. Lawhive
+125. Lawline
+126. Lawrissa
+127. Layerup
+128. Legal Engine
+129. LegalGraph
+130. LegalMike
+131. LegalMonitr
+132. LegalOn Technologies ~= LegalOn
+133. LegalSifter
+134. Legistify
+135. Legora ~= Legora Platform
+136. LexCheck
+137. Lexis Connect by LexisNexis Lexis Connect ~= Lexis+
+138. Lexis Create+ by LexisNexis (formerly Henchman) Lexis Create+
+139. Lexis+ AI by LexisNexis
+140. LexisNexis ProtÃ©gÃ© ~= LexisNexis
+141. LinkSquares ~= LinkSquares Cloud
+142. Lopti ~= Lopti Lite, Lopti Enterprise
+143. Lucio
+144. Luminance Corporate by Luminance CORPORATE ~= Luminance
+145. Luminance Diligence ~= Luminance
+146. Luminos.AI
+147. Macro
+148. Maite.ai
+149. Mantle
+150. Marveri
+151. Matey AI
+152. Microsoft Copilot Microsoftâ€‹Copilot ~= Microsoft
+153. Microsoft Copilot Studio by Microsoft Microsoftâ€‹Copilot Studio ~= Microsoft
+154. MineOS
+155. MinuteBox
+156. MyMai ~= MyMai Express
+157. NLPatent
+158. Nebula
+159. Neota by Neota Logic
+160. NetDocuments
+161. NewLaw
+162. Newcode.ai
+163. Norm AI
+164. Nymiz
+165. Obviate.ai
+166. Oratio Technologies
+167. Otter.ai
+168. Ozmosys
+169. Parley
+170. PatSnap ~= Patsnap Eureka Platform
+171. PatentPal
+172. Patentext
+173. Patently
+174. Patlytics
+175. Paximal ~= Paximal AI Patent Application Drafting
+176. Paxton Legal AI ~= Paxton
+177. Pincites
+178. Pitchly
+179. Plural ~= Plural Policy, Inc.
+180. PointOne ~= PointOne Time
+181. Poppy Legal ~= Poppy
+182. Precisely
+183. Predictice
+184. Propense AI ~= Propense
+185. Qanooni
+186. QorusDocs
+187. Querious
+188. Qura
+189. Rain Intelligence ~= Rain Intelligence Platform
+190. Recital ~= Recital Platform
+191. RegPass
+192. Regology
+193. Relativity Contracts ~= Relativity
+194. Relativity aiR for Case Strategy ~= Relativity aiR for Privilege
+195. Relativity aiR for Privilege
+196. Relaw
+197. Responsiv ~= Responsiv Platform
+198. Rev
+199. Robin ~= Robin AI Limited
+200. Ruli
+201. Saga ~= Saga AI Platform
+202. Sahel AI
+203. Second Chair.ai ~= Second Chair
+204. SimpliContract
+205. SimplyAgree
+206. SingleDraft
+207. Sitomatica
+208. Skribe
+209. SlataDoc
+210. SmartBundle by Law In Order
+211. Unity by Onit
+212. eBrevia
+213. eDiscovery AI
+214. goHeather
+215. iManage Work 10 by iManage iManage Work ~= iManage
+216. midpage ~= midpage AI Inc.
+217. negotiagent ~= Negotiagent B.V.

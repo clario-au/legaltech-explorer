@@ -1,0 +1,2954 @@
+[
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "AI Lawyer",
+    "vendor_name": null,
+    "search_query": "AI Lawyer legal tech",
+    "original_name": "AI Lawyer"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "AI Legal Assistant",
+    "vendor_name": null,
+    "search_query": "AI Legal Assistant legal tech",
+    "original_name": "AI Legal Assistant"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "AI4Discovery",
+    "vendor_name": null,
+    "search_query": "AI4Discovery legal tech",
+    "original_name": "AI4Discovery"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Added Matter",
+    "vendor_name": null,
+    "search_query": "Added Matter legal tech",
+    "original_name": "Added Matter"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Airia",
+    "vendor_name": null,
+    "search_query": "Airia legal tech",
+    "original_name": "Airia"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Alegi",
+    "vendor_name": null,
+    "search_query": "Alegi legal tech",
+    "original_name": "Alegi"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Aloi",
+    "vendor_name": null,
+    "search_query": "Aloi legal tech",
+    "original_name": "Aloi"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Anylaw",
+    "vendor_name": null,
+    "search_query": "Anylaw legal tech",
+    "original_name": "Anylaw"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "AtlasAI",
+    "vendor_name": null,
+    "search_query": "AtlasAI legal tech",
+    "original_name": "AtlasAI"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Bench IQ",
+    "vendor_name": null,
+    "search_query": "Bench IQ legal tech",
+    "original_name": "Bench IQ"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Booke.ai",
+    "vendor_name": null,
+    "search_query": "Booke.ai legal tech",
+    "original_name": "Booke.ai"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Box",
+    "vendor_name": null,
+    "search_query": "Box legal tech",
+    "original_name": "Box"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Brackets AI",
+    "vendor_name": null,
+    "search_query": "Brackets AI legal tech",
+    "original_name": "Brackets AI"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Callidus",
+    "vendor_name": null,
+    "search_query": "Callidus legal tech",
+    "original_name": "Callidus"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Candle AI candle",
+    "vendor_name": null,
+    "search_query": "Candle AI candle legal tech",
+    "original_name": "Candle AI candle"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "CaseBlink",
+    "vendor_name": null,
+    "search_query": "CaseBlink legal tech",
+    "original_name": "CaseBlink"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "CaseGuild",
+    "vendor_name": null,
+    "search_query": "CaseGuild legal tech",
+    "original_name": "CaseGuild"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Casey",
+    "vendor_name": null,
+    "search_query": "Casey legal tech",
+    "original_name": "Casey"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Chamelio",
+    "vendor_name": null,
+    "search_query": "Chamelio legal tech",
+    "original_name": "Chamelio"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "ClientLogic",
+    "vendor_name": null,
+    "search_query": "ClientLogic legal tech",
+    "original_name": "ClientLogic"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Clio Duo",
+    "vendor_name": null,
+    "search_query": "Clio Duo legal tech",
+    "original_name": "Clio Duo"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Covenant",
+    "vendor_name": null,
+    "search_query": "Covenant legal tech",
+    "original_name": "Covenant"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Crane Patents",
+    "vendor_name": null,
+    "search_query": "Crane Patents legal tech",
+    "original_name": "Crane Patents"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "DiliTrust",
+    "vendor_name": null,
+    "search_query": "DiliTrust legal tech",
+    "original_name": "DiliTrust"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Dimension AI",
+    "vendor_name": null,
+    "search_query": "Dimension AI legal tech",
+    "original_name": "Dimension AI"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "DocDraft",
+    "vendor_name": null,
+    "search_query": "DocDraft legal tech",
+    "original_name": "DocDraft"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Docato",
+    "vendor_name": null,
+    "search_query": "Docato legal tech",
+    "original_name": "Docato"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "DraftCheck",
+    "vendor_name": null,
+    "search_query": "DraftCheck legal tech",
+    "original_name": "DraftCheck"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "DraftLex Dl Draftlex",
+    "vendor_name": null,
+    "search_query": "DraftLex Dl Draftlex legal tech",
+    "original_name": "DraftLex Dl Draftlex"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Edge",
+    "vendor_name": null,
+    "search_query": "Edge legal tech",
+    "original_name": "Edge"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "EisphorIA",
+    "vendor_name": null,
+    "search_query": "EisphorIA legal tech",
+    "original_name": "EisphorIA"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Emma Legal",
+    "vendor_name": null,
+    "search_query": "Emma Legal legal tech",
+    "original_name": "Emma Legal"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Emmi",
+    "vendor_name": null,
+    "search_query": "Emmi legal tech",
+    "original_name": "Emmi"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Eskwai",
+    "vendor_name": null,
+    "search_query": "Eskwai legal tech",
+    "original_name": "Eskwai"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "EsquireTek",
+    "vendor_name": null,
+    "search_query": "EsquireTek legal tech",
+    "original_name": "EsquireTek"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Eudia",
+    "vendor_name": null,
+    "search_query": "Eudia legal tech",
+    "original_name": "Eudia"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Eve",
+    "vendor_name": null,
+    "search_query": "Eve legal tech",
+    "original_name": "Eve"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "EvenUp",
+    "vendor_name": null,
+    "search_query": "EvenUp legal tech",
+    "original_name": "EvenUp"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Evisort",
+    "vendor_name": null,
+    "search_query": "Evisort legal tech",
+    "original_name": "Evisort"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Fern AI",
+    "vendor_name": null,
+    "search_query": "Fern AI legal tech",
+    "original_name": "Fern AI"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Filevine Filevine",
+    "vendor_name": null,
+    "search_query": "Filevine Filevine legal tech",
+    "original_name": "Filevine Filevine"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Finch",
+    "vendor_name": null,
+    "search_query": "Finch legal tech",
+    "original_name": "Finch"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Fireflies.ai",
+    "vendor_name": null,
+    "search_query": "Fireflies.ai legal tech",
+    "original_name": "Fireflies.ai"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "FirmPilot",
+    "vendor_name": null,
+    "search_query": "FirmPilot legal tech",
+    "original_name": "FirmPilot"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "FirmProfit",
+    "vendor_name": null,
+    "search_query": "FirmProfit legal tech",
+    "original_name": "FirmProfit"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "FirstRead",
+    "vendor_name": null,
+    "search_query": "FirstRead legal tech",
+    "original_name": "FirstRead"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Flank",
+    "vendor_name": null,
+    "search_query": "Flank legal tech",
+    "original_name": "Flank"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Fledger",
+    "vendor_name": null,
+    "search_query": "Fledger legal tech",
+    "original_name": "Fledger"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "HIKE2",
+    "vendor_name": null,
+    "search_query": "HIKE2 legal tech",
+    "original_name": "HIKE2"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Hanzo",
+    "vendor_name": null,
+    "search_query": "Hanzo legal tech",
+    "original_name": "Hanzo"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "HaystackID",
+    "vendor_name": null,
+    "search_query": "HaystackID legal tech",
+    "original_name": "HaystackID"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Hercules AI",
+    "vendor_name": null,
+    "search_query": "Hercules AI legal tech",
+    "original_name": "Hercules AI"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Icertis Contract Intelligence",
+    "vendor_name": null,
+    "search_query": "Icertis Contract Intelligence legal tech",
+    "original_name": "Icertis Contract Intelligence"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Imprima",
+    "vendor_name": null,
+    "search_query": "Imprima legal tech",
+    "original_name": "Imprima"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Introhive",
+    "vendor_name": null,
+    "search_query": "Introhive legal tech",
+    "original_name": "Introhive"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Ipelint",
+    "vendor_name": null,
+    "search_query": "Ipelint legal tech",
+    "original_name": "Ipelint"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "JibuDocs",
+    "vendor_name": null,
+    "search_query": "JibuDocs legal tech",
+    "original_name": "JibuDocs"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Juris AI",
+    "vendor_name": null,
+    "search_query": "Juris AI legal tech",
+    "original_name": "Juris AI"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "JuristAI",
+    "vendor_name": null,
+    "search_query": "JuristAI legal tech",
+    "original_name": "JuristAI"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Jury-X",
+    "vendor_name": null,
+    "search_query": "Jury-X legal tech",
+    "original_name": "Jury-X"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Justee AI",
+    "vendor_name": null,
+    "search_query": "Justee AI legal tech",
+    "original_name": "Justee AI"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Juztina Juztina.ai",
+    "vendor_name": null,
+    "search_query": "Juztina Juztina.ai legal tech",
+    "original_name": "Juztina Juztina.ai"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Kaitongo",
+    "vendor_name": null,
+    "search_query": "Kaitongo legal tech",
+    "original_name": "Kaitongo"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Knool",
+    "vendor_name": null,
+    "search_query": "Knool legal tech",
+    "original_name": "Knool"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "LawQi",
+    "vendor_name": null,
+    "search_query": "LawQi legal tech",
+    "original_name": "LawQi"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Lawdify",
+    "vendor_name": null,
+    "search_query": "Lawdify legal tech",
+    "original_name": "Lawdify"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Lega",
+    "vendor_name": null,
+    "search_query": "Lega legal tech",
+    "original_name": "Lega"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Legau",
+    "vendor_name": null,
+    "search_query": "Legau legal tech",
+    "original_name": "Legau"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Legion",
+    "vendor_name": null,
+    "search_query": "Legion legal tech",
+    "original_name": "Legion"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Lexidesk",
+    "vendor_name": null,
+    "search_query": "Lexidesk legal tech",
+    "original_name": "Lexidesk"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Lexlink AI",
+    "vendor_name": null,
+    "search_query": "Lexlink AI legal tech",
+    "original_name": "Lexlink AI"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Libra",
+    "vendor_name": null,
+    "search_query": "Libra legal tech",
+    "original_name": "Libra"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Litigaze",
+    "vendor_name": null,
+    "search_query": "Litigaze legal tech",
+    "original_name": "Litigaze"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Lysp",
+    "vendor_name": null,
+    "search_query": "Lysp legal tech",
+    "original_name": "Lysp"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "M-Files",
+    "vendor_name": null,
+    "search_query": "M-Files legal tech",
+    "original_name": "M-Files"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Maeven",
+    "vendor_name": null,
+    "search_query": "Maeven legal tech",
+    "original_name": "Maeven"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "MagNet Agents",
+    "vendor_name": null,
+    "search_query": "MagNet Agents legal tech",
+    "original_name": "MagNet Agents"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "MagicMirror Security",
+    "vendor_name": null,
+    "search_query": "MagicMirror Security legal tech",
+    "original_name": "MagicMirror Security"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Maigon document review",
+    "vendor_name": null,
+    "search_query": "Maigon document review legal tech",
+    "original_name": "Maigon document review"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Minerva26",
+    "vendor_name": null,
+    "search_query": "Minerva26 legal tech",
+    "original_name": "Minerva26"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Moonlit.ai",
+    "vendor_name": null,
+    "search_query": "Moonlit.ai legal tech",
+    "original_name": "Moonlit.ai"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Navys",
+    "vendor_name": null,
+    "search_query": "Navys legal tech",
+    "original_name": "Navys"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Oddr",
+    "vendor_name": null,
+    "search_query": "Oddr legal tech",
+    "original_name": "Oddr"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Opus 2 Cases",
+    "vendor_name": null,
+    "search_query": "Opus 2 Cases legal tech",
+    "original_name": "Opus 2 Cases"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Parambil",
+    "vendor_name": null,
+    "search_query": "Parambil legal tech",
+    "original_name": "Parambil"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "PaxAI",
+    "vendor_name": null,
+    "search_query": "PaxAI legal tech",
+    "original_name": "PaxAI"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Pramata",
+    "vendor_name": null,
+    "search_query": "Pramata legal tech",
+    "original_name": "Pramata"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "ProCounsel",
+    "vendor_name": null,
+    "search_query": "ProCounsel legal tech",
+    "original_name": "ProCounsel"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Rhetoric",
+    "vendor_name": null,
+    "search_query": "Rhetoric legal tech",
+    "original_name": "Rhetoric"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "RoboLex",
+    "vendor_name": null,
+    "search_query": "RoboLex legal tech",
+    "original_name": "RoboLex"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Root Signals",
+    "vendor_name": null,
+    "search_query": "Root Signals legal tech",
+    "original_name": "Root Signals"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Sandbox",
+    "vendor_name": null,
+    "search_query": "Sandbox legal tech",
+    "original_name": "Sandbox"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Scribestar",
+    "vendor_name": null,
+    "search_query": "Scribestar legal tech",
+    "original_name": "Scribestar"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Seedless",
+    "vendor_name": null,
+    "search_query": "Seedless legal tech",
+    "original_name": "Seedless"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "ServiceNow",
+    "vendor_name": null,
+    "search_query": "ServiceNow legal tech",
+    "original_name": "ServiceNow"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Servient",
+    "vendor_name": null,
+    "search_query": "Servient legal tech",
+    "original_name": "Servient"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "SimuLaw AI",
+    "vendor_name": null,
+    "search_query": "SimuLaw AI legal tech",
+    "original_name": "SimuLaw AI"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "SmartEsq",
+    "vendor_name": null,
+    "search_query": "SmartEsq legal tech",
+    "original_name": "SmartEsq"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Smokeball",
+    "vendor_name": null,
+    "search_query": "Smokeball legal tech",
+    "original_name": "Smokeball"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Solve Intelligence Solveâ€‹Intelligence",
+    "vendor_name": null,
+    "search_query": "Solve Intelligence Solveâ€‹Intelligence legal tech",
+    "original_name": "Solve Intelligence Solveâ€‹Intelligence"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Sonar Legal",
+    "vendor_name": null,
+    "search_query": "Sonar Legal legal tech",
+    "original_name": "Sonar Legal"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Soutron",
+    "vendor_name": null,
+    "search_query": "Soutron legal tech",
+    "original_name": "Soutron"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Spellbook",
+    "vendor_name": null,
+    "search_query": "Spellbook legal tech",
+    "original_name": "Spellbook"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Splitifi",
+    "vendor_name": null,
+    "search_query": "Splitifi legal tech",
+    "original_name": "Splitifi"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "SquadBox",
+    "vendor_name": null,
+    "search_query": "SquadBox legal tech",
+    "original_name": "SquadBox"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Standd",
+    "vendor_name": null,
+    "search_query": "Standd legal tech",
+    "original_name": "Standd"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Statera",
+    "vendor_name": null,
+    "search_query": "Statera legal tech",
+    "original_name": "Statera"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Streamline AI",
+    "vendor_name": null,
+    "search_query": "Streamline AI legal tech",
+    "original_name": "Streamline AI"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "StructureFlow",
+    "vendor_name": null,
+    "search_query": "StructureFlow legal tech",
+    "original_name": "StructureFlow"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Summize",
+    "vendor_name": null,
+    "search_query": "Summize legal tech",
+    "original_name": "Summize"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Supio",
+    "vendor_name": null,
+    "search_query": "Supio legal tech",
+    "original_name": "Supio"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "SurePath AI",
+    "vendor_name": null,
+    "search_query": "SurePath AI legal tech",
+    "original_name": "SurePath AI"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Syllo",
+    "vendor_name": null,
+    "search_query": "Syllo legal tech",
+    "original_name": "Syllo"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "SyntheticJuror",
+    "vendor_name": null,
+    "search_query": "SyntheticJuror legal tech",
+    "original_name": "SyntheticJuror"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Syntracts",
+    "vendor_name": null,
+    "search_query": "Syntracts legal tech",
+    "original_name": "Syntracts"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "The Precedent",
+    "vendor_name": null,
+    "search_query": "The Precedent legal tech",
+    "original_name": "The Precedent"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Theo AI",
+    "vendor_name": null,
+    "search_query": "Theo AI legal tech",
+    "original_name": "Theo AI"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "ThoughtRiver",
+    "vendor_name": null,
+    "search_query": "ThoughtRiver legal tech",
+    "original_name": "ThoughtRiver"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "TimeSentry",
+    "vendor_name": null,
+    "search_query": "TimeSentry legal tech",
+    "original_name": "TimeSentry"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Tower",
+    "vendor_name": null,
+    "search_query": "Tower legal tech",
+    "original_name": "Tower"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Trellis",
+    "vendor_name": null,
+    "search_query": "Trellis legal tech",
+    "original_name": "Trellis"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "TrialKit",
+    "vendor_name": null,
+    "search_query": "TrialKit legal tech",
+    "original_name": "TrialKit"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "TrialView",
+    "vendor_name": null,
+    "search_query": "TrialView legal tech",
+    "original_name": "TrialView"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Unplex",
+    "vendor_name": null,
+    "search_query": "Unplex legal tech",
+    "original_name": "Unplex"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Unwildered",
+    "vendor_name": null,
+    "search_query": "Unwildered legal tech",
+    "original_name": "Unwildered"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Vallor AI",
+    "vendor_name": null,
+    "search_query": "Vallor AI legal tech",
+    "original_name": "Vallor AI"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Vals AI",
+    "vendor_name": null,
+    "search_query": "Vals AI legal tech",
+    "original_name": "Vals AI"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Veritone Redact",
+    "vendor_name": null,
+    "search_query": "Veritone Redact legal tech",
+    "original_name": "Veritone Redact"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Vesence",
+    "vendor_name": null,
+    "search_query": "Vesence legal tech",
+    "original_name": "Vesence"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Volody CLM",
+    "vendor_name": null,
+    "search_query": "Volody CLM legal tech",
+    "original_name": "Volody CLM"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Warrant",
+    "vendor_name": null,
+    "search_query": "Warrant legal tech",
+    "original_name": "Warrant"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Wequity",
+    "vendor_name": null,
+    "search_query": "Wequity legal tech",
+    "original_name": "Wequity"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Wexler",
+    "vendor_name": null,
+    "search_query": "Wexler legal tech",
+    "original_name": "Wexler"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Wilson AI",
+    "vendor_name": null,
+    "search_query": "Wilson AI legal tech",
+    "original_name": "Wilson AI"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Wisetax",
+    "vendor_name": null,
+    "search_query": "Wisetax legal tech",
+    "original_name": "Wisetax"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Wordsmith AI",
+    "vendor_name": null,
+    "search_query": "Wordsmith AI legal tech",
+    "original_name": "Wordsmith AI"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Xapien",
+    "vendor_name": null,
+    "search_query": "Xapien legal tech",
+    "original_name": "Xapien"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "XpressDox",
+    "vendor_name": null,
+    "search_query": "XpressDox legal tech",
+    "original_name": "XpressDox"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Zeno",
+    "vendor_name": null,
+    "search_query": "Zeno legal tech",
+    "original_name": "Zeno"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "Zoom AI Companion",
+    "vendor_name": null,
+    "search_query": "Zoom AI Companion legal tech",
+    "original_name": "Zoom AI Companion"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "askLisa",
+    "vendor_name": null,
+    "search_query": "askLisa legal tech",
+    "original_name": "askLisa"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "ayora",
+    "vendor_name": null,
+    "search_query": "ayora legal tech",
+    "original_name": "ayora"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "esumry",
+    "vendor_name": null,
+    "search_query": "esumry legal tech",
+    "original_name": "esumry"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "fileread",
+    "vendor_name": null,
+    "search_query": "fileread legal tech",
+    "original_name": "fileread"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "ikaun",
+    "vendor_name": null,
+    "search_query": "ikaun legal tech",
+    "original_name": "ikaun"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "smartContract CLM",
+    "vendor_name": null,
+    "search_query": "smartContract CLM legal tech",
+    "original_name": "smartContract CLM"
+  },
+  {
+    "category": "simple",
+    "priority": 1,
+    "product_name": "trails",
+    "vendor_name": null,
+    "search_query": "trails legal tech",
+    "original_name": "trails"
+  },
+  {
+    "category": "medium",
+    "priority": 2,
+    "product_name": "Epiq AI Discovery Assistant",
+    "vendor_name": null,
+    "search_query": "Epiq AI Discovery Assistant legal tech",
+    "original_name": "Epiq AI Discovery Assistant"
+  },
+  {
+    "category": "medium",
+    "priority": 2,
+    "product_name": "LegalMation Dispute Resolution Automation Platform",
+    "vendor_name": null,
+    "search_query": "LegalMation Dispute Resolution Automation Platform legal tech",
+    "original_name": "LegalMation Dispute Resolution Automation Platform"
+  },
+  {
+    "category": "medium",
+    "priority": 2,
+    "product_name": "Mary Technology M ary Technology",
+    "vendor_name": null,
+    "search_query": "Mary Technology M ary Technology legal tech",
+    "original_name": "Mary Technology M ary Technology"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "A1",
+    "vendor_name": "Sarvam.ai",
+    "search_query": "A1 Sarvam.ai",
+    "original_name": "A1 by Sarvam.ai"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "AI Agent Studio",
+    "vendor_name": "Onit",
+    "search_query": "AI Agent Studio Onit",
+    "original_name": "AI Agent Studio by Onit"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "AI Insights",
+    "vendor_name": "Jurisage",
+    "search_query": "AI Insights Jurisage",
+    "original_name": "AI Insights by Jurisage"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Apperio",
+    "vendor_name": "Persuit",
+    "search_query": "Apperio Persuit",
+    "original_name": "Apperio by Persuit"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Arrow AI",
+    "vendor_name": "ArrowLex",
+    "search_query": "Arrow AI ArrowLex",
+    "original_name": "Arrow AI by ArrowLex"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Ask",
+    "vendor_name": "Reveal",
+    "search_query": "Ask Reveal",
+    "original_name": "Ask by Reveal"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Atlas Client Portals and Extranet",
+    "vendor_name": "ClearPeople Atlas Extranetâ€‹",
+    "search_query": "Atlas Client Portals and Extranet ClearPeople Atlas Extranetâ€‹",
+    "original_name": "Atlas Client Portals and Extranet by ClearPeople Atlas Extranetâ€‹"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Atlas Intelligent Knowledge Platform",
+    "vendor_name": "ClearPeople",
+    "search_query": "Atlas Intelligent Knowledge Platform ClearPeople",
+    "original_name": "Atlas Intelligent Knowledge Platform by ClearPeople"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Atlas",
+    "vendor_name": "Ontra",
+    "search_query": "Atlas Ontra",
+    "original_name": "Atlas by Ontra"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Aurora",
+    "vendor_name": "Consilio",
+    "search_query": "Aurora Consilio",
+    "original_name": "Aurora by Consilio"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "BA Insight",
+    "vendor_name": "Upland Software",
+    "search_query": "BA Insight Upland Software",
+    "original_name": "BA Insight by Upland Software"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "BEAMON AI",
+    "vendor_name": "BRYTER",
+    "search_query": "BEAMON AI BRYTER",
+    "original_name": "BEAMON AI by BRYTER"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "BeringAI",
+    "vendor_name": "Bering Lab",
+    "search_query": "BeringAI Bering Lab",
+    "original_name": "BeringAI by Bering Lab"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "BestAgreement.ai",
+    "vendor_name": "12New.ai",
+    "search_query": "BestAgreement.ai 12New.ai",
+    "original_name": "BestAgreement.ai by 12New.ai"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "BestCompliance.ai",
+    "vendor_name": "12New.ai",
+    "search_query": "BestCompliance.ai 12New.ai",
+    "original_name": "BestCompliance.ai by 12New.ai"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Botineer",
+    "vendor_name": "1Law",
+    "search_query": "Botineer 1Law",
+    "original_name": "Botineer by 1Law"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "BridgeIndex",
+    "vendor_name": "LitAgility",
+    "search_query": "BridgeIndex LitAgility",
+    "original_name": "BridgeIndex by LitAgility"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Builder",
+    "vendor_name": "LawDroid",
+    "search_query": "Builder LawDroid",
+    "original_name": "Builder by LawDroid"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "CONTROLit",
+    "vendor_name": "Element Standard",
+    "search_query": "CONTROLit Element Standard",
+    "original_name": "CONTROLit by Element Standard"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "CaseChat",
+    "vendor_name": "esumry Case Chat",
+    "search_query": "CaseChat esumry Case Chat",
+    "original_name": "CaseChat by esumry Case Chat"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "CaseDocker",
+    "vendor_name": "Coingeit",
+    "search_query": "CaseDocker Coingeit",
+    "original_name": "CaseDocker by Coingeit"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "CaseFusion",
+    "vendor_name": "Cloudficient",
+    "search_query": "CaseFusion Cloudficient",
+    "original_name": "CaseFusion by Cloudficient"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "CaseReview",
+    "vendor_name": "MINDSET Integrated Co",
+    "search_query": "CaseReview MINDSET Integrated Co",
+    "original_name": "CaseReview by MINDSET Integrated Co"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Cecilia AI",
+    "vendor_name": "DISCO",
+    "search_query": "Cecilia AI DISCO",
+    "original_name": "Cecilia AI by DISCO"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Charter",
+    "vendor_name": "Truth Systems",
+    "search_query": "Charter Truth Systems",
+    "original_name": "Charter by Truth Systems"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Cicero",
+    "vendor_name": "Automatise",
+    "search_query": "Cicero Automatise",
+    "original_name": "Cicero by Automatise"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Clause Builder AI",
+    "vendor_name": "American Arbitration Association",
+    "search_query": "Clause Builder AI American Arbitration Association",
+    "original_name": "Clause Builder AI by American Arbitration Association"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Clause9",
+    "vendor_name": "ClauseBase 9",
+    "search_query": "Clause9 ClauseBase 9",
+    "original_name": "Clause9 by ClauseBase 9"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "ClauseBuddy",
+    "vendor_name": "ClauseBase",
+    "search_query": "ClauseBuddy ClauseBase",
+    "original_name": "ClauseBuddy by ClauseBase"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "CobbleStone Contract Insight",
+    "vendor_name": "Cobblestone Software",
+    "search_query": "CobbleStone Contract Insight Cobblestone Software",
+    "original_name": "CobbleStone Contract Insight by Cobblestone Software"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "ContracMatrix",
+    "vendor_name": "A&O Shearman",
+    "search_query": "ContracMatrix A&O Shearman",
+    "original_name": "ContracMatrix by A&O Shearman"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Contract Logix",
+    "vendor_name": "LegalSifter",
+    "search_query": "Contract Logix LegalSifter",
+    "original_name": "Contract Logix by LegalSifter"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "ContractGenie",
+    "vendor_name": "Predactica",
+    "search_query": "ContractGenie Predactica",
+    "original_name": "ContractGenie by Predactica"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Contraqto",
+    "vendor_name": "Swiss GRC",
+    "search_query": "Contraqto Swiss GRC",
+    "original_name": "Contraqto by Swiss GRC"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Corpus",
+    "vendor_name": "TirLegal Inc.",
+    "search_query": "Corpus TirLegal Inc.",
+    "original_name": "Corpus by TirLegal Inc."
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "DISCO Auto Review",
+    "vendor_name": "CS DISCO",
+    "search_query": "DISCO Auto Review CS DISCO",
+    "original_name": "DISCO Auto Review by CS DISCO"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "David AI",
+    "vendor_name": "2nd Chair",
+    "search_query": "David AI 2nd Chair",
+    "original_name": "David AI by 2nd Chair"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Deal Intelligence",
+    "vendor_name": "Centari",
+    "search_query": "Deal Intelligence Centari",
+    "original_name": "Deal Intelligence by Centari"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Demand Composer",
+    "vendor_name": "Precedent",
+    "search_query": "Demand Composer Precedent",
+    "original_name": "Demand Composer by Precedent"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Depo CoPilot",
+    "vendor_name": "Filevine",
+    "search_query": "Depo CoPilot Filevine",
+    "original_name": "Depo CoPilot by Filevine"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "DepoSummary Pro",
+    "vendor_name": "U.S. Legal Support",
+    "search_query": "DepoSummary Pro U.S. Legal Support",
+    "original_name": "DepoSummary Pro by U.S. Legal Support"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Deposition Insights",
+    "vendor_name": "Lexitas",
+    "search_query": "Deposition Insights Lexitas",
+    "original_name": "Deposition Insights by Lexitas"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Depositions",
+    "vendor_name": "Filevine",
+    "search_query": "Depositions Filevine",
+    "original_name": "Depositions by Filevine"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "DocEx",
+    "vendor_name": "Metamorf",
+    "search_query": "DocEx Metamorf",
+    "original_name": "DocEx by Metamorf"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Docket Alarm",
+    "vendor_name": "vLex",
+    "search_query": "Docket Alarm vLex",
+    "original_name": "Docket Alarm by vLex"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "ELLE Legal Solutions",
+    "vendor_name": "Logol AG",
+    "search_query": "ELLE Legal Solutions Logol AG",
+    "original_name": "ELLE Legal Solutions by Logol AG"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "ELM Solutions",
+    "vendor_name": "Wolters Kluwer Enterprise Legal Management",
+    "search_query": "ELM Solutions Wolters Kluwer Enterprise Legal Management",
+    "original_name": "ELM Solutions by Wolters Kluwer Enterprise Legal Management"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "ELTEMATE CRAIG",
+    "vendor_name": "ELTEMATE A Hogan Lovellsâ€‹Technology Company",
+    "search_query": "ELTEMATE CRAIG ELTEMATE A Hogan Lovellsâ€‹Technology Company",
+    "original_name": "ELTEMATE CRAIG by ELTEMATE A Hogan Lovellsâ€‹Technology Company"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Email Summarizer",
+    "vendor_name": "Syntheia",
+    "search_query": "Email Summarizer Syntheia",
+    "original_name": "Email Summarizer by Syntheia"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Evidence Replay",
+    "vendor_name": "Finamotion E VIDENCE R EPLAY TM",
+    "search_query": "Evidence Replay Finamotion E VIDENCE R EPLAY TM",
+    "original_name": "Evidence Replay by Finamotion E VIDENCE R EPLAY TM"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Expireon",
+    "vendor_name": "Cloudficient",
+    "search_query": "Expireon Cloudficient",
+    "original_name": "Expireon by Cloudficient"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "FirmLink",
+    "vendor_name": "Metamorf",
+    "search_query": "FirmLink Metamorf",
+    "original_name": "FirmLink by Metamorf"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Fund Curator",
+    "vendor_name": "Syntheia",
+    "search_query": "Fund Curator Syntheia",
+    "original_name": "Fund Curator by Syntheia"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Gateway",
+    "vendor_name": "Truth Systems",
+    "search_query": "Gateway Truth Systems",
+    "original_name": "Gateway by Truth Systems"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Generative AI Development",
+    "vendor_name": "Erbis",
+    "search_query": "Generative AI Development Erbis",
+    "original_name": "Generative AI Development by Erbis"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Gino AI",
+    "vendor_name": "Gino LegalTech",
+    "search_query": "Gino AI Gino LegalTech",
+    "original_name": "Gino AI by Gino LegalTech"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Hive",
+    "vendor_name": "ReVia",
+    "search_query": "Hive ReVia",
+    "original_name": "Hive by ReVia"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "InView Legal",
+    "vendor_name": "Wolters Kluwer InView",
+    "search_query": "InView Legal Wolters Kluwer InView",
+    "original_name": "InView Legal by Wolters Kluwer InView"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Intelligize",
+    "vendor_name": "LexisNexis",
+    "search_query": "Intelligize LexisNexis",
+    "original_name": "Intelligize by LexisNexis"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "JudyAI",
+    "vendor_name": "Gemini Legal",
+    "search_query": "JudyAI Gemini Legal",
+    "original_name": "JudyAI by Gemini Legal"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Jurist",
+    "vendor_name": "Ironclad",
+    "search_query": "Jurist Ironclad",
+    "original_name": "Jurist by Ironclad"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Jus AI",
+    "vendor_name": "Jus Mundi",
+    "search_query": "Jus AI Jus Mundi",
+    "original_name": "Jus AI by Jus Mundi"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "KAILA",
+    "vendor_name": "Karnov Group",
+    "search_query": "KAILA Karnov Group",
+    "original_name": "KAILA by Karnov Group"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "KLapper",
+    "vendor_name": "KLoBot",
+    "search_query": "KLapper KLoBot",
+    "original_name": "KLapper by KLoBot"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "LEDOX365",
+    "vendor_name": "Join GmbH",
+    "search_query": "LEDOX365 Join GmbH",
+    "original_name": "LEDOX365 by Join GmbH"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "LEIAA",
+    "vendor_name": "Augmetec",
+    "search_query": "LEIAA Augmetec",
+    "original_name": "LEIAA by Augmetec"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "LISA",
+    "vendor_name": "Fledger",
+    "search_query": "LISA Fledger",
+    "original_name": "LISA by Fledger"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Language Weaver",
+    "vendor_name": "RWS",
+    "search_query": "Language Weaver RWS",
+    "original_name": "Language Weaver by RWS"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "LeXi AI",
+    "vendor_name": "Astute Lex Servicado",
+    "search_query": "LeXi AI Astute Lex Servicado",
+    "original_name": "LeXi AI by Astute Lex Servicado"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Lead Docket",
+    "vendor_name": "Filevine",
+    "search_query": "Lead Docket Filevine",
+    "original_name": "Lead Docket by Filevine"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Leah",
+    "vendor_name": "ContractPodAI",
+    "search_query": "Leah ContractPodAI",
+    "original_name": "Leah by ContractPodAI"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Legal Visor",
+    "vendor_name": "Verbit",
+    "search_query": "Legal Visor Verbit",
+    "original_name": "Legal Visor by Verbit"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "LegalMind+",
+    "vendor_name": "Traveling Coaches",
+    "search_query": "LegalMind+ Traveling Coaches",
+    "original_name": "LegalMind+ by Traveling Coaches"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "LegalWorks",
+    "vendor_name": "Tonkean",
+    "search_query": "LegalWorks Tonkean",
+    "original_name": "LegalWorks by Tonkean"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Lexion",
+    "vendor_name": "Docusign",
+    "search_query": "Lexion Docusign",
+    "original_name": "Lexion by Docusign"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Litigation Assist",
+    "vendor_name": "EyeLevel",
+    "search_query": "Litigation Assist EyeLevel",
+    "original_name": "Litigation Assist by EyeLevel"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Luka",
+    "vendor_name": "Cachai",
+    "search_query": "Luka Cachai",
+    "original_name": "Luka by Cachai"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Lyncs",
+    "vendor_name": "Logical Construct",
+    "search_query": "Lyncs Logical Construct",
+    "original_name": "Lyncs by Logical Construct"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "MARC",
+    "vendor_name": "Altorney",
+    "search_query": "MARC Altorney",
+    "original_name": "MARC by Altorney"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Mark My Matter",
+    "vendor_name": "Happy Curious Lawyer LLP",
+    "search_query": "Mark My Matter Happy Curious Lawyer LLP",
+    "original_name": "Mark My Matter by Happy Curious Lawyer LLP"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Massdraft",
+    "vendor_name": "Avvoka",
+    "search_query": "Massdraft Avvoka",
+    "original_name": "Massdraft by Avvoka"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "MatterSuite ELM",
+    "vendor_name": "CaseFox",
+    "search_query": "MatterSuite ELM CaseFox",
+    "original_name": "MatterSuite ELM by CaseFox"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "MedChron",
+    "vendor_name": "Filevine Filevine",
+    "search_query": "MedChron Filevine Filevine",
+    "original_name": "MedChron by Filevine Filevine"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Merlin Alchemy",
+    "vendor_name": "Merlin Search Technologies",
+    "search_query": "Merlin Alchemy Merlin Search Technologies",
+    "original_name": "Merlin Alchemy by Merlin Search Technologies"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Mike Virtual Paralegal",
+    "vendor_name": "Scissero",
+    "search_query": "Mike Virtual Paralegal Scissero",
+    "original_name": "Mike Virtual Paralegal by Scissero"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "MindPeer",
+    "vendor_name": "Mind-Alliance Systems",
+    "search_query": "MindPeer Mind-Alliance Systems",
+    "original_name": "MindPeer by Mind-Alliance Systems"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Murphy",
+    "vendor_name": "Deus Group",
+    "search_query": "Murphy Deus Group",
+    "original_name": "Murphy by Deus Group"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Native AI Review",
+    "vendor_name": "Consilio",
+    "search_query": "Native AI Review Consilio",
+    "original_name": "Native AI Review by Consilio"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "OpenText eDOCS Content Management",
+    "vendor_name": "OpenText OpenText eDOCS",
+    "search_query": "OpenText eDOCS Content Management OpenText OpenText eDOCS",
+    "original_name": "OpenText eDOCS Content Management by OpenText OpenText eDOCS"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Otto",
+    "vendor_name": "Black Hills AI",
+    "search_query": "Otto Black Hills AI",
+    "original_name": "Otto by Black Hills AI"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Patent X-Ray",
+    "vendor_name": "Tangibly",
+    "search_query": "Patent X-Ray Tangibly",
+    "original_name": "Patent X-Ray by Tangibly"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Phaselaw",
+    "vendor_name": "Phaselab",
+    "search_query": "Phaselaw Phaselab",
+    "original_name": "Phaselaw by Phaselab"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Playbooks",
+    "vendor_name": "Lext",
+    "search_query": "Playbooks Lext",
+    "original_name": "Playbooks by Lext"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "QuarkAI",
+    "vendor_name": "LSG",
+    "search_query": "QuarkAI LSG",
+    "original_name": "QuarkAI by LSG"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "RecordSummary Pro",
+    "vendor_name": "U.S. Legal Support",
+    "search_query": "RecordSummary Pro U.S. Legal Support",
+    "original_name": "RecordSummary Pro by U.S. Legal Support"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Redwood",
+    "vendor_name": "Talking Tree Talking Tree.",
+    "search_query": "Redwood Talking Tree Talking Tree.",
+    "original_name": "Redwood by Talking Tree Talking Tree."
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Regulatory Pilot",
+    "vendor_name": "ELTEMATE A Hogan Lovellsâ€‹Technology Company",
+    "search_query": "Regulatory Pilot ELTEMATE A Hogan Lovellsâ€‹Technology Company",
+    "original_name": "Regulatory Pilot by ELTEMATE A Hogan Lovellsâ€‹Technology Company"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "RightHub",
+    "vendor_name": "Anaqua",
+    "search_query": "RightHub Anaqua",
+    "original_name": "RightHub by Anaqua"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Rocket Matter",
+    "vendor_name": "ProfitSolv",
+    "search_query": "Rocket Matter ProfitSolv",
+    "original_name": "Rocket Matter by ProfitSolv"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Self-Serve",
+    "vendor_name": "DigitalOwl",
+    "search_query": "Self-Serve DigitalOwl",
+    "original_name": "Self-Serve by DigitalOwl"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "SiSo Diligence",
+    "vendor_name": "SingleSource Technologies",
+    "search_query": "SiSo Diligence SingleSource Technologies",
+    "original_name": "SiSo Diligence by SingleSource Technologies"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "SimpleAI",
+    "vendor_name": "SimpleDocs",
+    "search_query": "SimpleAI SimpleDocs",
+    "original_name": "SimpleAI by SimpleDocs"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Sinequa",
+    "vendor_name": "ChapsVision",
+    "search_query": "Sinequa ChapsVision",
+    "original_name": "Sinequa by ChapsVision"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Sirion CLM",
+    "vendor_name": "Sirion Labs",
+    "search_query": "Sirion CLM Sirion Labs",
+    "original_name": "Sirion CLM by Sirion Labs"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Smart Summary",
+    "vendor_name": "Veritext",
+    "search_query": "Smart Summary Veritext",
+    "original_name": "Smart Summary by Veritext"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "SmartAAI",
+    "vendor_name": "Law In Order",
+    "search_query": "SmartAAI Law In Order",
+    "original_name": "SmartAAI by Law In Order"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "SmartDepo",
+    "vendor_name": "Rev",
+    "search_query": "SmartDepo Rev",
+    "original_name": "SmartDepo by Rev"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Super Comparer",
+    "vendor_name": "Syntheia",
+    "search_query": "Super Comparer Syntheia",
+    "original_name": "Super Comparer by Syntheia"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Synapse",
+    "vendor_name": "Ontra",
+    "search_query": "Synapse Ontra",
+    "original_name": "Synapse by Ontra"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "TestMtWitness",
+    "vendor_name": "A-dapt International Ltd",
+    "search_query": "TestMtWitness A-dapt International Ltd",
+    "original_name": "TestMtWitness by A-dapt International Ltd"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "The Legal AI Consultancy",
+    "vendor_name": "Simplexico ðŸš€ simplexico",
+    "search_query": "The Legal AI Consultancy Simplexico ðŸš€ simplexico",
+    "original_name": "The Legal AI Consultancy by Simplexico ðŸš€ simplexico"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Titan AI Contract Drafter",
+    "vendor_name": "AirCounsel Titan AIâ€‹Contract Drafter",
+    "search_query": "Titan AI Contract Drafter AirCounsel Titan AIâ€‹Contract Drafter",
+    "original_name": "Titan AI Contract Drafter by AirCounsel Titan AIâ€‹Contract Drafter"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "TrueLaw",
+    "vendor_name": "Consilio",
+    "search_query": "TrueLaw Consilio",
+    "original_name": "TrueLaw by Consilio"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "VDRPro",
+    "vendor_name": "SS&C Intralinks",
+    "search_query": "VDRPro SS&C Intralinks",
+    "original_name": "VDRPro by SS&C Intralinks"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "VerifAI",
+    "vendor_name": "SpotDraft",
+    "search_query": "VerifAI SpotDraft",
+    "original_name": "VerifAI by SpotDraft"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "Vincent AI",
+    "vendor_name": "vLex",
+    "search_query": "Vincent AI vLex",
+    "original_name": "Vincent AI by vLex"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "XISUITE",
+    "vendor_name": "XtremeForensics",
+    "search_query": "XISUITE XtremeForensics",
+    "original_name": "XISUITE by XtremeForensics"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "aiR for Review",
+    "vendor_name": "Relativity",
+    "search_query": "aiR for Review Relativity",
+    "original_name": "aiR for Review by Relativity"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "bagmen.ai",
+    "vendor_name": "IDS Legal Technology Services",
+    "search_query": "bagmen.ai IDS Legal Technology Services",
+    "original_name": "bagmen.ai by IDS Legal Technology Services"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "e!",
+    "vendor_name": "Lexemo GmbH",
+    "search_query": "e! Lexemo GmbH",
+    "original_name": "e! by Lexemo GmbH"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "iFinder",
+    "vendor_name": "IntraFind",
+    "search_query": "iFinder IntraFind",
+    "original_name": "iFinder by IntraFind"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "ndMax App Builder",
+    "vendor_name": "NetDocuments",
+    "search_query": "ndMax App Builder NetDocuments",
+    "original_name": "ndMax App Builder by NetDocuments"
+  },
+  {
+    "category": "by_pattern_clean",
+    "priority": 3,
+    "product_name": "ndMax",
+    "vendor_name": "NetDocuments",
+    "search_query": "ndMax NetDocuments",
+    "original_name": "ndMax by NetDocuments"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "8am MyCase",
+    "vendor_name": "8am",
+    "search_query": "8am",
+    "original_name": "8am MyCase by 8am"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "AI Billing Compliance",
+    "vendor_name": "273 Ventures AI Billing Compliance",
+    "search_query": "273 Ventures AI Billing Compliance",
+    "original_name": "AI Billing Compliance by 273 Ventures AI Billing Compliance"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "AllRize Law Practice Management",
+    "vendor_name": "AllRize",
+    "search_query": "AllRize",
+    "original_name": "AllRize Law Practice Management by AllRize"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "AnNoText",
+    "vendor_name": "Wolters Kluwer AnNoText",
+    "search_query": "Wolters Kluwer AnNoText",
+    "original_name": "AnNoText by Wolters Kluwer AnNoText"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Apollo",
+    "vendor_name": "Hercules AI Apollo",
+    "search_query": "Hercules AI Apollo",
+    "original_name": "Apollo by Hercules AI Apollo"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Aracor AI",
+    "vendor_name": "Aracor",
+    "search_query": "Aracor",
+    "original_name": "Aracor AI by Aracor"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Ask Blue J",
+    "vendor_name": "Blue J",
+    "search_query": "Blue J",
+    "original_name": "Ask Blue J by Blue J"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Ask Knowable",
+    "vendor_name": "Knowable",
+    "search_query": "Knowable",
+    "original_name": "Ask Knowable by Knowable"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Athena",
+    "vendor_name": "Hercules AI Athena",
+    "search_query": "Hercules AI Athena",
+    "original_name": "Athena by Hercules AI Athena"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Atlas Fuse",
+    "vendor_name": "ClearPeople Atlas Fuseâ€‹",
+    "search_query": "ClearPeople Atlas Fuseâ€‹",
+    "original_name": "Atlas Fuse by ClearPeople Atlas Fuseâ€‹"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Belt",
+    "vendor_name": "Belt Software",
+    "search_query": "Belt Software",
+    "original_name": "Belt by Belt Software"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Bloomberg Law Research",
+    "vendor_name": "Bloomberg",
+    "search_query": "Bloomberg",
+    "original_name": "Bloomberg Law Research by Bloomberg"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "CaseGuard",
+    "vendor_name": "CaseGuard Inc.",
+    "search_query": "CaseGuard Inc.",
+    "original_name": "CaseGuard by CaseGuard Inc."
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "CaseMap+ AI",
+    "vendor_name": "LexisNexis CaseMap+ AI",
+    "search_query": "LexisNexis CaseMap+ AI",
+    "original_name": "CaseMap+ AI by LexisNexis CaseMap+ AI"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Chrometa Time Tracker",
+    "vendor_name": "Chrometa",
+    "search_query": "Chrometa",
+    "original_name": "Chrometa Time Tracker by Chrometa"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "CiteCheck AI",
+    "vendor_name": "LawDroid CiteCheck AI Powered by LawDroid",
+    "search_query": "LawDroid CiteCheck AI Powered by LawDroid",
+    "original_name": "CiteCheck AI by LawDroid CiteCheck AI Powered by LawDroid"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "ClaimChart LLM",
+    "vendor_name": "XLSCOUT ClaimChart LLM",
+    "search_query": "XLSCOUT ClaimChart LLM",
+    "original_name": "ClaimChart LLM by XLSCOUT ClaimChart LLM"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "CoCounsel Drafting",
+    "vendor_name": "Thomson Reuters CoCounsel Drafting",
+    "search_query": "Thomson Reuters CoCounsel Drafting",
+    "original_name": "CoCounsel Drafting by Thomson Reuters CoCounsel Drafting"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "CoCounsel Legal",
+    "vendor_name": "Thomson Reuters CoCounsel Legal",
+    "search_query": "Thomson Reuters CoCounsel Legal",
+    "original_name": "CoCounsel Legal by Thomson Reuters CoCounsel Legal"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Contract Automation",
+    "vendor_name": "Ontra",
+    "search_query": "Ontra",
+    "original_name": "Contract Automation by Ontra"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Contract Companion",
+    "vendor_name": "Litera Contract Companion",
+    "search_query": "Litera Contract Companion",
+    "original_name": "Contract Companion by Litera Contract Companion"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Contract Express",
+    "vendor_name": "Thomson Reuters Contract Express",
+    "search_query": "Thomson Reuters Contract Express",
+    "original_name": "Contract Express by Thomson Reuters Contract Express"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Contract Lifecycle Management",
+    "vendor_name": "Workday CONTRACT LIFECYCLE MANAGEMENT",
+    "search_query": "Workday CONTRACT LIFECYCLE MANAGEMENT",
+    "original_name": "Contract Lifecycle Management by Workday CONTRACT LIFECYCLE MANAGEMENT"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "ContractPodAI Cloud",
+    "vendor_name": "ContractPodAI",
+    "search_query": "ContractPodAI",
+    "original_name": "ContractPodAI Cloud by ContractPodAI"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Cooley GO",
+    "vendor_name": "Cooley",
+    "search_query": "Cooley",
+    "original_name": "Cooley GO by Cooley"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Coveo AI-Relevance Platform",
+    "vendor_name": "Coveo",
+    "search_query": "Coveo",
+    "original_name": "Coveo AI-Relevance Platform by Coveo"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Datasite Diligence",
+    "vendor_name": "Datasite",
+    "search_query": "Datasite",
+    "original_name": "Datasite Diligence by Datasite"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Definely Cascade",
+    "vendor_name": "Definely Definely Cascade",
+    "search_query": "Definely Definely Cascade",
+    "original_name": "Definely Cascade by Definely Definely Cascade"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Definely Enhance",
+    "vendor_name": "Definely Definely Enhance",
+    "search_query": "Definely Definely Enhance",
+    "original_name": "Definely Enhance by Definely Definely Enhance"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Definely Vault",
+    "vendor_name": "Definely Definely Vault",
+    "search_query": "Definely Definely Vault",
+    "original_name": "Definely Vault by Definely Definely Vault"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Elite Validate",
+    "vendor_name": "Elite",
+    "search_query": "Elite",
+    "original_name": "Elite Validate by Elite"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Epiq Discovery - eDiscovery Software",
+    "vendor_name": "EPIQ",
+    "search_query": "EPIQ",
+    "original_name": "Epiq Discovery - eDiscovery Software by EPIQ"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Expert Radar",
+    "vendor_name": "Expert Institute EXPERT RADAR",
+    "search_query": "Expert Institute EXPERT RADAR",
+    "original_name": "Expert Radar by Expert Institute EXPERT RADAR"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Expert Sierra",
+    "vendor_name": "Aderant Expert Sierra",
+    "search_query": "Aderant Expert Sierra",
+    "original_name": "Expert Sierra by Aderant Expert Sierra"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "First Drafts",
+    "vendor_name": "First Drafts AI",
+    "search_query": "First Drafts AI",
+    "original_name": "First Drafts by First Drafts AI"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Foundation Insights",
+    "vendor_name": "Litera Foundation Insights",
+    "search_query": "Litera Foundation Insights",
+    "original_name": "Foundation Insights by Litera Foundation Insights"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Foundation Proactive",
+    "vendor_name": "Litera Foundation Proactive",
+    "search_query": "Litera Foundation Proactive",
+    "original_name": "Foundation Proactive by Litera Foundation Proactive"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Fund Management",
+    "vendor_name": "BRYTER Fund Management",
+    "search_query": "BRYTER Fund Management",
+    "original_name": "Fund Management by BRYTER Fund Management"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Insight+",
+    "vendor_name": "iManage Insight+",
+    "search_query": "iManage Insight+",
+    "original_name": "Insight+ by iManage Insight+"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Intapp Conflicts",
+    "vendor_name": "Intapp Conflicts",
+    "search_query": "Intapp Conflicts",
+    "original_name": "Intapp Conflicts by Intapp Conflicts"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Intapp DealCloud",
+    "vendor_name": "Intapp DealCloud",
+    "search_query": "Intapp DealCloud",
+    "original_name": "Intapp DealCloud by Intapp DealCloud"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Intapp Intake",
+    "vendor_name": "Intapp Intake",
+    "search_query": "Intapp Intake",
+    "original_name": "Intapp Intake by Intapp Intake"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Intapp Terms",
+    "vendor_name": "Intapp Terms",
+    "search_query": "Intapp Terms",
+    "original_name": "Intapp Terms by Intapp Terms"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Intapp Time",
+    "vendor_name": "Intapp Time",
+    "search_query": "Intapp Time",
+    "original_name": "Intapp Time by Intapp Time"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Kira",
+    "vendor_name": "Litera Kira",
+    "search_query": "Litera Kira",
+    "original_name": "Kira by Litera Kira"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Korbyt Booking",
+    "vendor_name": "Korbyt",
+    "search_query": "Korbyt",
+    "original_name": "Korbyt Booking by Korbyt"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Legal Data API",
+    "vendor_name": "LexisNexis Legal Data API",
+    "search_query": "LexisNexis Legal Data API",
+    "original_name": "Legal Data API by LexisNexis Legal Data API"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Legisway",
+    "vendor_name": "Wolters Kluwer Legisway",
+    "search_query": "Wolters Kluwer Legisway",
+    "original_name": "Legisway by Wolters Kluwer Legisway"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Lex Machina",
+    "vendor_name": "LexisNexis Lex Machina",
+    "search_query": "LexisNexis Lex Machina",
+    "original_name": "Lex Machina by LexisNexis Lex Machina"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Lighthouse AI Search",
+    "vendor_name": "Lighthouse Lighthouse AI Search",
+    "search_query": "Lighthouse Lighthouse AI Search",
+    "original_name": "Lighthouse AI Search by Lighthouse Lighthouse AI Search"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Lighthouse AI",
+    "vendor_name": "Lighthouse",
+    "search_query": "Lighthouse",
+    "original_name": "Lighthouse AI by Lighthouse"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Litera Create - Content",
+    "vendor_name": "Litera Create",
+    "search_query": "Litera Create",
+    "original_name": "Litera Create - Content by Litera Create"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Litera One",
+    "vendor_name": "Litera Litera One",
+    "search_query": "Litera Litera One",
+    "original_name": "Litera One by Litera Litera One"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Litify ELM",
+    "vendor_name": "Litify",
+    "search_query": "Litify",
+    "original_name": "Litify ELM by Litify"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Lito",
+    "vendor_name": "Litera Lito",
+    "search_query": "Litera Lito",
+    "original_name": "Lito by Litera Lito"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "MATTEROOM",
+    "vendor_name": "MATTEROOM LLC",
+    "search_query": "MATTEROOM LLC",
+    "original_name": "MATTEROOM by MATTEROOM LLC"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Markup",
+    "vendor_name": "DraftWise Markup",
+    "search_query": "DraftWise Markup",
+    "original_name": "Markup by DraftWise Markup"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Matter",
+    "vendor_name": "Legavee Matter.",
+    "search_query": "Legavee Matter.",
+    "original_name": "Matter by Legavee Matter."
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Maxime",
+    "vendor_name": "Maxime Tools, Inc. Maxime",
+    "search_query": "Maxime Tools, Inc. Maxime",
+    "original_name": "Maxime by Maxime Tools, Inc. Maxime"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Milliman Datalytics-Defense",
+    "vendor_name": "Milliman",
+    "search_query": "Milliman",
+    "original_name": "Milliman Datalytics-Defense by Milliman"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "NeoLegal Affaire Suite",
+    "vendor_name": "NeoLegal",
+    "search_query": "NeoLegal",
+    "original_name": "NeoLegal Affaire Suite by NeoLegal"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Nexis Diligence+",
+    "vendor_name": "LexisNexis Nexis Diligence+",
+    "search_query": "LexisNexis Nexis Diligence+",
+    "original_name": "Nexis Diligence+ by LexisNexis Nexis Diligence+"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Office & Dragons",
+    "vendor_name": "Litera Office & Dragons",
+    "search_query": "Litera Office & Dragons",
+    "original_name": "Office & Dragons by Litera Office & Dragons"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "OpenText eDiscovery",
+    "vendor_name": "OpenText OpenText eDiscovery",
+    "search_query": "OpenText OpenText eDiscovery",
+    "original_name": "OpenText eDiscovery by OpenText OpenText eDiscovery"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Orbit Trace",
+    "vendor_name": "Kentron AI Orbit Trace",
+    "search_query": "Kentron AI Orbit Trace",
+    "original_name": "Orbit Trace by Kentron AI Orbit Trace"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Orbital Copilot",
+    "vendor_name": "Orbital",
+    "search_query": "Orbital",
+    "original_name": "Orbital Copilot by Orbital"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Orbital Witness",
+    "vendor_name": "Orbital",
+    "search_query": "Orbital",
+    "original_name": "Orbital Witness by Orbital"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "PONS",
+    "vendor_name": "PONS LABS PONS",
+    "search_query": "PONS LABS PONS",
+    "original_name": "PONS by PONS LABS PONS"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Parsl",
+    "vendor_name": "Parsl AI Inc. Parsl",
+    "search_query": "Parsl AI Inc. Parsl",
+    "original_name": "Parsl by Parsl AI Inc. Parsl"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "PatDigger LLM",
+    "vendor_name": "XLSCOUT PatDigger LLM",
+    "search_query": "XLSCOUT PatDigger LLM",
+    "original_name": "PatDigger LLM by XLSCOUT PatDigger LLM"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Power Apps",
+    "vendor_name": "Microsoft Microsoftâ€‹Power Apps",
+    "search_query": "Microsoft Microsoftâ€‹Power Apps",
+    "original_name": "Power Apps by Microsoft Microsoftâ€‹Power Apps"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Practical Law Dynamic",
+    "vendor_name": "Thomson Reuters Practical Law Dynamic",
+    "search_query": "Thomson Reuters Practical Law Dynamic",
+    "original_name": "Practical Law Dynamic by Thomson Reuters Practical Law Dynamic"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Practical Law UK",
+    "vendor_name": "Thomson Reuters Practical Law UK",
+    "search_query": "Thomson Reuters Practical Law UK",
+    "original_name": "Practical Law UK by Thomson Reuters Practical Law UK"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Prevail",
+    "vendor_name": "Prevail Legal",
+    "search_query": "Prevail Legal",
+    "original_name": "Prevail by Prevail Legal"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Rasa Platform",
+    "vendor_name": "Rasa",
+    "search_query": "Rasa",
+    "original_name": "Rasa Platform by Rasa"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Repository and Assistant",
+    "vendor_name": "Ivo Repository and Assistantâ€‹â€‹",
+    "search_query": "Ivo Repository and Assistantâ€‹â€‹",
+    "original_name": "Repository and Assistant by Ivo Repository and Assistantâ€‹â€‹"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Sana Agents",
+    "vendor_name": "Sana",
+    "search_query": "Sana",
+    "original_name": "Sana Agents by Sana"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Spellbook Associate",
+    "vendor_name": "Spellbook Associate",
+    "search_query": "Spellbook Associate",
+    "original_name": "Spellbook Associate by Spellbook Associate"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Strative Connect",
+    "vendor_name": "Strative",
+    "search_query": "Strative",
+    "original_name": "Strative Connect by Strative"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Stretto Conductor",
+    "vendor_name": "Stretto",
+    "search_query": "Stretto",
+    "original_name": "Stretto Conductor by Stretto"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Subi Compliance",
+    "vendor_name": "Subi",
+    "search_query": "Subi",
+    "original_name": "Subi Compliance by Subi"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "TIQ Time",
+    "vendor_name": "TIQ",
+    "search_query": "TIQ",
+    "original_name": "TIQ Time by TIQ"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Tariff Risk Analyzer",
+    "vendor_name": "Pramata Tariff Risk Analyzerâ€‹",
+    "search_query": "Pramata Tariff Risk Analyzerâ€‹",
+    "original_name": "Tariff Risk Analyzer by Pramata Tariff Risk Analyzerâ€‹"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Tavrn",
+    "vendor_name": "Tavrn AI",
+    "search_query": "Tavrn AI",
+    "original_name": "Tavrn by Tavrn AI"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Threadeo",
+    "vendor_name": "Threadeo Inc.",
+    "search_query": "Threadeo Inc.",
+    "original_name": "Threadeo by Threadeo Inc."
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Transcript Genius",
+    "vendor_name": "Steno Transcript Genius",
+    "search_query": "Steno Transcript Genius",
+    "original_name": "Transcript Genius by Steno Transcript Genius"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Trellis AI",
+    "vendor_name": "Trellis Trellis AI",
+    "search_query": "Trellis Trellis AI",
+    "original_name": "Trellis AI by Trellis Trellis AI"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Uncover",
+    "vendor_name": "Uncover Legal BV",
+    "search_query": "Uncover Legal BV",
+    "original_name": "Uncover by Uncover Legal BV"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "UseJunior Assistant",
+    "vendor_name": "UseJunior",
+    "search_query": "UseJunior",
+    "original_name": "UseJunior Assistant by UseJunior"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Verify",
+    "vendor_name": "HerculesAI Verify",
+    "search_query": "HerculesAI Verify",
+    "original_name": "Verify by HerculesAI Verify"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Virtual Data Rooms",
+    "vendor_name": "Thomson Reuters Virtual data rooms",
+    "search_query": "Thomson Reuters Virtual data rooms",
+    "original_name": "Virtual Data Rooms by Thomson Reuters Virtual data rooms"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "VitalLaw",
+    "vendor_name": "Wolters Kluwer VitalLaw",
+    "search_query": "Wolters Kluwer VitalLaw",
+    "original_name": "VitalLaw by Wolters Kluwer VitalLaw"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Voltaire",
+    "vendor_name": "Voltaire Legal",
+    "search_query": "Voltaire Legal",
+    "original_name": "Voltaire by Voltaire Legal"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Westlaw Edge UK with CoCounsel",
+    "vendor_name": "Thomson Reuters WESTLAW EDGE UK WITH COCOUNSEL",
+    "search_query": "Thomson Reuters WESTLAW EDGE UK WITH COCOUNSEL",
+    "original_name": "Westlaw Edge UK with CoCounsel by Thomson Reuters WESTLAW EDGE UK WITH COCOUNSEL"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "Westlaw Precision",
+    "vendor_name": "Thomson Reuters WESTLAW PRECISION WITH COCOUNSEL",
+    "search_query": "Thomson Reuters WESTLAW PRECISION WITH COCOUNSEL",
+    "original_name": "Westlaw Precision by Thomson Reuters WESTLAW PRECISION WITH COCOUNSEL"
+  },
+  {
+    "category": "by_pattern_redundant",
+    "priority": 4,
+    "product_name": "iTimekeep",
+    "vendor_name": "Aderant iTimekeep",
+    "search_query": "Aderant iTimekeep",
+    "original_name": "iTimekeep by Aderant iTimekeep"
+  }
+]

@@ -1,0 +1,661 @@
+PRIORITY 3: Hard Tools (Sub-products, 'by' pattern)
+Total: 219
+================================================================================
+
+1. A1 by Sarvam.ai
+   Product: A1
+   Vendor: Sarvam.ai
+2. AI Agent Studio by Onit
+   Product: AI Agent Studio
+   Vendor: Onit
+3. AI Insights by Jurisage
+   Product: AI Insights
+   Vendor: Jurisage
+4. Apperio by Persuit
+   Product: Apperio
+   Vendor: Persuit
+5. Arrow AI by ArrowLex
+   Product: Arrow AI
+   Vendor: ArrowLex
+6. Ask by Reveal
+   Product: Ask
+   Vendor: Reveal
+7. Atlas Client Portals and Extranet by ClearPeople Atlas Extranetâ€‹
+   Product: Atlas Client Portals and Extranet
+   Vendor: ClearPeople Atlas Extranetâ€‹
+8. Atlas Intelligent Knowledge Platform by ClearPeople
+   Product: Atlas Intelligent Knowledge Platform
+   Vendor: ClearPeople
+9. Atlas by Ontra
+   Product: Atlas
+   Vendor: Ontra
+10. Aurora by Consilio
+   Product: Aurora
+   Vendor: Consilio
+11. BA Insight by Upland Software
+   Product: BA Insight
+   Vendor: Upland Software
+12. BEAMON AI by BRYTER
+   Product: BEAMON AI
+   Vendor: BRYTER
+13. BeringAI by Bering Lab
+   Product: BeringAI
+   Vendor: Bering Lab
+14. BestAgreement.ai by 12New.ai
+   Product: BestAgreement.ai
+   Vendor: 12New.ai
+15. BestCompliance.ai by 12New.ai
+   Product: BestCompliance.ai
+   Vendor: 12New.ai
+16. Botineer by 1Law
+   Product: Botineer
+   Vendor: 1Law
+17. BridgeIndex by LitAgility
+   Product: BridgeIndex
+   Vendor: LitAgility
+18. Builder by LawDroid
+   Product: Builder
+   Vendor: LawDroid
+19. CONTROLit by Element Standard
+   Product: CONTROLit
+   Vendor: Element Standard
+20. CaseChat by esumry Case Chat
+   Product: CaseChat
+   Vendor: esumry Case Chat
+21. CaseDocker by Coingeit
+   Product: CaseDocker
+   Vendor: Coingeit
+22. CaseFusion by Cloudficient
+   Product: CaseFusion
+   Vendor: Cloudficient
+23. CaseReview by MINDSET Integrated Co
+   Product: CaseReview
+   Vendor: MINDSET Integrated Co
+24. Cecilia AI by DISCO
+   Product: Cecilia AI
+   Vendor: DISCO
+25. Charter by Truth Systems
+   Product: Charter
+   Vendor: Truth Systems
+26. Cicero by Automatise
+   Product: Cicero
+   Vendor: Automatise
+27. Clause Builder AI by American Arbitration Association
+   Product: Clause Builder AI
+   Vendor: American Arbitration Association
+28. Clause9 by ClauseBase 9
+   Product: Clause9
+   Vendor: ClauseBase 9
+29. ClauseBuddy by ClauseBase
+   Product: ClauseBuddy
+   Vendor: ClauseBase
+30. CobbleStone Contract Insight by Cobblestone Software
+   Product: CobbleStone Contract Insight
+   Vendor: Cobblestone Software
+31. ContracMatrix by A&O Shearman
+   Product: ContracMatrix
+   Vendor: A&O Shearman
+32. Contract Logix by LegalSifter
+   Product: Contract Logix
+   Vendor: LegalSifter
+33. ContractGenie by Predactica
+   Product: ContractGenie
+   Vendor: Predactica
+34. Contraqto by Swiss GRC
+   Product: Contraqto
+   Vendor: Swiss GRC
+35. Corpus by TirLegal Inc.
+   Product: Corpus
+   Vendor: TirLegal Inc.
+36. DISCO Auto Review by CS DISCO
+   Product: DISCO Auto Review
+   Vendor: CS DISCO
+37. David AI by 2nd Chair
+   Product: David AI
+   Vendor: 2nd Chair
+38. Deal Intelligence by Centari
+   Product: Deal Intelligence
+   Vendor: Centari
+39. Demand Composer by Precedent
+   Product: Demand Composer
+   Vendor: Precedent
+40. Depo CoPilot by Filevine
+   Product: Depo CoPilot
+   Vendor: Filevine
+41. DepoSummary Pro by U.S. Legal Support
+   Product: DepoSummary Pro
+   Vendor: U.S. Legal Support
+42. Deposition Insights by Lexitas
+   Product: Deposition Insights
+   Vendor: Lexitas
+43. Depositions by Filevine
+   Product: Depositions
+   Vendor: Filevine
+44. DocEx by Metamorf
+   Product: DocEx
+   Vendor: Metamorf
+45. Docket Alarm by vLex
+   Product: Docket Alarm
+   Vendor: vLex
+46. ELLE Legal Solutions by Logol AG
+   Product: ELLE Legal Solutions
+   Vendor: Logol AG
+47. ELM Solutions by Wolters Kluwer Enterprise Legal Management
+   Product: ELM Solutions
+   Vendor: Wolters Kluwer Enterprise Legal Management
+48. ELTEMATE CRAIG by ELTEMATE A Hogan Lovellsâ€‹Technology Company
+   Product: ELTEMATE CRAIG
+   Vendor: ELTEMATE A Hogan Lovellsâ€‹Technology Company
+49. Email Summarizer by Syntheia
+   Product: Email Summarizer
+   Vendor: Syntheia
+50. Evidence Replay by Finamotion E VIDENCE R EPLAY TM
+   Product: Evidence Replay
+   Vendor: Finamotion E VIDENCE R EPLAY TM
+51. Expireon by Cloudficient
+   Product: Expireon
+   Vendor: Cloudficient
+52. FirmLink by Metamorf
+   Product: FirmLink
+   Vendor: Metamorf
+53. Fund Curator by Syntheia
+   Product: Fund Curator
+   Vendor: Syntheia
+54. Gateway by Truth Systems
+   Product: Gateway
+   Vendor: Truth Systems
+55. Generative AI Development by Erbis
+   Product: Generative AI Development
+   Vendor: Erbis
+56. Gino AI by Gino LegalTech
+   Product: Gino AI
+   Vendor: Gino LegalTech
+57. Hive by ReVia
+   Product: Hive
+   Vendor: ReVia
+58. InView Legal by Wolters Kluwer InView
+   Product: InView Legal
+   Vendor: Wolters Kluwer InView
+59. Intelligize by LexisNexis
+   Product: Intelligize
+   Vendor: LexisNexis
+60. JudyAI by Gemini Legal
+   Product: JudyAI
+   Vendor: Gemini Legal
+61. Jurist by Ironclad
+   Product: Jurist
+   Vendor: Ironclad
+62. Jus AI by Jus Mundi
+   Product: Jus AI
+   Vendor: Jus Mundi
+63. KAILA by Karnov Group
+   Product: KAILA
+   Vendor: Karnov Group
+64. KLapper by KLoBot
+   Product: KLapper
+   Vendor: KLoBot
+65. LEDOX365 by Join GmbH
+   Product: LEDOX365
+   Vendor: Join GmbH
+66. LEIAA by Augmetec
+   Product: LEIAA
+   Vendor: Augmetec
+67. LISA by Fledger
+   Product: LISA
+   Vendor: Fledger
+68. Language Weaver by RWS
+   Product: Language Weaver
+   Vendor: RWS
+69. LeXi AI by Astute Lex Servicado
+   Product: LeXi AI
+   Vendor: Astute Lex Servicado
+70. Lead Docket by Filevine
+   Product: Lead Docket
+   Vendor: Filevine
+71. Leah by ContractPodAI
+   Product: Leah
+   Vendor: ContractPodAI
+72. Legal Visor by Verbit
+   Product: Legal Visor
+   Vendor: Verbit
+73. LegalMind+ by Traveling Coaches
+   Product: LegalMind+
+   Vendor: Traveling Coaches
+74. LegalWorks by Tonkean
+   Product: LegalWorks
+   Vendor: Tonkean
+75. Lexion by Docusign
+   Product: Lexion
+   Vendor: Docusign
+76. Litigation Assist by EyeLevel
+   Product: Litigation Assist
+   Vendor: EyeLevel
+77. Luka by Cachai
+   Product: Luka
+   Vendor: Cachai
+78. Lyncs by Logical Construct
+   Product: Lyncs
+   Vendor: Logical Construct
+79. MARC by Altorney
+   Product: MARC
+   Vendor: Altorney
+80. Mark My Matter by Happy Curious Lawyer LLP
+   Product: Mark My Matter
+   Vendor: Happy Curious Lawyer LLP
+81. Massdraft by Avvoka
+   Product: Massdraft
+   Vendor: Avvoka
+82. MatterSuite ELM by CaseFox
+   Product: MatterSuite ELM
+   Vendor: CaseFox
+83. MedChron by Filevine Filevine
+   Product: MedChron
+   Vendor: Filevine Filevine
+84. Merlin Alchemy by Merlin Search Technologies
+   Product: Merlin Alchemy
+   Vendor: Merlin Search Technologies
+85. Mike Virtual Paralegal by Scissero
+   Product: Mike Virtual Paralegal
+   Vendor: Scissero
+86. MindPeer by Mind-Alliance Systems
+   Product: MindPeer
+   Vendor: Mind-Alliance Systems
+87. Murphy by Deus Group
+   Product: Murphy
+   Vendor: Deus Group
+88. Native AI Review by Consilio
+   Product: Native AI Review
+   Vendor: Consilio
+89. OpenText eDOCS Content Management by OpenText OpenText eDOCS
+   Product: OpenText eDOCS Content Management
+   Vendor: OpenText OpenText eDOCS
+90. Otto by Black Hills AI
+   Product: Otto
+   Vendor: Black Hills AI
+91. Patent X-Ray by Tangibly
+   Product: Patent X-Ray
+   Vendor: Tangibly
+92. Phaselaw by Phaselab
+   Product: Phaselaw
+   Vendor: Phaselab
+93. Playbooks by Lext
+   Product: Playbooks
+   Vendor: Lext
+94. QuarkAI by LSG
+   Product: QuarkAI
+   Vendor: LSG
+95. RecordSummary Pro by U.S. Legal Support
+   Product: RecordSummary Pro
+   Vendor: U.S. Legal Support
+96. Redwood by Talking Tree Talking Tree.
+   Product: Redwood
+   Vendor: Talking Tree Talking Tree.
+97. Regulatory Pilot by ELTEMATE A Hogan Lovellsâ€‹Technology Company
+   Product: Regulatory Pilot
+   Vendor: ELTEMATE A Hogan Lovellsâ€‹Technology Company
+98. RightHub by Anaqua
+   Product: RightHub
+   Vendor: Anaqua
+99. Rocket Matter by ProfitSolv
+   Product: Rocket Matter
+   Vendor: ProfitSolv
+100. Self-Serve by DigitalOwl
+   Product: Self-Serve
+   Vendor: DigitalOwl
+101. SiSo Diligence by SingleSource Technologies
+   Product: SiSo Diligence
+   Vendor: SingleSource Technologies
+102. SimpleAI by SimpleDocs
+   Product: SimpleAI
+   Vendor: SimpleDocs
+103. Sinequa by ChapsVision
+   Product: Sinequa
+   Vendor: ChapsVision
+104. Sirion CLM by Sirion Labs
+   Product: Sirion CLM
+   Vendor: Sirion Labs
+105. Smart Summary by Veritext
+   Product: Smart Summary
+   Vendor: Veritext
+106. SmartAAI by Law In Order
+   Product: SmartAAI
+   Vendor: Law In Order
+107. SmartDepo by Rev
+   Product: SmartDepo
+   Vendor: Rev
+108. Super Comparer by Syntheia
+   Product: Super Comparer
+   Vendor: Syntheia
+109. Synapse by Ontra
+   Product: Synapse
+   Vendor: Ontra
+110. TestMtWitness by A-dapt International Ltd
+   Product: TestMtWitness
+   Vendor: A-dapt International Ltd
+111. The Legal AI Consultancy by Simplexico ðŸš€ simplexico
+   Product: The Legal AI Consultancy
+   Vendor: Simplexico ðŸš€ simplexico
+112. Titan AI Contract Drafter by AirCounsel Titan AIâ€‹Contract Drafter
+   Product: Titan AI Contract Drafter
+   Vendor: AirCounsel Titan AIâ€‹Contract Drafter
+113. TrueLaw by Consilio
+   Product: TrueLaw
+   Vendor: Consilio
+114. VDRPro by SS&C Intralinks
+   Product: VDRPro
+   Vendor: SS&C Intralinks
+115. VerifAI by SpotDraft
+   Product: VerifAI
+   Vendor: SpotDraft
+116. Vincent AI by vLex
+   Product: Vincent AI
+   Vendor: vLex
+117. XISUITE by XtremeForensics
+   Product: XISUITE
+   Vendor: XtremeForensics
+118. aiR for Review by Relativity
+   Product: aiR for Review
+   Vendor: Relativity
+119. bagmen.ai by IDS Legal Technology Services
+   Product: bagmen.ai
+   Vendor: IDS Legal Technology Services
+120. e! by Lexemo GmbH
+   Product: e!
+   Vendor: Lexemo GmbH
+121. iFinder by IntraFind
+   Product: iFinder
+   Vendor: IntraFind
+122. ndMax App Builder by NetDocuments
+   Product: ndMax App Builder
+   Vendor: NetDocuments
+123. ndMax by NetDocuments
+   Product: ndMax
+   Vendor: NetDocuments
+124. 8am MyCase by 8am
+   Product: 8am MyCase
+   Vendor: 8am
+125. AI Billing Compliance by 273 Ventures AI Billing Compliance
+   Product: AI Billing Compliance
+   Vendor: 273 Ventures AI Billing Compliance
+126. AllRize Law Practice Management by AllRize
+   Product: AllRize Law Practice Management
+   Vendor: AllRize
+127. AnNoText by Wolters Kluwer AnNoText
+   Product: AnNoText
+   Vendor: Wolters Kluwer AnNoText
+128. Apollo by Hercules AI Apollo
+   Product: Apollo
+   Vendor: Hercules AI Apollo
+129. Aracor AI by Aracor
+   Product: Aracor AI
+   Vendor: Aracor
+130. Ask Blue J by Blue J
+   Product: Ask Blue J
+   Vendor: Blue J
+131. Ask Knowable by Knowable
+   Product: Ask Knowable
+   Vendor: Knowable
+132. Athena by Hercules AI Athena
+   Product: Athena
+   Vendor: Hercules AI Athena
+133. Atlas Fuse by ClearPeople Atlas Fuseâ€‹
+   Product: Atlas Fuse
+   Vendor: ClearPeople Atlas Fuseâ€‹
+134. Belt by Belt Software
+   Product: Belt
+   Vendor: Belt Software
+135. Bloomberg Law Research by Bloomberg
+   Product: Bloomberg Law Research
+   Vendor: Bloomberg
+136. CaseGuard by CaseGuard Inc.
+   Product: CaseGuard
+   Vendor: CaseGuard Inc.
+137. CaseMap+ AI by LexisNexis CaseMap+ AI
+   Product: CaseMap+ AI
+   Vendor: LexisNexis CaseMap+ AI
+138. Chrometa Time Tracker by Chrometa
+   Product: Chrometa Time Tracker
+   Vendor: Chrometa
+139. CiteCheck AI by LawDroid CiteCheck AI Powered by LawDroid
+   Product: CiteCheck AI
+   Vendor: LawDroid CiteCheck AI Powered by LawDroid
+140. ClaimChart LLM by XLSCOUT ClaimChart LLM
+   Product: ClaimChart LLM
+   Vendor: XLSCOUT ClaimChart LLM
+141. CoCounsel Drafting by Thomson Reuters CoCounsel Drafting
+   Product: CoCounsel Drafting
+   Vendor: Thomson Reuters CoCounsel Drafting
+142. CoCounsel Legal by Thomson Reuters CoCounsel Legal
+   Product: CoCounsel Legal
+   Vendor: Thomson Reuters CoCounsel Legal
+143. Contract Automation by Ontra
+   Product: Contract Automation
+   Vendor: Ontra
+144. Contract Companion by Litera Contract Companion
+   Product: Contract Companion
+   Vendor: Litera Contract Companion
+145. Contract Express by Thomson Reuters Contract Express
+   Product: Contract Express
+   Vendor: Thomson Reuters Contract Express
+146. Contract Lifecycle Management by Workday CONTRACT LIFECYCLE MANAGEMENT
+   Product: Contract Lifecycle Management
+   Vendor: Workday CONTRACT LIFECYCLE MANAGEMENT
+147. ContractPodAI Cloud by ContractPodAI
+   Product: ContractPodAI Cloud
+   Vendor: ContractPodAI
+148. Cooley GO by Cooley
+   Product: Cooley GO
+   Vendor: Cooley
+149. Coveo AI-Relevance Platform by Coveo
+   Product: Coveo AI-Relevance Platform
+   Vendor: Coveo
+150. Datasite Diligence by Datasite
+   Product: Datasite Diligence
+   Vendor: Datasite
+151. Definely Cascade by Definely Definely Cascade
+   Product: Definely Cascade
+   Vendor: Definely Definely Cascade
+152. Definely Enhance by Definely Definely Enhance
+   Product: Definely Enhance
+   Vendor: Definely Definely Enhance
+153. Definely Vault by Definely Definely Vault
+   Product: Definely Vault
+   Vendor: Definely Definely Vault
+154. Elite Validate by Elite
+   Product: Elite Validate
+   Vendor: Elite
+155. Epiq Discovery - eDiscovery Software by EPIQ
+   Product: Epiq Discovery - eDiscovery Software
+   Vendor: EPIQ
+156. Expert Radar by Expert Institute EXPERT RADAR
+   Product: Expert Radar
+   Vendor: Expert Institute EXPERT RADAR
+157. Expert Sierra by Aderant Expert Sierra
+   Product: Expert Sierra
+   Vendor: Aderant Expert Sierra
+158. First Drafts by First Drafts AI
+   Product: First Drafts
+   Vendor: First Drafts AI
+159. Foundation Insights by Litera Foundation Insights
+   Product: Foundation Insights
+   Vendor: Litera Foundation Insights
+160. Foundation Proactive by Litera Foundation Proactive
+   Product: Foundation Proactive
+   Vendor: Litera Foundation Proactive
+161. Fund Management by BRYTER Fund Management
+   Product: Fund Management
+   Vendor: BRYTER Fund Management
+162. Insight+ by iManage Insight+
+   Product: Insight+
+   Vendor: iManage Insight+
+163. Intapp Conflicts by Intapp Conflicts
+   Product: Intapp Conflicts
+   Vendor: Intapp Conflicts
+164. Intapp DealCloud by Intapp DealCloud
+   Product: Intapp DealCloud
+   Vendor: Intapp DealCloud
+165. Intapp Intake by Intapp Intake
+   Product: Intapp Intake
+   Vendor: Intapp Intake
+166. Intapp Terms by Intapp Terms
+   Product: Intapp Terms
+   Vendor: Intapp Terms
+167. Intapp Time by Intapp Time
+   Product: Intapp Time
+   Vendor: Intapp Time
+168. Kira by Litera Kira
+   Product: Kira
+   Vendor: Litera Kira
+169. Korbyt Booking by Korbyt
+   Product: Korbyt Booking
+   Vendor: Korbyt
+170. Legal Data API by LexisNexis Legal Data API
+   Product: Legal Data API
+   Vendor: LexisNexis Legal Data API
+171. Legisway by Wolters Kluwer Legisway
+   Product: Legisway
+   Vendor: Wolters Kluwer Legisway
+172. Lex Machina by LexisNexis Lex Machina
+   Product: Lex Machina
+   Vendor: LexisNexis Lex Machina
+173. Lighthouse AI Search by Lighthouse Lighthouse AI Search
+   Product: Lighthouse AI Search
+   Vendor: Lighthouse Lighthouse AI Search
+174. Lighthouse AI by Lighthouse
+   Product: Lighthouse AI
+   Vendor: Lighthouse
+175. Litera Create - Content by Litera Create
+   Product: Litera Create - Content
+   Vendor: Litera Create
+176. Litera One by Litera Litera One
+   Product: Litera One
+   Vendor: Litera Litera One
+177. Litify ELM by Litify
+   Product: Litify ELM
+   Vendor: Litify
+178. Lito by Litera Lito
+   Product: Lito
+   Vendor: Litera Lito
+179. MATTEROOM by MATTEROOM LLC
+   Product: MATTEROOM
+   Vendor: MATTEROOM LLC
+180. Markup by DraftWise Markup
+   Product: Markup
+   Vendor: DraftWise Markup
+181. Matter by Legavee Matter.
+   Product: Matter
+   Vendor: Legavee Matter.
+182. Maxime by Maxime Tools, Inc. Maxime
+   Product: Maxime
+   Vendor: Maxime Tools, Inc. Maxime
+183. Milliman Datalytics-Defense by Milliman
+   Product: Milliman Datalytics-Defense
+   Vendor: Milliman
+184. NeoLegal Affaire Suite by NeoLegal
+   Product: NeoLegal Affaire Suite
+   Vendor: NeoLegal
+185. Nexis Diligence+ by LexisNexis Nexis Diligence+
+   Product: Nexis Diligence+
+   Vendor: LexisNexis Nexis Diligence+
+186. Office & Dragons by Litera Office & Dragons
+   Product: Office & Dragons
+   Vendor: Litera Office & Dragons
+187. OpenText eDiscovery by OpenText OpenText eDiscovery
+   Product: OpenText eDiscovery
+   Vendor: OpenText OpenText eDiscovery
+188. Orbit Trace by Kentron AI Orbit Trace
+   Product: Orbit Trace
+   Vendor: Kentron AI Orbit Trace
+189. Orbital Copilot by Orbital
+   Product: Orbital Copilot
+   Vendor: Orbital
+190. Orbital Witness by Orbital
+   Product: Orbital Witness
+   Vendor: Orbital
+191. PONS by PONS LABS PONS
+   Product: PONS
+   Vendor: PONS LABS PONS
+192. Parsl by Parsl AI Inc. Parsl
+   Product: Parsl
+   Vendor: Parsl AI Inc. Parsl
+193. PatDigger LLM by XLSCOUT PatDigger LLM
+   Product: PatDigger LLM
+   Vendor: XLSCOUT PatDigger LLM
+194. Power Apps by Microsoft Microsoftâ€‹Power Apps
+   Product: Power Apps
+   Vendor: Microsoft Microsoftâ€‹Power Apps
+195. Practical Law Dynamic by Thomson Reuters Practical Law Dynamic
+   Product: Practical Law Dynamic
+   Vendor: Thomson Reuters Practical Law Dynamic
+196. Practical Law UK by Thomson Reuters Practical Law UK
+   Product: Practical Law UK
+   Vendor: Thomson Reuters Practical Law UK
+197. Prevail by Prevail Legal
+   Product: Prevail
+   Vendor: Prevail Legal
+198. Rasa Platform by Rasa
+   Product: Rasa Platform
+   Vendor: Rasa
+199. Repository and Assistant by Ivo Repository and Assistantâ€‹â€‹
+   Product: Repository and Assistant
+   Vendor: Ivo Repository and Assistantâ€‹â€‹
+200. Sana Agents by Sana
+   Product: Sana Agents
+   Vendor: Sana
+201. Spellbook Associate by Spellbook Associate
+   Product: Spellbook Associate
+   Vendor: Spellbook Associate
+202. Strative Connect by Strative
+   Product: Strative Connect
+   Vendor: Strative
+203. Stretto Conductor by Stretto
+   Product: Stretto Conductor
+   Vendor: Stretto
+204. Subi Compliance by Subi
+   Product: Subi Compliance
+   Vendor: Subi
+205. TIQ Time by TIQ
+   Product: TIQ Time
+   Vendor: TIQ
+206. Tariff Risk Analyzer by Pramata Tariff Risk Analyzerâ€‹
+   Product: Tariff Risk Analyzer
+   Vendor: Pramata Tariff Risk Analyzerâ€‹
+207. Tavrn by Tavrn AI
+   Product: Tavrn
+   Vendor: Tavrn AI
+208. Threadeo by Threadeo Inc.
+   Product: Threadeo
+   Vendor: Threadeo Inc.
+209. Transcript Genius by Steno Transcript Genius
+   Product: Transcript Genius
+   Vendor: Steno Transcript Genius
+210. Trellis AI by Trellis Trellis AI
+   Product: Trellis AI
+   Vendor: Trellis Trellis AI
+211. Uncover by Uncover Legal BV
+   Product: Uncover
+   Vendor: Uncover Legal BV
+212. UseJunior Assistant by UseJunior
+   Product: UseJunior Assistant
+   Vendor: UseJunior
+213. Verify by HerculesAI Verify
+   Product: Verify
+   Vendor: HerculesAI Verify
+214. Virtual Data Rooms by Thomson Reuters Virtual data rooms
+   Product: Virtual Data Rooms
+   Vendor: Thomson Reuters Virtual data rooms
+215. VitalLaw by Wolters Kluwer VitalLaw
+   Product: VitalLaw
+   Vendor: Wolters Kluwer VitalLaw
+216. Voltaire by Voltaire Legal
+   Product: Voltaire
+   Vendor: Voltaire Legal
+217. Westlaw Edge UK with CoCounsel by Thomson Reuters WESTLAW EDGE UK WITH COCOUNSEL
+   Product: Westlaw Edge UK with CoCounsel
+   Vendor: Thomson Reuters WESTLAW EDGE UK WITH COCOUNSEL
+218. Westlaw Precision by Thomson Reuters WESTLAW PRECISION WITH COCOUNSEL
+   Product: Westlaw Precision
+   Vendor: Thomson Reuters WESTLAW PRECISION WITH COCOUNSEL
+219. iTimekeep by Aderant iTimekeep
+   Product: iTimekeep
+   Vendor: Aderant iTimekeep

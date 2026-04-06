@@ -1,0 +1,440 @@
+ALL LOGO FILENAMES - ALPHABETICAL LIST
+================================================================================
+Total vendors: 431
+================================================================================
+
+12New.ai                                           → 12newai.png
+273 Ventures                                       → 273ventures.png
+2nd Chair                                          → 2ndchair.png
+A&O Shearman                                       → aoshearman.png
+A-dapt International Ltd                           → adaptinternationalltd.png
+AI Legal Assistant                                 → ailegalassistant.png
+AI.Law                                             → ailaw.png
+AI4Discovery                                       → ai4discovery.png
+Abstract                                           → abstract.png
+Ace4 AI                                            → ace4ai.png
+AcroDocz                                           → acrodocz.png
+Actionstep                                         → actionstep.png
+Added Matter                                       → addedmatter.png
+Adobe                                              → adobe.png
+Agiloft                                            → agiloft.png
+AirCounsel                                         → aircounsel.png
+Airia                                              → airia.png
+Alegi                                              → alegi.png
+Alexi                                              → alexi.png
+Aloi                                               → aloi.png
+AlphaSense                                         → alphasense.png
+Altumatim                                          → altumatim.png
+American Arbitration Association                   → americanarbitrationassociation.png
+Amplified AI, Inc.                                 → amplifiedaiinc.png
+Amtolit Inc.                                       → amtolitinc.png
+AndAI Inc.                                         → andaiinc.png
+Andri.ai                                           → andriai.png
+Annature                                           → annature.png
+Antidote Legal                                     → antidotelegal.png
+Anylaw                                             → anylaw.png
+Anytime AI                                         → anytimeai.png
+Apprvd                                             → apprvd.png
+ArrowLex                                           → arrowlex.png
+Arteria AI                                         → arteriaai.png
+AssetDivide                                        → assetdivide.png
+AtlasAI                                            → atlasai.png
+Atticus                                            → atticus.png
+August                                             → august.png
+AutoLex                                            → autolex.png
+Autologyx                                          → autologyx.png
+Avantia                                            → avantia.png
+Avokaado                                           → avokaado.png
+Avvoka                                             → avvoka.png
+Axsar                                              → axsar.png
+BRYTER                                             → bryter.png
+BRYTER GmbH                                        → brytergmbh.png
+Beagle                                             → beagle.png
+Bering Lab                                         → beringlab.png
+Betty Blocks                                       → bettyblocks.png
+BigHand                                            → bighand.png
+Bigle Iberia, S.L.                                 → bigleiberiasl.png
+Billables AI                                       → billablesai.png
+Black Hills AI                                     → blackhillsai.png
+BlackBoiler                                        → blackboiler.png
+Blee                                               → blee.png
+Booke.ai                                           → bookeai.png
+Boutiq AI                                          → boutiqai.png
+Brackets AI                                        → bracketsai.png
+Braithwate Ltd                                     → braithwateltd.png
+BriefBox                                           → briefbox.png
+BriefCatch                                         → briefcatch.png
+Brightflag                                         → brightflag.png
+Bundledocs                                         → bundledocs.png
+CORTO                                              → corto.png
+CTRL AI Global Ltd.                                → ctrlaigloballtd.png
+CallidusAI, Inc.                                   → callidusaiinc.png
+CamoText LLC                                       → camotextllc.png
+Candle AI                                          → candleai.png
+Canotera                                           → canotera.png
+CarefulAI                                          → carefulai.png
+Case Compass                                       → casecompass.png
+CaseBlink                                          → caseblink.png
+CaseFox                                            → casefox.png
+CaseFox Inc.                                       → casefoxinc.png
+CaseGuild                                          → caseguild.png
+CaseMark                                           → casemark.png
+Casepal                                            → casepal.png
+Caseway                                            → caseway.png
+Casey                                              → casey.png
+Catylex                                            → catylex.png
+Centari                                            → centari.png
+Cequence                                           → cequence.png
+Chamelio                                           → chamelio.png
+ChapsVision                                        → chapsvision.png
+Checkbox                                           → checkbox.png
+CircleUp Technologies Pty Ltd                      → circleuptechnologiesptyltd.png
+Clarilis                                           → clarilis.png
+ClauseBase                                         → clausebase.png
+ClauseBase 9                                       → clausebase9.png
+ClearPeople                                        → clearpeople.png
+Clearbrief                                         → clearbrief.png
+Cleardocs                                          → cleardocs.png
+Clearlaw Inc.                                      → clearlawinc.png
+Clio                                               → clio.png
+Cloudficient                                       → cloudficient.png
+Cobblestone Software                               → cobblestonesoftware.png
+Coheso                                             → coheso.png
+Coingeit                                           → coingeit.png
+Competition AI                                     → competitionai.png
+Consilio                                           → consilio.png
+Contract Logix by LegalSifter                      → contractlogixbylegalsifter.png
+ContractKen                                        → contractken.png
+ContractPodAI                                      → contractpodai.png
+ContractSafe                                       → contractsafe.png
+ContractZen                                        → contractzen.png
+Contractify                                        → contractify.png
+Contractzy                                         → contractzy.png
+Contraqto by Swiss GRC                             → contraqtobyswissgrc.png
+Corpora                                            → corpora.png
+Counsel Stack                                      → counselstack.png
+CounselPro, Inc.                                   → counselproinc.png
+CourtAid                                           → courtaid.png
+Crimson                                            → crimson.png
+Curvestone                                         → curvestone.png
+DISCO                                              → disco.png
+Darrow                                             → darrow.png
+Data Pro                                           → datapro.png
+DealCloser Inc.                                    → dealcloserinc.png
+DecoverAI                                          → decoverai.png
+DeepIP                                             → deepip.png
+DeepJudge AG                                       → deepjudgeag.png
+Deliberately.ai                                    → deliberatelyai.png
+Deposely                                           → deposely.png
+Descrybe                                           → descrybe.png
+Deus Group                                         → deusgroup.png
+DigitalOwl                                         → digitalowl.png
+DiliTrust                                          → dilitrust.png
+Dimension AI                                       → dimensionai.png
+Dioptra                                            → dioptra.png
+Discrepancy AI                                     → discrepancyai.png
+DocDraft                                           → docdraft.png
+DocJuris                                           → docjuris.png
+Doctrine                                           → doctrine.png
+DocuSign                                           → docusign.png
+Document Drafter                                   → documentdrafter.png
+Dodonai                                            → dodonai.png
+DraftCheck                                         → draftcheck.png
+DraftLex                                           → draftlex.png
+DraftPilot Ltd.                                    → draftpilotltd.png
+Draftwise                                          → draftwise.png
+DueCourse                                          → duecourse.png
+ELTEMATE A Hogan Lovells Technology Company        → eltemateahoganlovellstechnologycompany.png
+Edge                                               → edge.png
+EisphorIA                                          → eisphoria.png
+Element Standard                                   → elementstandard.png
+Emma Legal                                         → emmalegal.png
+Emmi                                               → emmi.png
+Erbis                                              → erbis.png
+Eskwai                                             → eskwai.png
+EsquireTek                                         → esquiretek.png
+Eudia                                              → eudia.png
+Eve                                                → eve.png
+EvenUp                                             → evenup.png
+Everlaw                                            → everlaw.png
+Evisort                                            → evisort.png
+EyeLevel                                           → eyelevel.png
+Fern AI                                            → fernai.png
+FilePro                                            → filepro.png
+Filevine                                           → filevine.png
+Finamotion                                         → finamotion.png
+Finch                                              → finch.png
+Fireflies.ai                                       → firefliesai.png
+FirmPilot                                          → firmpilot.png
+FirmProfit                                         → firmprofit.png
+FirstRead                                          → firstread.png
+Flank                                              → flank.png
+Fledger                                            → fledger.png
+GC AI                                              → gcai.png
+GDPR Register                                      → gdprregister.png
+Gatekeeper                                         → gatekeeper.png
+Gavel                                              → gavel.png
+Gemini Legal                                       → geminilegal.png
+Genie AI                                           → genieai.png
+Gino LegalTech                                     → ginolegaltech.png
+Goodfact                                           → goodfact.png
+HIKE2                                              → hike2.png
+Habeas                                             → habeas.png
+Hanzo                                              → hanzo.png
+Happy Curious Lawyer LLP                           → happycuriouslawyerllp.png
+Harvey                                             → harvey.png
+HaystackID                                         → haystackid.png
+Hebbia                                             → hebbia.png
+Hercules AI                                        → herculesai.png
+HerculesAI                                         → herculesai.png
+IP Mind                                            → ipmind.png
+Icertis                                            → icertis.png
+Ideagen ConvergePoint                              → ideagenconvergepoint.png
+Immediation                                        → immediation.png
+Imprima                                            → imprima.png
+InfoTrack                                          → infotrack.png
+IntelAgree                                         → intelagree.png
+Introhive                                          → introhive.png
+Ironclad                                           → ironclad.png
+Ironclad, Inc.                                     → ironcladinc.png
+Ivo                                                → ivo.png
+JUNE GmbH                                          → junegmbh.png
+JibuDocs                                           → jibudocs.png
+Jigsaw                                             → jigsaw.png
+Join GmbH                                          → joingmbh.png
+Josef                                              → josef.png
+Junior Associate                                   → juniorassociate.png
+Jurimesh                                           → jurimesh.png
+Juris AI                                           → jurisai.png
+Jurisage                                           → jurisage.png
+JuristAI                                           → juristai.png
+Juristic ApS                                       → juristicaps.png
+Juro                                               → juro.png
+Jury-X                                             → juryx.png
+Justee AI                                          → justeeai.png
+Juztina                                            → juztina.png
+Jylo                                               → jylo.png
+KLoBot Inc                                         → klobotinc.png
+Kaitongo                                           → kaitongo.png
+Karnov Group                                       → karnovgroup.png
+Kelsen Legal Technologies Inc.                     → kelsenlegaltechnologiesinc.png
+Knool                                              → knool.png
+LEAP Legal Software                                → leaplegalsoftware.png
+LEGALFLY                                           → legalfly.png
+LSG                                                → lsg.png
+Laine Neural Network SA                            → laineneuralnetworksa.png
+Laurel                                             → laurel.png
+Law In Order                                       → lawinorder.png
+LawDroid                                           → lawdroid.png
+LawQi                                              → lawqi.png
+LawVu                                              → lawvu.png
+Lawcadia                                           → lawcadia.png
+Lawdify                                            → lawdify.png
+Lawformer                                          → lawformer.png
+Lawhive Ltd                                        → lawhiveltd.png
+Lawline                                            → lawline.png
+Lawpath                                            → lawpath.png
+Lawrissa                                           → lawrissa.png
+Layerup                                            → layerup.png
+Legal Engine                                       → legalengine.png
+LegalGraph                                         → legalgraph.png
+LegalMike                                          → legalmike.png
+LegalOn                                            → legalon.png
+LegalSifter, Inc.                                  → legalsifterinc.png
+Legau                                              → legau.png
+Legion                                             → legion.png
+Legistify                                          → legistify.png
+Legora                                             → legora.png
+LexCheck                                           → lexcheck.png
+Lexidesk                                           → lexidesk.png
+LexisNexis                                         → lexisnexis.png
+Lexitas                                            → lexitas.png
+Lexlink AI                                         → lexlinkai.png
+Lext                                               → lext.png
+Libra                                              → libra.png
+LinkSquares                                        → linksquares.png
+LitAgility                                         → litagility.png
+Litigaze                                           → litigaze.png
+Logical Construct                                  → logicalconstruct.png
+Logol AG                                           → logolag.png
+Lopti                                              → lopti.png
+Lucio                                              → lucio.png
+Luminance Technologies Ltd.                        → luminancetechnologiesltd.png
+Luminos.AI                                         → luminosai.png
+Lysp                                               → lysp.png
+M-Files                                            → mfiles.png
+MINDSET Integrated Co                              → mindsetintegratedco.png
+Macro                                              → macro.png
+MagNet Agents                                      → magnetagents.png
+MagicMirror Security                               → magicmirrorsecurity.png
+Maite.ai                                           → maiteai.png
+Mantle                                             → mantle.png
+Marveri                                            → marveri.png
+Mary Technology                                    → marytechnology.png
+Matey AI                                           → mateyai.png
+Merlin Search Technologies                         → merlinsearchtechnologies.png
+Metamorf                                           → metamorf.png
+MineOS                                             → mineos.png
+Minerva26                                          → minerva26.png
+MinuteBox Inc.                                     → minuteboxinc.png
+Moonlit.ai                                         → moonlitai.png
+MyMai                                              → mymai.png
+NLPatent                                           → nlpatent.png
+Navys                                              → navys.png
+Nebula Legal                                       → nebulalegal.png
+Negotiagent B.V.                                   → negotiagentbv.png
+Neota                                              → neota.png
+NetDocuments                                       → netdocuments.png
+NewLaw                                             → newlaw.png
+Newcode.ai                                         → newcodeai.png
+No More Screenshots, Inc.                          → nomorescreenshotsinc.png
+Norm Ai                                            → normai.png
+NowInfinity                                        → nowinfinity.png
+Nuix                                               → nuix.png
+Nymiz                                              → nymiz.png
+Obviate.ai                                         → obviateai.png
+Oddr                                               → oddr.png
+Onit                                               → onit.png
+Onit, Inc.                                         → onitinc.png
+Ontra                                              → ontra.png
+OpenText                                           → opentext.png
+Opus 2                                             → opus2.png
+Oratio Technologies                                → oratiotechnologies.png
+Otter.ai                                           → otterai.png
+PEXA                                               → pexa.png
+Parambil                                           → parambil.png
+Parley                                             → parley.png
+PatentPal                                          → patentpal.png
+Patentext, Inc.                                    → patentextinc.png
+Patently                                           → patently.png
+Patlytics                                          → patlytics.png
+Patsnap                                            → patsnap.png
+Pax AI                                             → paxai.png
+Paximal                                            → paximal.png
+Paxton AI                                          → paxtonai.png
+Persuit                                            → persuit.png
+Phaselab                                           → phaselab.png
+Pincites                                           → pincites.png
+Pitchly                                            → pitchly.png
+Plexus                                             → plexus.png
+Plural Policy, Inc.                                → pluralpolicyinc.png
+PointOne                                           → pointone.png
+Poppy Legal                                        → poppylegal.png
+Pramata                                            → pramata.png
+Precedent                                          → precedent.png
+Precisely AB                                       → preciselyab.png
+Predictice                                         → predictice.png
+ProCounsel                                         → procounsel.png
+Propense.ai                                        → propenseai.png
+Qanooni                                            → qanooni.png
+QorusDocs                                          → qorusdocs.png
+Querious                                           → querious.png
+Qura                                               → qura.png
+RWS                                                → rws.png
+Rain Intelligence                                  → rainintelligence.png
+ReVia                                              → revia.png
+Recital                                            → recital.png
+Regology                                           → regology.png
+Relativity                                         → relativity.png
+Relaw                                              → relaw.png
+Responsiv                                          → responsiv.png
+Rev                                                → rev.png
+Reveal                                             → reveal.png
+RightHub by Anaqua                                 → righthubbyanaqua.png
+Robin AI Limited                                   → robinailimited.png
+RoboLex                                            → robolex.png
+Root Signals                                       → rootsignals.png
+Ruli, Inc.                                         → ruliinc.png
+Saga International B.V.                            → sagainternationalbv.png
+Sahel AI                                           → sahelai.png
+Sandbox                                            → sandbox.png
+Scissero                                           → scissero.png
+Second Chair                                       → secondchair.png
+Secured Signing                                    → securedsigning.png
+Seedless                                           → seedless.png
+SimpleDocs                                         → simpledocs.png
+SimpleLegal                                        → simplelegal.png
+SimpliContract                                     → simplicontract.png
+SimplyAgree                                        → simplyagree.png
+SingleDraft                                        → singledraft.png
+SingleSource Technologies                          → singlesourcetechnologies.png
+Sitomatica                                         → sitomatica.png
+Skribe                                             → skribe.png
+Sky Discovery                                      → skydiscovery.png
+SlataDoc                                           → slatadoc.png
+SmartEsq                                           → smartesq.png
+Smarter Drafter                                    → smarterdrafter.png
+Smokeball                                          → smokeball.png
+Solve Intelligence                                 → solveintelligence.png
+Sonar Legal                                        → sonarlegal.png
+Soutron                                            → soutron.png
+Spellbook                                          → spellbook.png
+Splitifi                                           → splitifi.png
+SquadBox                                           → squadbox.png
+Standd                                             → standd.png
+Streamline AI                                      → streamlineai.png
+StructureFlow                                      → structureflow.png
+Summize                                            → summize.png
+Supio                                              → supio.png
+SurePath AI                                        → surepathai.png
+Syllo                                              → syllo.png
+Syntheia                                           → syntheia.png
+SyntheticJuror                                     → syntheticjuror.png
+Syntracts                                          → syntracts.png
+Talking Tree                                       → talkingtree.png
+Tangibly                                           → tangibly.png
+The Legal AI Consultancy by Simplexico             → thelegalaiconsultancybysimplexico.png
+The Legal Monitoring Company BV                    → thelegalmonitoringcompanybv.png
+The Precedent                                      → theprecedent.png
+The Simple Associate, Inc., dba Briefpoint         → thesimpleassociateincdbabriefpoint.png
+Theo AI                                            → theoai.png
+Thomson Reuters                                    → thomsonreuters.png
+ThoughtRiver                                       → thoughtriver.png
+TimeSentry                                         → timesentry.png
+TirLegal Inc.                                      → tirlegalinc.png
+Tonkean                                            → tonkean.png
+Tower                                              → tower.png
+Traveling Coaches                                  → travelingcoaches.png
+Trellis                                            → trellis.png
+TrialKit                                           → trialkit.png
+TrialView                                          → trialview.png
+Truth Systems                                      → truthsystems.png
+U.S. Legal Support                                 → uslegalsupport.png
+Unplex                                             → unplex.png
+Unwildered                                         → unwildered.png
+Upland Software                                    → uplandsoftware.png
+Vallor AI                                          → vallorai.png
+Vals AI                                            → valsai.png
+Vendor Name                                        → vendorname.png
+Verbit                                             → verbit.png
+Veritext                                           → veritext.png
+Veritone                                           → veritone.png
+Vesence                                            → vesence.png
+Volody                                             → volody.png
+Warrant                                            → warrant.png
+Wequity                                            → wequity.png
+Wexler                                             → wexler.png
+Whispli                                            → whispli.png
+Wilson AI                                          → wilsonai.png
+Wisetax                                            → wisetax.png
+Wolters Kluwer                                     → wolterskluwer.png
+Wordsmith AI                                       → wordsmithai.png
+Xakia                                              → xakia.png
+Xapien                                             → xapien.png
+XpressDox                                          → xpressdox.png
+Zeno                                               → zeno.png
+askLisa                                            → asklisa.png
+ayora                                              → ayora.png
+docassemble                                        → docassemble.png
+eBrevia                                            → ebrevia.png
+eDiscovery AI                                      → ediscoveryai.png
+esumry                                             → esumry.png
+fileread                                           → fileread.png
+goHeather                                          → goheather.png
+iManage                                            → imanage.png
+midpage AI Inc.                                    → midpageaiinc.png
+vLex                                               → vlex.png
+
+================================================================================
+✓ Saved to ALL_LOGO_NAMES.txt
+================================================================================

@@ -12,3 +12,27 @@ env/
 
 # VS Code settings
 .vscode/
+
+# Local databases (may contain user data)
+*.db
+
+# Logs
+logs/
+*.log
+
+# Backup/temp files
+*.backup
+*.backup_*
+*.bak
+temp_*.txt
+nul
+
+# Claude local context
+.claude/
+
+# Incremental data collection CSVs (noise)
+new_tools_incremental_*.csv
+google_trends_results_*.csv
+
+# PDF reports (large binaries)
+*.pdf
