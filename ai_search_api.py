@@ -86,11 +86,11 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
             response.headers["Cache-Control"] = "public, max-age=86400, stale-while-revalidate=604800"
         response.headers["Content-Security-Policy"] = (
             "default-src 'self'; "
-            "script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; "
-            "style-src 'self' 'unsafe-inline'; "
+            "script-src 'self' 'unsafe-inline' cdn.jsdelivr.net us.i.posthog.com; "
+            "style-src 'self' 'unsafe-inline' fonts.googleapis.com; "
             "img-src 'self' data: blob:; "
-            "connect-src 'self'; "
-            "font-src 'self'; "
+            "connect-src 'self' us.i.posthog.com; "
+            "font-src 'self' fonts.gstatic.com; "
             "frame-ancestors 'none'; "
             "object-src 'none'; "
             "base-uri 'self';"
@@ -101,13 +101,16 @@ app.add_middleware(SecurityHeadersMiddleware)
 
 # Mount static files for logos
 app.mount("/logos", StaticFiles(directory="logos"), name="logos")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # =========================
 # In-Memory Cache
 # =========================
 # Structure: { cache_key: {"data": ..., "expires": timestamp} }
 _cache: Dict[str, dict] = {}
-CACHE_TTL = 60 * 60 * 24  # 24 hours
+CACHE_TTL_SEARCH  = 60 * 5        # 5 minutes — search/query results (short: changes as we tune)
+CACHE_TTL_REPORT  = 60 * 60 * 24  # 24 hours  — PDF reports (expensive to regenerate)
+CACHE_TTL = CACHE_TTL_SEARCH       # default
 
 def cache_get(key: str):
     entry = _cache.get(key)
@@ -117,8 +120,8 @@ def cache_get(key: str):
         del _cache[key]
     return None
 
-def cache_set(key: str, data):
-    _cache[key] = {"data": data, "expires": time.time() + CACHE_TTL}
+def cache_set(key: str, data, ttl: int = CACHE_TTL_SEARCH):
+    _cache[key] = {"data": data, "expires": time.time() + ttl}
 
 # =========================
 # Rate Limiting
@@ -1226,7 +1229,7 @@ async def generate_report(req: ReportRequest, user: dict = Depends(require_auth)
         logger.error(f"[Report] PDF merge failed: {e}")
         merged_bytes = dynamic_pdf_bytes
 
-    cache_set(report_cache_key, merged_bytes)
+    cache_set(report_cache_key, merged_bytes, ttl=CACHE_TTL_REPORT)
 
     filename = f"Navigator-Snapshot-Report-{today}.pdf"
     return StreamingResponse(

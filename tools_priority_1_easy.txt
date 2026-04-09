@@ -1,0 +1,151 @@
+PRIORITY 1: Simple Tools (EASIEST - Start Here)
+Total: 147
+================================================================================
+
+1. AI Lawyer
+2. AI Legal Assistant
+3. AI4Discovery
+4. Added Matter
+5. Airia
+6. Alegi
+7. Aloi
+8. Anylaw
+9. AtlasAI
+10. Bench IQ
+11. Booke.ai
+12. Box
+13. Brackets AI
+14. Callidus
+15. Candle AI candle
+16. CaseBlink
+17. CaseGuild
+18. Casey
+19. Chamelio
+20. ClientLogic
+21. Clio Duo
+22. Covenant
+23. Crane Patents
+24. DiliTrust
+25. Dimension AI
+26. DocDraft
+27. Docato
+28. DraftCheck
+29. DraftLex Dl Draftlex
+30. Edge
+31. EisphorIA
+32. Emma Legal
+33. Emmi
+34. Eskwai
+35. EsquireTek
+36. Eudia
+37. Eve
+38. EvenUp
+39. Evisort
+40. Fern AI
+41. Filevine Filevine
+42. Finch
+43. Fireflies.ai
+44. FirmPilot
+45. FirmProfit
+46. FirstRead
+47. Flank
+48. Fledger
+49. HIKE2
+50. Hanzo
+51. HaystackID
+52. Hercules AI
+53. Icertis Contract Intelligence
+54. Imprima
+55. Introhive
+56. Ipelint
+57. JibuDocs
+58. Juris AI
+59. JuristAI
+60. Jury-X
+61. Justee AI
+62. Juztina Juztina.ai
+63. Kaitongo
+64. Knool
+65. LawQi
+66. Lawdify
+67. Lega
+68. Legau
+69. Legion
+70. Lexidesk
+71. Lexlink AI
+72. Libra
+73. Litigaze
+74. Lysp
+75. M-Files
+76. Maeven
+77. MagNet Agents
+78. MagicMirror Security
+79. Maigon document review
+80. Minerva26
+81. Moonlit.ai
+82. Navys
+83. Oddr
+84. Opus 2 Cases
+85. Parambil
+86. PaxAI
+87. Pramata
+88. ProCounsel
+89. Rhetoric
+90. RoboLex
+91. Root Signals
+92. Sandbox
+93. Scribestar
+94. Seedless
+95. ServiceNow
+96. Servient
+97. SimuLaw AI
+98. SmartEsq
+99. Smokeball
+100. Solve Intelligence Solveâ€‹Intelligence
+101. Sonar Legal
+102. Soutron
+103. Spellbook
+104. Splitifi
+105. SquadBox
+106. Standd
+107. Statera
+108. Streamline AI
+109. StructureFlow
+110. Summize
+111. Supio
+112. SurePath AI
+113. Syllo
+114. SyntheticJuror
+115. Syntracts
+116. The Precedent
+117. Theo AI
+118. ThoughtRiver
+119. TimeSentry
+120. Tower
+121. Trellis
+122. TrialKit
+123. TrialView
+124. Unplex
+125. Unwildered
+126. Vallor AI
+127. Vals AI
+128. Veritone Redact
+129. Vesence
+130. Volody CLM
+131. Warrant
+132. Wequity
+133. Wexler
+134. Wilson AI
+135. Wisetax
+136. Wordsmith AI
+137. Xapien
+138. XpressDox
+139. Zeno
+140. Zoom AI Companion
+141. askLisa
+142. ayora
+143. esumry
+144. fileread
+145. ikaun
+146. smartContract CLM
+147. trails

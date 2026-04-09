@@ -1401,7 +1401,7 @@
 
   <!-- libs -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-  <script src="/static/purify.min.js" integrity="sha384-+VfUPEb0PdtChMwmBcBmykRMDd+v6D/oFmB3rZM/puCMDYcIvF968OimRh4KQY9a" crossorigin="anonymous"></script>
+  <script src="/static/purify.min.js" integrity="sha384-OLBgp1GsljhM2TJ+sbHjaiH9txEUvgdDTAzHv2P24donTt6/529l+9Ua0vFImLlb" crossorigin="anonymous"></script>
 
   <!-- === App logic === -->
   <script>
@@ -1936,6 +1936,14 @@
       const nameB = (b.__display_name || b['Product Name'] || '').toLowerCase();
       return nameA.localeCompare(nameB);
     });
+
+    // Cap results for AI search queries — showing 200+ tools for a specific
+    // query is not useful and signals the search is too broad.
+    // Browse mode (no query) shows all tools.
+    const MAX_SEARCH_RESULTS = 20;
+    if(LAST_QUERY && rows.length > MAX_SEARCH_RESULTS){
+      rows = rows.slice(0, MAX_SEARCH_RESULTS);
+    }
 
     countEl.textContent = rows.length + ' tools';
     container.innerHTML = '';
@@ -4910,7 +4918,6 @@ void main(){
       }
 
       // Check for old-style invite token (backwards compatibility)
-      const urlParams = new URLSearchParams(window.location.search);
       const token = urlParams.get('token');
 
       if (token) {

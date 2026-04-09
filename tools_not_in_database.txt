@@ -1,0 +1,374 @@
+Vendors/Tools in legal_tools_all.xlsx NOT in merged_pref_top50.csv
+(Using conservative fuzzy matching to avoid duplicates)
+Total: 369
+================================================================================
+
+1. 8am MyCase by 8am
+2. A1 by Sarvam.ai
+3. AI Agent Studio by Onit
+4. AI Billing Compliance by 273 Ventures AI Billing Compliance
+5. AI Insights by Jurisage
+6. AI Lawyer
+7. AI Legal Assistant
+8. AI4Discovery
+9. Added Matter
+10. Airia
+11. Alegi
+12. AllRize Law Practice Management by AllRize
+13. Aloi
+14. AnNoText by Wolters Kluwer AnNoText
+15. Anylaw
+16. Apollo by Hercules AI Apollo
+17. Apperio by Persuit
+18. Aracor AI by Aracor
+19. Arrow AI by ArrowLex
+20. Ask Blue J by Blue J
+21. Ask Knowable by Knowable
+22. Ask by Reveal
+23. Athena by Hercules AI Athena
+24. Atlas Client Portals and Extranet by ClearPeople Atlas Extranetâ€‹
+25. Atlas Fuse by ClearPeople Atlas Fuseâ€‹
+26. Atlas Intelligent Knowledge Platform by ClearPeople
+27. Atlas by Ontra
+28. AtlasAI
+29. Aurora by Consilio
+30. BA Insight by Upland Software
+31. BEAMON AI by BRYTER
+32. Belt by Belt Software
+33. Bench IQ
+34. BeringAI by Bering Lab
+35. BestAgreement.ai by 12New.ai
+36. BestCompliance.ai by 12New.ai
+37. Bloomberg Law Research by Bloomberg
+38. Booke.ai
+39. Botineer by 1Law
+40. Box
+41. Brackets AI
+42. BridgeIndex by LitAgility
+43. Builder by LawDroid
+44. CONTROLit by Element Standard
+45. Callidus
+46. Candle AI candle
+47. CaseBlink
+48. CaseChat by esumry Case Chat
+49. CaseDocker by Coingeit
+50. CaseFusion by Cloudficient
+51. CaseGuard by CaseGuard Inc.
+52. CaseGuild
+53. CaseMap+ AI by LexisNexis CaseMap+ AI
+54. CaseReview by MINDSET Integrated Co
+55. Casey
+56. Cecilia AI by DISCO
+57. Chamelio
+58. Charter by Truth Systems
+59. Chrometa Time Tracker by Chrometa
+60. Cicero by Automatise
+61. CiteCheck AI by LawDroid CiteCheck AI Powered by LawDroid
+62. ClaimChart LLM by XLSCOUT ClaimChart LLM
+63. Clause Builder AI by American Arbitration Association
+64. Clause9 by ClauseBase 9
+65. ClauseBuddy by ClauseBase
+66. ClientLogic
+67. Clio Duo
+68. CoCounsel Drafting by Thomson Reuters CoCounsel Drafting
+69. CoCounsel Legal by Thomson Reuters CoCounsel Legal
+70. CobbleStone Contract Insight by Cobblestone Software
+71. ContracMatrix by A&O Shearman
+72. Contract Automation by Ontra
+73. Contract Companion by Litera Contract Companion
+74. Contract Express by Thomson Reuters Contract Express
+75. Contract Lifecycle Management by Workday CONTRACT LIFECYCLE MANAGEMENT
+76. Contract Logix by LegalSifter
+77. ContractGenie by Predactica
+78. ContractPodAI Cloud by ContractPodAI
+79. Contraqto by Swiss GRC
+80. Cooley GO by Cooley
+81. Corpus by TirLegal Inc.
+82. Covenant
+83. Coveo AI-Relevance Platform by Coveo
+84. Crane Patents
+85. DISCO Auto Review by CS DISCO
+86. Datasite Diligence by Datasite
+87. David AI by 2nd Chair
+88. Deal Intelligence by Centari
+89. Definely Cascade by Definely Definely Cascade
+90. Definely Enhance by Definely Definely Enhance
+91. Definely Vault by Definely Definely Vault
+92. Demand Composer by Precedent
+93. Depo CoPilot by Filevine
+94. DepoSummary Pro by U.S. Legal Support
+95. Deposition Insights by Lexitas
+96. Depositions by Filevine
+97. DiliTrust
+98. Dimension AI
+99. DocDraft
+100. DocEx by Metamorf
+101. Docato
+102. Docket Alarm by vLex
+103. DraftCheck
+104. DraftLex Dl Draftlex
+105. ELLE Legal Solutions by Logol AG
+106. ELM Solutions by Wolters Kluwer Enterprise Legal Management
+107. ELTEMATE CRAIG by ELTEMATE A Hogan Lovellsâ€‹Technology Company
+108. Edge
+109. EisphorIA
+110. Elite Validate by Elite
+111. Email Summarizer by Syntheia
+112. Emma Legal
+113. Emmi
+114. Epiq AI Discovery Assistant
+115. Epiq Discovery - eDiscovery Software by EPIQ
+116. Eskwai
+117. EsquireTek
+118. Eudia
+119. Eve
+120. EvenUp
+121. Evidence Replay by Finamotion E VIDENCE R EPLAY TM
+122. Evisort
+123. Expert Radar by Expert Institute EXPERT RADAR
+124. Expert Sierra by Aderant Expert Sierra
+125. Expireon by Cloudficient
+126. Fern AI
+127. Filevine Filevine
+128. Finch
+129. Fireflies.ai
+130. FirmLink by Metamorf
+131. FirmPilot
+132. FirmProfit
+133. First Drafts by First Drafts AI
+134. FirstRead
+135. Flank
+136. Fledger
+137. Foundation Insights by Litera Foundation Insights
+138. Foundation Proactive by Litera Foundation Proactive
+139. Fund Curator by Syntheia
+140. Fund Management by BRYTER Fund Management
+141. Gateway by Truth Systems
+142. Generative AI Development by Erbis
+143. Gino AI by Gino LegalTech
+144. HIKE2
+145. Hanzo
+146. HaystackID
+147. Hercules AI
+148. Hive by ReVia
+149. Icertis Contract Intelligence
+150. Imprima
+151. InView Legal by Wolters Kluwer InView
+152. Insight+ by iManage Insight+
+153. Intapp Conflicts by Intapp Conflicts
+154. Intapp DealCloud by Intapp DealCloud
+155. Intapp Intake by Intapp Intake
+156. Intapp Terms by Intapp Terms
+157. Intapp Time by Intapp Time
+158. Intelligize by LexisNexis
+159. Introhive
+160. Ipelint
+161. JibuDocs
+162. JudyAI by Gemini Legal
+163. Juris AI
+164. Jurist by Ironclad
+165. JuristAI
+166. Jury-X
+167. Jus AI by Jus Mundi
+168. Justee AI
+169. Juztina Juztina.ai
+170. KAILA by Karnov Group
+171. KLapper by KLoBot
+172. Kaitongo
+173. Kira by Litera Kira
+174. Knool
+175. Korbyt Booking by Korbyt
+176. LEDOX365 by Join GmbH
+177. LEIAA by Augmetec
+178. LISA by Fledger
+179. Language Weaver by RWS
+180. LawQi
+181. Lawdify
+182. LeXi AI by Astute Lex Servicado
+183. Lead Docket by Filevine
+184. Leah by ContractPodAI
+185. Lega
+186. Legal Data API by LexisNexis Legal Data API
+187. Legal Visor by Verbit
+188. LegalMation Dispute Resolution Automation Platform
+189. LegalMind+ by Traveling Coaches
+190. LegalWorks by Tonkean
+191. Legau
+192. Legion
+193. Legisway by Wolters Kluwer Legisway
+194. Lex Machina by LexisNexis Lex Machina
+195. Lexidesk
+196. Lexion by Docusign
+197. Lexlink AI
+198. Libra
+199. Lighthouse AI Search by Lighthouse Lighthouse AI Search
+200. Lighthouse AI by Lighthouse
+201. Litera Create - Content by Litera Create
+202. Litera One by Litera Litera One
+203. Litify ELM by Litify
+204. Litigation Assist by EyeLevel
+205. Litigaze
+206. Lito by Litera Lito
+207. Luka by Cachai
+208. Lyncs by Logical Construct
+209. Lysp
+210. M-Files
+211. MARC by Altorney
+212. MATTEROOM by MATTEROOM LLC
+213. Maeven
+214. MagNet Agents
+215. MagicMirror Security
+216. Maigon document review
+217. Mark My Matter by Happy Curious Lawyer LLP
+218. Markup by DraftWise Markup
+219. Mary Technology M ary Technology
+220. Massdraft by Avvoka
+221. Matter by Legavee Matter.
+222. MatterSuite ELM by CaseFox
+223. Maxime by Maxime Tools, Inc. Maxime
+224. MedChron by Filevine Filevine
+225. Merlin Alchemy by Merlin Search Technologies
+226. Mike Virtual Paralegal by Scissero
+227. Milliman Datalytics-Defense by Milliman
+228. MindPeer by Mind-Alliance Systems
+229. Minerva26
+230. Moonlit.ai
+231. Murphy by Deus Group
+232. Native AI Review by Consilio
+233. Navys
+234. NeoLegal Affaire Suite by NeoLegal
+235. Nexis Diligence+ by LexisNexis Nexis Diligence+
+236. Oddr
+237. Office & Dragons by Litera Office & Dragons
+238. OpenText eDOCS Content Management by OpenText OpenText eDOCS
+239. OpenText eDiscovery by OpenText OpenText eDiscovery
+240. Opus 2 Cases
+241. Orbit Trace by Kentron AI Orbit Trace
+242. Orbital Copilot by Orbital
+243. Orbital Witness by Orbital
+244. Otto by Black Hills AI
+245. PONS by PONS LABS PONS
+246. Parambil
+247. Parsl by Parsl AI Inc. Parsl
+248. PatDigger LLM by XLSCOUT PatDigger LLM
+249. Patent X-Ray by Tangibly
+250. PaxAI
+251. Phaselaw by Phaselab
+252. Playbooks by Lext
+253. Power Apps by Microsoft Microsoftâ€‹Power Apps
+254. Practical Law Dynamic by Thomson Reuters Practical Law Dynamic
+255. Practical Law UK by Thomson Reuters Practical Law UK
+256. Pramata
+257. Prevail by Prevail Legal
+258. ProCounsel
+259. QuarkAI by LSG
+260. Rasa Platform by Rasa
+261. RecordSummary Pro by U.S. Legal Support
+262. Redwood by Talking Tree Talking Tree.
+263. Regulatory Pilot by ELTEMATE A Hogan Lovellsâ€‹Technology Company
+264. Repository and Assistant by Ivo Repository and Assistantâ€‹â€‹
+265. Rhetoric
+266. RightHub by Anaqua
+267. RoboLex
+268. Rocket Matter by ProfitSolv
+269. Root Signals
+270. Sana Agents by Sana
+271. Sandbox
+272. Scribestar
+273. Seedless
+274. Self-Serve by DigitalOwl
+275. ServiceNow
+276. Servient
+277. SiSo Diligence by SingleSource Technologies
+278. SimpleAI by SimpleDocs
+279. SimuLaw AI
+280. Sinequa by ChapsVision
+281. Sirion CLM by Sirion Labs
+282. Smart Summary by Veritext
+283. SmartAAI by Law In Order
+284. SmartDepo by Rev
+285. SmartEsq
+286. Smokeball
+287. Solve Intelligence Solveâ€‹Intelligence
+288. Sonar Legal
+289. Soutron
+290. Spellbook
+291. Spellbook Associate by Spellbook Associate
+292. Splitifi
+293. SquadBox
+294. Standd
+295. Statera
+296. Strative Connect by Strative
+297. Streamline AI
+298. Stretto Conductor by Stretto
+299. StructureFlow
+300. Subi Compliance by Subi
+301. Summize
+302. Super Comparer by Syntheia
+303. Supio
+304. SurePath AI
+305. Syllo
+306. Synapse by Ontra
+307. SyntheticJuror
+308. Syntracts
+309. TIQ Time by TIQ
+310. Tariff Risk Analyzer by Pramata Tariff Risk Analyzerâ€‹
+311. Tavrn by Tavrn AI
+312. TestMtWitness by A-dapt International Ltd
+313. The Legal AI Consultancy by Simplexico ðŸš€ simplexico
+314. The Precedent
+315. Theo AI
+316. ThoughtRiver
+317. Threadeo by Threadeo Inc.
+318. TimeSentry
+319. Titan AI Contract Drafter by AirCounsel Titan AIâ€‹Contract Drafter
+320. Tower
+321. Transcript Genius by Steno Transcript Genius
+322. Trellis
+323. Trellis AI by Trellis Trellis AI
+324. TrialKit
+325. TrialView
+326. TrueLaw by Consilio
+327. Uncover by Uncover Legal BV
+328. Unplex
+329. Unwildered
+330. UseJunior Assistant by UseJunior
+331. VDRPro by SS&C Intralinks
+332. Vallor AI
+333. Vals AI
+334. VerifAI by SpotDraft
+335. Verify by HerculesAI Verify
+336. Veritone Redact
+337. Vesence
+338. Vincent AI by vLex
+339. Virtual Data Rooms by Thomson Reuters Virtual data rooms
+340. VitalLaw by Wolters Kluwer VitalLaw
+341. Volody CLM
+342. Voltaire by Voltaire Legal
+343. Warrant
+344. Wequity
+345. Westlaw Edge UK with CoCounsel by Thomson Reuters WESTLAW EDGE UK WITH COCOUNSEL
+346. Westlaw Precision by Thomson Reuters WESTLAW PRECISION WITH COCOUNSEL
+347. Wexler
+348. Wilson AI
+349. Wisetax
+350. Wordsmith AI
+351. XISUITE by XtremeForensics
+352. Xapien
+353. XpressDox
+354. Zeno
+355. Zoom AI Companion
+356. aiR for Review by Relativity
+357. askLisa
+358. ayora
+359. bagmen.ai by IDS Legal Technology Services
+360. e! by Lexemo GmbH
+361. esumry
+362. fileread
+363. iFinder by IntraFind
+364. iTimekeep by Aderant iTimekeep
+365. ikaun
+366. ndMax App Builder by NetDocuments
+367. ndMax by NetDocuments
+368. smartContract CLM
+369. trails
