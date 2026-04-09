@@ -86,11 +86,11 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
             response.headers["Cache-Control"] = "public, max-age=86400, stale-while-revalidate=604800"
         response.headers["Content-Security-Policy"] = (
             "default-src 'self'; "
-            "script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; "
-            "style-src 'self' 'unsafe-inline'; "
+            "script-src 'self' 'unsafe-inline' cdn.jsdelivr.net us.i.posthog.com; "
+            "style-src 'self' 'unsafe-inline' fonts.googleapis.com; "
             "img-src 'self' data: blob:; "
-            "connect-src 'self'; "
-            "font-src 'self'; "
+            "connect-src 'self' us.i.posthog.com; "
+            "font-src 'self' fonts.gstatic.com; "
             "frame-ancestors 'none'; "
             "object-src 'none'; "
             "base-uri 'self';"
@@ -101,6 +101,7 @@ app.add_middleware(SecurityHeadersMiddleware)
 
 # Mount static files for logos
 app.mount("/logos", StaticFiles(directory="logos"), name="logos")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # =========================
 # In-Memory Cache
