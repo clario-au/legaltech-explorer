@@ -27,13 +27,15 @@
   }
 
   *{box-sizing:border-box}
-  html,body{height:100%;overflow:hidden}
+  html{height:100%}
   body{
     margin:0;
+    min-height:100%;
     background:var(--bg);
     color:var(--text);
     font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
   }
+  body:not(.has-landing){height:100vh;overflow:hidden}
 
   header{position:sticky;top:0;z-index:20;background:#ffffff;border-bottom:1px solid #E6EBED;box-shadow:0 1px 4px rgba(0,0,0,.08);backdrop-filter:blur(6px)}
   header h1{color:#0F172A}
@@ -635,19 +637,116 @@
   .left::-webkit-scrollbar-thumb, main::-webkit-scrollbar-thumb, .right::-webkit-scrollbar-thumb, .compare-wrap::-webkit-scrollbar-thumb, #aiSummaryBox::-webkit-scrollbar-thumb, .box.alt::-webkit-scrollbar-thumb, aside.left .box::-webkit-scrollbar-thumb, aside.right .box::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:4px}
   .left::-webkit-scrollbar-thumb:hover, main::-webkit-scrollbar-thumb:hover, .right::-webkit-scrollbar-thumb:hover, .compare-wrap::-webkit-scrollbar-thumb:hover, #aiSummaryBox::-webkit-scrollbar-thumb:hover, .box.alt::-webkit-scrollbar-thumb:hover, aside.left .box::-webkit-scrollbar-thumb:hover, aside.right .box::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hover)}
 
-  /* Landing overlay */
-  #aiLanding{
-    position:fixed;inset:0;
-    background:linear-gradient(160deg, #edf2f7 0%, #e8f0f7 60%, #e0f2f2 100%);
-    display:none;flex-direction:column;align-items:center;justify-content:center;gap:24px;z-index:10;
-    padding:24px 24px 24px 24px;
-    padding-top:96px;
-    overflow:hidden;
-  }
+  /* Landing page */
+  #aiLanding{display:none;flex-direction:column;min-height:100vh;background:#f5f8fa;}
   body.has-landing #aiLanding{display:flex;}
-  body.has-landing{overflow:hidden;}
+  body.has-landing{overflow-y:auto;height:auto;}
+  body.has-landing header{display:none;}
   body.has-landing .wrap{display:none;}
   body.has-landing #filtersBtn{display:none;}
+
+  /* Landing nav */
+  .landing-nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(245,248,250,0.92);backdrop-filter:blur(10px);
+    border-bottom:1px solid #E6EBED;
+    padding:0 24px;
+    display:flex;align-items:center;gap:16px;height:60px;
+  }
+  .landing-nav .brand{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none;}
+  .landing-nav .brand img{height:22px;}
+  .landing-nav .brand span{font-size:15px;font-weight:700;color:#0F172A;}
+  .landing-nav .spacer{flex:1}
+  .landing-nav-links{display:flex;align-items:center;gap:4px;}
+  .landing-nav-links a{
+    padding:7px 14px;border-radius:999px;font-size:13px;font-weight:600;color:#475569;
+    text-decoration:none;cursor:pointer;transition:.2s;border:1px solid transparent;
+  }
+  .landing-nav-links a:hover{color:#0F172A;background:#edf0f3;}
+  .landing-nav-links a.primary{background:#2EA7A7;color:#fff;border-color:transparent;}
+  .landing-nav-links a.primary:hover{background:#238E8E;}
+  .landing-nav-sign-in{font-size:13px;font-weight:600;color:#2EA7A7;cursor:pointer;padding:7px 10px;border:none;background:none;}
+
+  /* Hero section */
+  .landing-hero{
+    background:linear-gradient(160deg,#e8f4f4 0%,#edf2f7 60%,#e8f4f4 100%);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:24px;padding:72px 24px 80px;
+    min-height:calc(100vh - 60px);
+  }
+  .landing-hero-tagline{font-size:14px;font-weight:600;color:#2EA7A7;letter-spacing:0.8px;text-transform:uppercase;}
+  .landing-hero-headline{font-size:clamp(28px,4vw,44px);font-weight:700;color:#0F172A;line-height:1.2;text-align:center;max-width:700px;letter-spacing:-0.5px;margin:0;}
+  .landing-hero-sub{font-size:16px;color:#475569;text-align:center;max-width:540px;line-height:1.6;margin:0;}
+  .landing-search-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;width:min(660px,90vw);}
+  .landing-search-wrap textarea{
+    width:100%;padding:16px 18px;border-radius:14px;border:1px solid #d4dde6;
+    font-size:14px;resize:none;background:#ffffff;color:#0F172A;
+    box-shadow:0 4px 24px rgba(0,0,0,0.08);outline:none;font-family:inherit;line-height:1.5;
+    transition:border-color .2s,box-shadow .2s;
+  }
+  .landing-search-wrap textarea:focus{border-color:#2EA7A7;box-shadow:0 4px 24px rgba(46,167,167,0.15);}
+  .landing-search-actions{display:flex;gap:10px;width:100%;}
+  .landing-search-actions .btn-search{
+    flex:1;padding:14px 24px;font-size:15px;border-radius:999px;border:none;
+    background:#2EA7A7;color:#fff;font-weight:600;cursor:pointer;transition:.2s;letter-spacing:0.2px;
+  }
+  .landing-search-actions .btn-search:hover{background:#238E8E;box-shadow:0 4px 16px rgba(46,167,167,0.35);}
+  .landing-search-actions .btn-browse{
+    padding:14px 24px;font-size:14px;border-radius:999px;border:none;
+    background:#F22C7A;color:#fff;font-weight:600;cursor:pointer;transition:.2s;white-space:nowrap;
+  }
+  .landing-search-actions .btn-browse:hover{background:#d41e68;box-shadow:0 4px 16px rgba(242,44,122,0.3);}
+
+  /* Category pills on landing */
+  .landing-category-pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:700px;}
+  .landing-cat-pill{
+    padding:7px 15px;border-radius:999px;border:1px solid #d4dde6;
+    background:#ffffff;color:#0F172A;font-size:13px;font-weight:500;cursor:pointer;
+    transition:.2s;white-space:nowrap;
+  }
+  .landing-cat-pill:hover{border-color:#2EA7A7;color:#2EA7A7;background:#f0fafa;}
+
+  /* Features strip */
+  .landing-features{
+    padding:72px 24px;background:#ffffff;
+    display:flex;flex-direction:column;align-items:center;gap:40px;
+  }
+  .landing-section-label{font-size:13px;font-weight:700;color:#2EA7A7;letter-spacing:0.8px;text-transform:uppercase;}
+  .landing-section-title{font-size:clamp(20px,3vw,30px);font-weight:700;color:#0F172A;text-align:center;margin:0;}
+  .landing-features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;width:100%;max-width:960px;}
+  .landing-feature-card{
+    background:#f8fafc;border:1px solid #E6EBED;border-radius:16px;
+    padding:28px 24px;display:flex;flex-direction:column;gap:12px;
+    cursor:pointer;transition:.2s;
+  }
+  .landing-feature-card:hover{border-color:#2EA7A7;box-shadow:0 4px 20px rgba(46,167,167,0.12);transform:translateY(-2px);}
+  .landing-feature-icon{font-size:24px;width:44px;height:44px;border-radius:12px;background:#edf9f9;display:flex;align-items:center;justify-content:center;}
+  .landing-feature-title{font-size:15px;font-weight:700;color:#0F172A;}
+  .landing-feature-desc{font-size:13px;color:#475569;line-height:1.5;}
+
+  /* Categories section */
+  .landing-categories{padding:72px 24px;background:#f5f8fa;display:flex;flex-direction:column;align-items:center;gap:32px;}
+  .landing-categories-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;width:100%;max-width:960px;}
+  .landing-category-card{
+    background:#ffffff;border:1px solid #E6EBED;border-radius:12px;padding:18px 20px;
+    cursor:pointer;transition:.2s;display:flex;align-items:center;gap:12px;
+  }
+  .landing-category-card:hover{border-color:#2EA7A7;color:#2EA7A7;box-shadow:0 2px 12px rgba(46,167,167,0.1);}
+  .landing-category-card span{font-size:13px;font-weight:600;color:inherit;line-height:1.3;}
+  .landing-category-dot{width:8px;height:8px;border-radius:50%;background:#2EA7A7;flex-shrink:0;}
+
+  /* About strip */
+  .landing-about{
+    padding:64px 24px;background:#0F3B45;
+    display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;
+  }
+  .landing-about h2{font-size:clamp(18px,2.5vw,26px);font-weight:700;color:#ffffff;margin:0;max-width:600px;}
+  .landing-about p{font-size:14px;color:rgba(255,255,255,0.7);max-width:560px;line-height:1.7;margin:0;}
+  .landing-about a{color:#2EA7A7;text-decoration:none;font-weight:600;}
+
+  /* Landing footer */
+  .landing-footer{background:#0a2d36;padding:20px 24px;display:flex;align-items:center;justify-content:center;}
+  .landing-footer p{font-size:12px;color:rgba(255,255,255,0.4);margin:0;}
   .logo-chip { display:inline-flex; align-items:center; justify-content:center; padding:14px 28px; border-radius:16px;
     background:#ffffff; box-shadow:0 2px 12px rgba(0,0,0,0.1); border:1px solid #E6EBED; }
   .logo-chip img { filter:drop-shadow(0 1px 3px rgba(0,0,0,0.1)); height:38px; }
@@ -1064,24 +1163,116 @@
   <!-- FULLSCREEN AURORA (always visible) -->
   <div id="auroraCanvas" class="aurora-bg fullscreen"></div>
 
-  <!-- AI search overlay -->
+  <!-- Landing page -->
   <div id="aiLanding">
-    <div class="logo-chip"><img src="logos/clario.png" alt="Clario"></div>
 
-    <!-- Static tagline -->
-    <div class="static-tagline">A curated explorer of legal tech tools for in house legal teams in Australia</div>
-
-    <!-- Search card -->
-    <div class="landing-search-wrap">
-      <div class="static-headline">Describe the legal-tech you're looking for</div>
-      <textarea id="aiQuery" rows="3" placeholder="e.g. contract management software for a mid-size law firm..."
-        style="width:100%;padding:16px 18px;border-radius:14px;border:1px solid #E6EBED;font-size:14px;resize:none;background:#ffffff;color:#0F172A;box-shadow:0 4px 20px rgba(0,0,0,0.08);outline:none;font-family:inherit;line-height:1.5;"></textarea>
-      <div style="display:flex;gap:12px;width:100%;align-items:center;">
-        <button id="aiSearchBtn" class="btn primary" style="flex:1;padding:14px 24px;font-size:15px;border-radius:999px;letter-spacing:0.2px;">Search</button>
-        <button id="viewAllBtnLanding" class="btn" style="padding:14px 24px;font-size:14px;border-radius:999px;white-space:nowrap;background:#F22C7A;border-color:transparent;color:#ffffff;font-weight:600;">Browse all tools</button>
+    <!-- Sticky nav -->
+    <nav class="landing-nav">
+      <a class="brand" id="landingNavBrand">
+        <img src="logos/clario.png" alt="Clario">
+        <span>Legal Tech Navigator</span>
+      </a>
+      <span class="spacer"></span>
+      <div class="landing-nav-links">
+        <a id="landingNavBrowse">Browse All</a>
+        <a id="landingNavCompare">Compare</a>
+        <a id="landingNavReports">Reports</a>
+        <a class="primary" id="landingNavSearch">Find Tools</a>
       </div>
-      <div id="aiStatus" class="sub" style="min-height:18px;text-align:center;color:#6b7280;"></div>
+      <button class="landing-nav-sign-in" id="landingNavSignIn">Sign In</button>
+    </nav>
+
+    <!-- Hero -->
+    <section class="landing-hero">
+      <div class="landing-hero-tagline">Australia's Legal Tech Database</div>
+      <h1 class="landing-hero-headline">Find the right legal tech for your team</h1>
+      <p class="landing-hero-sub">Search 600+ tools curated for in-house legal teams in Australia. Compare, shortlist, and generate reports.</p>
+
+      <div class="landing-search-wrap">
+        <textarea id="aiQuery" rows="3" placeholder="e.g. contract management software for a mid-size in-house team…"></textarea>
+        <div class="landing-search-actions">
+          <button id="aiSearchBtn" class="btn-search">Search</button>
+          <button id="viewAllBtnLanding" class="btn-browse">Browse all tools</button>
+        </div>
+        <div id="aiStatus" style="min-height:18px;font-size:13px;text-align:center;color:#6b7280;"></div>
+      </div>
+
+      <!-- Category pills -->
+      <div class="landing-category-pills">
+        <button class="landing-cat-pill" data-cat="Contracting &amp; Document Automation">Contracting &amp; Document Automation</button>
+        <button class="landing-cat-pill" data-cat="AI Legal Assistants &amp; Productivity Tools">AI Legal Assistants</button>
+        <button class="landing-cat-pill" data-cat="Compliance, Risk &amp; Governance">Compliance &amp; Risk</button>
+        <button class="landing-cat-pill" data-cat="Matter, Workflow &amp; Intake Management">Matter &amp; Workflow</button>
+        <button class="landing-cat-pill" data-cat="Litigation, Disputes &amp; Investigations">Litigation &amp; Disputes</button>
+        <button class="landing-cat-pill" data-cat="Corporate Governance &amp; Entity Management">Corporate Governance</button>
+        <button class="landing-cat-pill" data-cat="Legal Research &amp; Insights">Legal Research</button>
+        <button class="landing-cat-pill" data-cat="Outside Counsel &amp; Spend Management">Outside Counsel &amp; Spend</button>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="landing-features">
+      <div class="landing-section-label">What you can do</div>
+      <h2 class="landing-section-title">Everything you need to evaluate legal tech</h2>
+      <div class="landing-features-grid">
+        <div class="landing-feature-card" id="featureSearch">
+          <div class="landing-feature-icon">🔍</div>
+          <div class="landing-feature-title">AI Search</div>
+          <div class="landing-feature-desc">Describe what you need in plain English and get ranked, relevant results instantly.</div>
+        </div>
+        <div class="landing-feature-card" id="featureBrowse">
+          <div class="landing-feature-icon">📋</div>
+          <div class="landing-feature-title">Browse All Tools</div>
+          <div class="landing-feature-desc">Explore the full database with filters by category, AI capability, region, and more.</div>
+        </div>
+        <div class="landing-feature-card" id="featureCompare">
+          <div class="landing-feature-icon">⚖️</div>
+          <div class="landing-feature-title">Compare</div>
+          <div class="landing-feature-desc">Select up to 5 tools and view them side by side across key attributes.</div>
+        </div>
+        <div class="landing-feature-card" id="featureReports">
+          <div class="landing-feature-icon">📄</div>
+          <div class="landing-feature-title">Generate Reports</div>
+          <div class="landing-feature-desc">Shortlist tools and download a ready-to-share PDF report with AI-written summaries.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="landing-categories">
+      <div class="landing-section-label">Browse by category</div>
+      <h2 class="landing-section-title">16 legal tech categories covered</h2>
+      <div class="landing-categories-grid">
+        <div class="landing-category-card" data-cat="Contracting &amp; Document Automation"><div class="landing-category-dot"></div><span>Contracting &amp; Document Automation</span></div>
+        <div class="landing-category-card" data-cat="AI Legal Assistants &amp; Productivity Tools"><div class="landing-category-dot"></div><span>AI Legal Assistants &amp; Productivity Tools</span></div>
+        <div class="landing-category-card" data-cat="Compliance, Risk &amp; Governance"><div class="landing-category-dot"></div><span>Compliance, Risk &amp; Governance</span></div>
+        <div class="landing-category-card" data-cat="Matter, Workflow &amp; Intake Management"><div class="landing-category-dot"></div><span>Matter, Workflow &amp; Intake Management</span></div>
+        <div class="landing-category-card" data-cat="Litigation, Disputes &amp; Investigations"><div class="landing-category-dot"></div><span>Litigation, Disputes &amp; Investigations</span></div>
+        <div class="landing-category-card" data-cat="Corporate Governance &amp; Entity Management"><div class="landing-category-dot"></div><span>Corporate Governance &amp; Entity Management</span></div>
+        <div class="landing-category-card" data-cat="Legal Research &amp; Insights"><div class="landing-category-dot"></div><span>Legal Research &amp; Insights</span></div>
+        <div class="landing-category-card" data-cat="Outside Counsel &amp; Spend Management"><div class="landing-category-dot"></div><span>Outside Counsel &amp; Spend Management</span></div>
+        <div class="landing-category-card" data-cat="Legal Operations &amp; Analytics"><div class="landing-category-dot"></div><span>Legal Operations &amp; Analytics</span></div>
+        <div class="landing-category-card" data-cat="Intellectual Property, Technology &amp; Data"><div class="landing-category-dot"></div><span>Intellectual Property, Technology &amp; Data</span></div>
+        <div class="landing-category-card" data-cat="Employment &amp; HR Legal Support"><div class="landing-category-dot"></div><span>Employment &amp; HR Legal Support</span></div>
+        <div class="landing-category-card" data-cat="Cross-Border, Transactions &amp; Deal Management"><div class="landing-category-dot"></div><span>Cross-Border, Transactions &amp; Deal Management</span></div>
+        <div class="landing-category-card" data-cat="Knowledge, Search &amp; Precedent Management"><div class="landing-category-dot"></div><span>Knowledge, Search &amp; Precedent Management</span></div>
+        <div class="landing-category-card" data-cat="Business Partnering &amp; Self-Service Tools"><div class="landing-category-dot"></div><span>Business Partnering &amp; Self-Service Tools</span></div>
+        <div class="landing-category-card" data-cat="Integration &amp; Platform Infrastructure"><div class="landing-category-dot"></div><span>Integration &amp; Platform Infrastructure</span></div>
+        <div class="landing-category-card" data-cat="Legal Research &amp; Knowledge"><div class="landing-category-dot"></div><span>Legal Research &amp; Knowledge</span></div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="landing-about">
+      <h2>Built for in-house legal teams in Australia</h2>
+      <p>The Legal Tech Navigator is a free resource by <a href="#">Clario</a> — a curated, searchable database of 600+ legal technology tools. We track AI capabilities, regional availability, pricing, and market adoption so you don't have to.</p>
+    </section>
+
+    <!-- Footer -->
+    <div class="landing-footer">
+      <p>© 2025 Clario. All rights reserved.</p>
     </div>
+
   </div>
 
   <!-- Staggered Menu Overlay -->
@@ -1325,6 +1516,11 @@
         <div style="display:flex;align-items:center;gap:12px">
           <span class="sub" id="searchQuery"></span>
           <span class="sub" id="count"></span>
+          <select id="sortSelect" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);font-size:13px;font-weight:600;color:var(--text);background:#F5F7F8;cursor:pointer;outline:none;">
+            <option value="navigator">Navigator Score</option>
+            <option value="alpha">A – Z</option>
+            <option value="popular">Most Popular</option>
+          </select>
         </div>
       </div>
       <div class="box alt">
@@ -1822,6 +2018,9 @@
     var card = document.createElement('div');
     card.className = 'tool reveal-child' + (rank <= 4 ? ' rank-' + rank : '');
     card.dataset.id = rec.__id;
+    card.dataset.vendor = rec['Vendor Name'] || '';
+    card.dataset.score = rec['popularity_score'] || rec['navigator_score'] || '0';
+    card.dataset.popularity = rec['popularity_score'] || '0';
 
     // Add rank badge for top 4 results
     if(rank >= 1 && rank <= 4){
@@ -3340,9 +3539,87 @@
     });
   });
 
-  // View All Tools button listener
+  // View All Tools button listeners
   document.getElementById('viewAllBtnHeader')?.addEventListener('click', viewAllTools);
   document.getElementById('viewAllBtnLanding')?.addEventListener('click', viewAllTools);
+
+  // Landing nav links
+  document.getElementById('landingNavBrand')?.addEventListener('click', function(){
+    document.getElementById('aiLanding').style.display='flex';
+    document.body.classList.add('has-landing');
+    window.scrollTo(0,0);
+  });
+  document.getElementById('landingNavBrowse')?.addEventListener('click', viewAllTools);
+  document.getElementById('landingNavSearch')?.addEventListener('click', function(){
+    document.getElementById('aiQuery')?.focus();
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+  document.getElementById('landingNavReports')?.addEventListener('click', function(){
+    document.getElementById('reportExplainerModal')?.classList.add('active');
+  });
+  document.getElementById('landingNavSignIn')?.addEventListener('click', openLoginModal);
+
+  // Landing feature cards
+  document.getElementById('featureSearch')?.addEventListener('click', function(){
+    document.getElementById('aiQuery')?.focus();
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+  document.getElementById('featureBrowse')?.addEventListener('click', viewAllTools);
+  document.getElementById('featureCompare')?.addEventListener('click', viewAllTools);
+  document.getElementById('featureReports')?.addEventListener('click', function(){
+    document.getElementById('reportExplainerModal')?.classList.add('active');
+  });
+
+  // Category pills + category cards on landing → browse with filter pre-applied
+  function browseByCategory(cat) {
+    if (!window.AUTH_STATE || !window.AUTH_STATE.authenticated) { openLoginModal(); return; }
+    HAS_SEARCHED = true;
+    LAST_QUERY = '';
+    SHORTLIST_SELECTION = [];
+    if(aiQuery) aiQuery.value = '';
+    if(aiStatus) aiStatus.textContent = '';
+    if(window.q) window.q.value = '';
+    document.querySelectorAll('.filters select').forEach(sel => {
+      if(sel.dataset && sel.closest) {
+        const group = sel.closest('[data-key]');
+        if(group && group.dataset.key === 'Legal Functionality') sel.value = cat;
+        else sel.value = '';
+      } else { sel.value = ''; }
+    });
+    // Set Legal Functionality filter via the select element
+    document.querySelectorAll('.filters select').forEach(sel => {
+      if(sel.dataset.key === 'Legal Functionality') sel.value = cat;
+    });
+    document.getElementById('aiLanding').style.display = 'none';
+    document.body.classList.remove('has-landing');
+    applyFilters();
+    document.getElementById('searchQuery').textContent = cat;
+    history.pushState({ view: 'category', cat }, '');
+  }
+  document.querySelectorAll('.landing-cat-pill').forEach(function(pill){
+    pill.addEventListener('click', function(){ browseByCategory(this.dataset.cat); });
+  });
+  document.querySelectorAll('.landing-category-card').forEach(function(card){
+    card.addEventListener('click', function(){ browseByCategory(this.dataset.cat); });
+  });
+
+  // Sort dropdown
+  document.getElementById('sortSelect')?.addEventListener('change', function(){
+    const mode = this.value;
+    const container = document.getElementById('tools');
+    if(!container) return;
+    const cards = Array.from(container.children);
+    cards.sort(function(a,b){
+      if(mode === 'alpha'){
+        return (a.dataset.vendor||'').localeCompare(b.dataset.vendor||'');
+      } else if(mode === 'popular'){
+        return parseFloat(b.dataset.popularity||0) - parseFloat(a.dataset.popularity||0);
+      } else {
+        return parseFloat(b.dataset.score||0) - parseFloat(a.dataset.score||0);
+      }
+    });
+    cards.forEach(function(c){ container.appendChild(c); });
+  });
 
   // Show differences checkbox listener
   document.addEventListener('change', function(e){
