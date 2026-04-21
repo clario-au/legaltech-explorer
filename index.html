@@ -1478,7 +1478,7 @@
     </div>
   </div>
 
-  <!-- Top bar -->
+  <!-- Results header (hidden when landing is shown) -->
   <header>
     <div class="topbar">
       <div class="brand">
@@ -1486,6 +1486,11 @@
         <h1>Legal Tech Navigator</h1>
       </div>
       <span class="spacer"></span>
+      <!-- Mini search bar -->
+      <div style="display:flex;align-items:center;background:#F5F7F8;border:1px solid var(--border);border-radius:999px;padding:4px 8px 4px 14px;gap:6px;width:min(280px,30vw)">
+        <input id="headerSearchInput" type="search" placeholder="Search tools…" style="border:none;background:transparent;outline:none;font-size:13px;color:var(--text);width:100%;padding:0">
+        <button id="headerSearchBtn" style="background:#2EA7A7;border:none;border-radius:999px;color:#fff;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">Go</button>
+      </div>
       <button class="btn" id="compareHeaderBtn" style="display:none">
         Compare <span id="compareHeaderCount">(0)</span>
       </button>
@@ -2122,12 +2127,19 @@
       searchQueryEl.textContent = '';
     }
 
-    // If rows carry a semantic similarity score, sort by that; otherwise by popularity
+    // Sort: semantic score wins when present; otherwise respect sort dropdown
     const hasSemScore = rows.length > 0 && rows[0].__sem_score != null;
+    const sortMode = (document.getElementById('sortSelect') || {}).value || 'navigator';
     rows = rows.slice().sort((a, b) => {
       if(hasSemScore){
         return (b.__sem_score || 0) - (a.__sem_score || 0);
       }
+      if(sortMode === 'alpha'){
+        const nameA = (a.__display_name || a['Product Name'] || '').toLowerCase();
+        const nameB = (b.__display_name || b['Product Name'] || '').toLowerCase();
+        return nameA.localeCompare(nameB);
+      }
+      // navigator + popular both use popularity_score
       const scoreA = parseFloat(a['popularity_score']) || 0;
       const scoreB = parseFloat(b['popularity_score']) || 0;
       if (scoreB !== scoreA) return scoreB - scoreA;
@@ -3077,8 +3089,8 @@
     if(viewTable) viewTable.classList.remove('is-hidden');
   }
 
-  // Header buttons
-  document.querySelector('.brand').addEventListener('click', function(){
+  // Header buttons — target the results-header brand specifically (not the landing nav brand)
+  document.querySelector('header .brand').addEventListener('click', function(){
     // Return to landing page and clear state
     document.getElementById('aiLanding').style.display='flex';
     document.body.classList.add('has-landing');
@@ -3433,14 +3445,24 @@
   }
 
   aiBtn?.addEventListener('click', runAISearch);
+
+  // Header mini search bar
+  function runHeaderSearch() {
+    var input = document.getElementById('headerSearchInput');
+    if (!input || !input.value.trim()) return;
+    var q = input.value.trim();
+    // Put query into main search box and fire
+    if (aiQuery) aiQuery.value = q;
+    runAISearch();
+  }
+  document.getElementById('headerSearchBtn')?.addEventListener('click', runHeaderSearch);
+  document.getElementById('headerSearchInput')?.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') runHeaderSearch();
+  });
   aiQuery?.addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); runAISearch(); }});
 
   // View All Tools button - shows all tools without any filters
   function viewAllTools(){
-    if (!window.AUTH_STATE || !window.AUTH_STATE.authenticated) {
-      openLoginModal();
-      return;
-    }
     HAS_SEARCHED = true;
     LAST_QUERY = '';
     SHORTLIST_SELECTION = []; // Reset shortlist when viewing all
@@ -3554,10 +3576,9 @@
     document.getElementById('aiQuery')?.focus();
     window.scrollTo({top:0,behavior:'smooth'});
   });
-  document.getElementById('landingNavReports')?.addEventListener('click', function(){
-    document.getElementById('reportExplainerModal')?.classList.add('active');
-  });
-  document.getElementById('landingNavSignIn')?.addEventListener('click', openLoginModal);
+  document.getElementById('landingNavReports')?.addEventListener('click', openReportExplainerModal);
+  document.getElementById('landingNavCompare')?.addEventListener('click', openHowToUseModal);
+  document.getElementById('landingNavSignIn')?.addEventListener('click', function(){ if(typeof openLoginModal==='function') openLoginModal(); });
 
   // Landing feature cards
   document.getElementById('featureSearch')?.addEventListener('click', function(){
@@ -3572,7 +3593,6 @@
 
   // Category pills + category cards on landing → browse with filter pre-applied
   function browseByCategory(cat) {
-    if (!window.AUTH_STATE || !window.AUTH_STATE.authenticated) { openLoginModal(); return; }
     HAS_SEARCHED = true;
     LAST_QUERY = '';
     SHORTLIST_SELECTION = [];
@@ -3603,22 +3623,9 @@
     card.addEventListener('click', function(){ browseByCategory(this.dataset.cat); });
   });
 
-  // Sort dropdown
+  // Sort dropdown — re-run renderList so the sort applies to current data
   document.getElementById('sortSelect')?.addEventListener('change', function(){
-    const mode = this.value;
-    const container = document.getElementById('tools');
-    if(!container) return;
-    const cards = Array.from(container.children);
-    cards.sort(function(a,b){
-      if(mode === 'alpha'){
-        return (a.dataset.vendor||'').localeCompare(b.dataset.vendor||'');
-      } else if(mode === 'popular'){
-        return parseFloat(b.dataset.popularity||0) - parseFloat(a.dataset.popularity||0);
-      } else {
-        return parseFloat(b.dataset.score||0) - parseFloat(a.dataset.score||0);
-      }
-    });
-    cards.forEach(function(c){ container.appendChild(c); });
+    applyFilters();
   });
 
   // Show differences checkbox listener
