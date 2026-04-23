@@ -11,9 +11,9 @@ Requires SUPABASE_URL, SUPABASE_SERVICE_KEY, and OPENAI_API_KEY in .env
 
 import os
 import time
+import requests as _requests
 from dotenv import load_dotenv
 from openai import OpenAI
-from supabase import create_client
 
 load_dotenv()
 
@@ -21,9 +21,46 @@ SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
+_SB_HEADERS = {
+    "apikey": SUPABASE_SERVICE_KEY,
+    "Authorization": f"Bearer {SUPABASE_SERVICE_KEY}",
+    "Content-Type": "application/json",
+}
+
 EMBED_MODEL = "text-embedding-3-small"  # 1536 dims, cheap, high quality
 BATCH_SIZE = 20                          # OpenAI allows up to 2048 inputs per call
 SLEEP_BETWEEN_BATCHES = 1.0             # seconds — stay well under rate limit
+
+
+def _sb_fetch_all() -> list[dict]:
+    """Fetch all tools via REST, handling the 1000-row default limit."""
+    all_tools = []
+    offset = 0
+    while True:
+        r = _requests.get(
+            f"{SUPABASE_URL}/rest/v1/legal_tools?select=*&limit=1000&offset={offset}",
+            headers=_SB_HEADERS,
+        )
+        r.raise_for_status()
+        batch = r.json()
+        all_tools.extend(batch)
+        if len(batch) < 1000:
+            break
+        offset += 1000
+    return all_tools
+
+
+def _sb_update_embedding(vendor: str, product: str | None, vector: list) -> None:
+    base = (
+        f"{SUPABASE_URL}/rest/v1/legal_tools"
+        f"?{_requests.utils.quote('Vendor Name')}=eq.{_requests.utils.quote(vendor or '')}"
+    )
+    if product:
+        base += f"&{_requests.utils.quote('Product Name')}=eq.{_requests.utils.quote(product)}"
+    else:
+        base += f"&{_requests.utils.quote('Product Name')}=is.null"
+    r = _requests.patch(base, json={"embedding": vector}, headers=_SB_HEADERS)
+    r.raise_for_status()
 
 
 def build_embedding_text(tool: dict) -> str:
@@ -54,13 +91,11 @@ def main():
         print("ERROR: OPENAI_API_KEY must be set in .env")
         return
 
-    supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
     openai = OpenAI(api_key=OPENAI_API_KEY)
 
     # Fetch all tools
     print("Fetching tools from Supabase...")
-    response = supabase.table("legal_tools").select("*").execute()
-    tools = response.data
+    tools = _sb_fetch_all()
     print(f"Found {len(tools)} tools.")
 
     # Only embed tools that don't have an embedding yet (allows safe re-runs)
@@ -95,9 +130,7 @@ def main():
             product = tool.get("Product Name", "")
 
             try:
-                supabase.table("legal_tools").update(
-                    {"embedding": vector}
-                ).eq("Vendor Name", vendor).eq("Product Name", product).execute()
+                _sb_update_embedding(vendor, product, vector)
                 embedded += 1
             except Exception as e:
                 print(f"  ERROR: Failed to update {vendor} / {product}: {e}")

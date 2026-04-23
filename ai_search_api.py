@@ -928,6 +928,13 @@ async def login_page():
     response.headers["Expires"] = "0"
     return response
 
+@app.get("/terms")
+async def terms_page():
+    """Serve Terms of Use page"""
+    response = FileResponse("terms.html")
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    return response
+
 @app.get("/auth/callback")
 async def auth_callback():
     """Minimal auth callback page — no analytics, handles Supabase token exchange"""
