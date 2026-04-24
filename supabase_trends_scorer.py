@@ -29,12 +29,8 @@ MAX_RETRIES  = 3
 MAX_429      = 5     # hard stop after this many rate-limit errors
 
 
-# ---------------------------------------------------------------------------
-# Supabase helpers
-# ---------------------------------------------------------------------------
-
 def fetch_tools(unscored_only: bool) -> list[dict]:
-    params = 'select="Vendor Name","Product Name",google_trends_score&limit=1000'
+    params = 'select=Vendor+Name,Product+Name,google_trends_score&limit=1000'
     if unscored_only:
         params += "&google_trends_score=is.null"
     r = requests.get(f"{SUPABASE_URL}/rest/v1/legal_tools?{params}", headers=HEADERS)
@@ -42,19 +38,15 @@ def fetch_tools(unscored_only: bool) -> list[dict]:
     return r.json()
 
 
-def write_score(vendor: str, product: str, score: float) -> None:
-    payload = {"google_trends_score": score}
+def write_score(vendor: str, score: float) -> None:
     r = requests.patch(
-        f'{SUPABASE_URL}/rest/v1/legal_tools?{"Vendor Name"}=eq.{requests.utils.quote(vendor)}'
-        f'&{"Product Name"}=eq.{requests.utils.quote(product)}',
-        json=payload, headers=HEADERS,
+        f'{SUPABASE_URL}/rest/v1/legal_tools'
+        f'?Vendor+Name=eq.{requests.utils.quote(vendor)}',
+        json={"google_trends_score": score},
+        headers=HEADERS,
     )
     r.raise_for_status()
 
-
-# ---------------------------------------------------------------------------
-# Trends query
-# ---------------------------------------------------------------------------
 
 def get_trends_score(keyword: str, errors_429: list[int]) -> float | None:
     backoff = 60
@@ -69,10 +61,10 @@ def get_trends_score(keyword: str, errors_429: list[int]) -> float | None:
 
         except Exception as e:
             msg = str(e).lower()
-            if "429" in msg or "too many" in msg:
+            if "429" in msg or "too many" in msg or "response code" in msg:
                 errors_429[0] += 1
                 if errors_429[0] >= MAX_429:
-                    raise SystemExit(f"Hit {MAX_429} rate-limit errors — stopping. Re-run later.")
+                    raise SystemExit(f"Hit {MAX_429} rate-limit errors — stopping. Re-run in ~30 min.")
                 jitter = random.uniform(0.8, 1.2)
                 wait = backoff * jitter
                 print(f"    [429] Backing off {wait:.0f}s (error {errors_429[0]}/{MAX_429})")
@@ -87,10 +79,6 @@ def get_trends_score(keyword: str, errors_429: list[int]) -> float | None:
     return None
 
 
-# ---------------------------------------------------------------------------
-# Main
-# ---------------------------------------------------------------------------
-
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--all",   action="store_true", help="Re-score every tool, not just NULLs")
@@ -103,7 +91,7 @@ def main() -> None:
 
     tools = fetch_tools(unscored_only=not args.all)
     if args.limit:
-        tools = tools[: args.limit]
+        tools = tools[:args.limit]
 
     total = len(tools)
     print(f"Tools to score: {total}")
@@ -114,13 +102,12 @@ def main() -> None:
     est_min = (total * MIN_DELAY) / 60
     print(f"Estimated time: ~{est_min:.0f} min  (rate-limited to ≥{MIN_DELAY}s per request)\n")
 
-    errors_429 = [0]   # mutable counter shared with get_trends_score
+    errors_429 = [0]
     scored = skipped = 0
 
     for i, tool in enumerate(tools, 1):
         vendor  = tool["Vendor Name"]
-        product = tool.get("Product Name") or vendor
-        keyword = vendor  # search by vendor name — most recognisable
+        keyword = vendor
 
         print(f"[{i:3}/{total}] {vendor}", end="  ", flush=True)
 
@@ -130,19 +117,20 @@ def main() -> None:
             skipped += 1
         else:
             try:
-                write_score(vendor, product, score)
+                write_score(vendor, score)
                 print(f"→ {score:.1f}")
                 scored += 1
             except Exception as e:
                 print(f"SKIP (write error: {e!s:.60})")
                 skipped += 1
 
-        # Rate limiting — add jitter to avoid request fingerprinting
         if i < total:
             time.sleep(MIN_DELAY * random.uniform(0.9, 1.2))
 
     print(f"\n{'='*60}")
     print(f"Done.  Scored: {scored}  Skipped: {skipped}  429 errors: {errors_429[0]}")
+    if skipped:
+        print("Re-run to catch skipped tools (NULLs picked up automatically).")
 
 
 if __name__ == "__main__":

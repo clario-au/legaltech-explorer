@@ -88,8 +88,12 @@ def score_ai(val: str | None) -> float:
 def score_regions(val: str | None) -> float:
     if not val or str(val).strip() in ("", "nan"):
         return 0.0
-    count = len([r for r in str(val).split(",") if r.strip()])
-    return min(count * 20.0, 100.0)
+    import re
+    parts = [r.strip() for r in re.split(r"[;,]", str(val)) if r.strip()]
+    # "Global" in the canonical set means worldwide — full marks
+    if any(p.lower() == "global" for p in parts):
+        return 100.0
+    return min(len(parts) * 20.0, 100.0)
 
 
 def score_completeness(tool: dict) -> float:
