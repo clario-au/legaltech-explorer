@@ -666,6 +666,9 @@
   .landing-nav-links a.primary{background:#2EA7A7;color:#fff;border-color:transparent;}
   .landing-nav-links a.primary:hover{background:#238E8E;}
   .landing-nav-sign-in{font-size:13px;font-weight:600;color:#2EA7A7;cursor:pointer;padding:7px 10px;border:none;background:none;}
+  .landing-nav-menu-btn{display:flex;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;padding:6px;border:none;background:none;cursor:pointer;border-radius:8px;transition:background .15s;}
+  .landing-nav-menu-btn:hover{background:#edf0f3;}
+  .landing-nav-menu-btn span{display:block;height:2px;border-radius:2px;background:#0F172A;transition:background .15s;}
   /* Auth-pending: hide auth-sensitive UI until session check resolves */
   body.auth-pending #landingNavSignIn{visibility:hidden;}
   body.auth-pending .landing-search-wrap textarea{opacity:0.55;pointer-events:none;}
@@ -1183,13 +1186,10 @@
         <span>Legal Tech Navigator</span>
       </a>
       <span class="spacer"></span>
-      <div class="landing-nav-links">
-        <a id="landingNavBrowse">Browse All</a>
-        <a id="landingNavCompare">Compare</a>
-        <a id="landingNavReports">Reports</a>
-        <a class="primary" id="landingNavSearch">Find Tools</a>
-      </div>
       <button class="landing-nav-sign-in" id="landingNavSignIn">Sign In</button>
+      <button class="landing-nav-menu-btn" id="landingNavMenuBtn">
+        <span></span><span></span><span></span>
+      </button>
     </nav>
 
     <!-- Hero -->
@@ -1453,22 +1453,27 @@
         </a>
       </li>
       <li class="menu-item">
-        <a href="#" class="menu-item-link" data-index="04" data-action="report-explainer">
+        <a href="#" class="menu-item-link" data-index="04" data-action="compare-tools">
+          Compare Tools
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="#" class="menu-item-link" data-index="05" data-action="report-explainer">
           How Reports Work
         </a>
       </li>
       <li class="menu-item">
-        <a href="#" class="menu-item-link" data-index="05" data-action="about-clario">
+        <a href="#" class="menu-item-link" data-index="06" data-action="about-clario">
           About Clario
         </a>
       </li>
       <li class="menu-item" id="signInMenuItem">
-        <a href="#" class="menu-item-link" data-index="06" data-action="sign-in">
+        <a href="#" class="menu-item-link" data-index="07" data-action="sign-in">
           Sign In
         </a>
       </li>
       <li class="menu-item" id="signOutMenuItem" style="display: none;">
-        <a href="#" class="menu-item-link" data-index="07" data-action="sign-out">
+        <a href="#" class="menu-item-link" data-index="08" data-action="sign-out">
           Sign Out
         </a>
       </li>
@@ -3509,6 +3514,7 @@
   }
 
   menuBtn?.addEventListener('click', openMenu);
+  document.getElementById('landingNavMenuBtn')?.addEventListener('click', openMenu);
   menuCloseBtn?.addEventListener('click', closeMenu);
   menuOverlay?.addEventListener('click', closeMenu);
 
@@ -3522,6 +3528,10 @@
       if (action === 'view-tools') {
         closeMenu();
         viewAllTools();
+      } else if (action === 'compare-tools') {
+        closeMenu();
+        viewAllTools();
+        setTimeout(function(){ openHowToUseModal(); }, 300);
       } else if (action === 'report-explainer') {
         closeMenu();
         openReportExplainerModal();
@@ -3551,19 +3561,12 @@
   document.getElementById('viewAllBtnHeader')?.addEventListener('click', viewAllTools);
   document.getElementById('viewAllBtnLanding')?.addEventListener('click', viewAllTools);
 
-  // Landing nav links
+  // Landing nav
   document.getElementById('landingNavBrand')?.addEventListener('click', function(){
     document.getElementById('aiLanding').style.display='flex';
     document.body.classList.add('has-landing');
     window.scrollTo(0,0);
   });
-  document.getElementById('landingNavBrowse')?.addEventListener('click', viewAllTools);
-  document.getElementById('landingNavSearch')?.addEventListener('click', function(){
-    document.getElementById('aiQuery')?.focus();
-    window.scrollTo({top:0,behavior:'smooth'});
-  });
-  document.getElementById('landingNavReports')?.addEventListener('click', openReportExplainerModal);
-  document.getElementById('landingNavCompare')?.addEventListener('click', openHowToUseModal);
   document.getElementById('landingNavSignIn')?.addEventListener('click', function(){ if(typeof openLoginModal==='function') openLoginModal(); });
 
   // Landing feature cards
