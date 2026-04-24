@@ -27,13 +27,15 @@
   }
 
   *{box-sizing:border-box}
-  html,body{height:100%;overflow:hidden}
+  html{height:100%}
   body{
     margin:0;
+    min-height:100%;
     background:var(--bg);
     color:var(--text);
     font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
   }
+  body:not(.has-landing){height:100vh;overflow:hidden}
 
   header{position:sticky;top:0;z-index:20;background:#ffffff;border-bottom:1px solid #E6EBED;box-shadow:0 1px 4px rgba(0,0,0,.08);backdrop-filter:blur(6px)}
   header h1{color:#0F172A}
@@ -635,19 +637,129 @@
   .left::-webkit-scrollbar-thumb, main::-webkit-scrollbar-thumb, .right::-webkit-scrollbar-thumb, .compare-wrap::-webkit-scrollbar-thumb, #aiSummaryBox::-webkit-scrollbar-thumb, .box.alt::-webkit-scrollbar-thumb, aside.left .box::-webkit-scrollbar-thumb, aside.right .box::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:4px}
   .left::-webkit-scrollbar-thumb:hover, main::-webkit-scrollbar-thumb:hover, .right::-webkit-scrollbar-thumb:hover, .compare-wrap::-webkit-scrollbar-thumb:hover, #aiSummaryBox::-webkit-scrollbar-thumb:hover, .box.alt::-webkit-scrollbar-thumb:hover, aside.left .box::-webkit-scrollbar-thumb:hover, aside.right .box::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hover)}
 
-  /* Landing overlay */
-  #aiLanding{
-    position:fixed;inset:0;
-    background:linear-gradient(160deg, #edf2f7 0%, #e8f0f7 60%, #e0f2f2 100%);
-    display:none;flex-direction:column;align-items:center;justify-content:center;gap:24px;z-index:10;
-    padding:24px 24px 24px 24px;
-    padding-top:96px;
-    overflow:hidden;
-  }
+  /* Landing page */
+  #aiLanding{display:none;flex-direction:column;min-height:100vh;background:#f5f8fa;}
   body.has-landing #aiLanding{display:flex;}
-  body.has-landing{overflow:hidden;}
+  body.has-landing{overflow-y:auto;height:auto;}
+  body.has-landing header{display:none;}
   body.has-landing .wrap{display:none;}
   body.has-landing #filtersBtn{display:none;}
+
+  /* Landing nav */
+  .landing-nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(245,248,250,0.92);backdrop-filter:blur(10px);
+    border-bottom:1px solid #E6EBED;
+    padding:0 24px;
+    display:flex;align-items:center;gap:16px;height:60px;
+  }
+  .landing-nav .brand{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none;}
+  .landing-nav .brand img{height:22px;}
+  .landing-nav .brand span{font-size:15px;font-weight:700;color:#0F172A;}
+  .landing-nav .spacer{flex:1}
+  .landing-nav-links{display:flex;align-items:center;gap:4px;}
+  .landing-nav-links a{
+    padding:7px 14px;border-radius:999px;font-size:13px;font-weight:600;color:#475569;
+    text-decoration:none;cursor:pointer;transition:.2s;border:1px solid transparent;
+  }
+  .landing-nav-links a:hover{color:#0F172A;background:#edf0f3;}
+  .landing-nav-links a.primary{background:#2EA7A7;color:#fff;border-color:transparent;}
+  .landing-nav-links a.primary:hover{background:#238E8E;}
+  .landing-nav-sign-in{font-size:13px;font-weight:600;color:#2EA7A7;cursor:pointer;padding:7px 10px;border:none;background:none;}
+  .landing-nav-menu-btn{display:flex;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;padding:6px;border:none;background:none;cursor:pointer;border-radius:8px;transition:background .15s;}
+  .landing-nav-menu-btn:hover{background:#edf0f3;}
+  .landing-nav-menu-btn span{display:block;height:2px;border-radius:2px;background:#0F172A;transition:background .15s;}
+  /* Auth-pending: hide auth-sensitive UI until session check resolves */
+  body.auth-pending #landingNavSignIn{visibility:hidden;}
+  body.auth-pending .landing-search-wrap textarea{opacity:0.55;pointer-events:none;}
+  body.auth-pending #aiBtn{opacity:0.55;pointer-events:none;cursor:wait;}
+  body.auth-pending .landing-search-actions button{opacity:0.55;pointer-events:none;cursor:wait;}
+
+  /* Hero section */
+  .landing-hero{
+    background:linear-gradient(160deg,#e8f4f4 0%,#edf2f7 60%,#e8f4f4 100%);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:24px;padding:72px 24px 80px;
+    min-height:68vh;
+  }
+  .landing-hero-tagline{font-size:14px;font-weight:600;color:#2EA7A7;letter-spacing:0.8px;text-transform:uppercase;}
+  .landing-hero-headline{font-size:clamp(28px,4vw,44px);font-weight:700;color:#0F172A;line-height:1.2;text-align:center;max-width:700px;letter-spacing:-0.5px;margin:0;}
+  .landing-hero-sub{font-size:16px;color:#475569;text-align:center;max-width:540px;line-height:1.6;margin:0;}
+  .landing-search-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;width:min(660px,90vw);}
+  .landing-search-wrap textarea{
+    width:100%;padding:16px 18px;border-radius:14px;border:1px solid #d4dde6;
+    font-size:14px;resize:none;background:#ffffff;color:#0F172A;
+    box-shadow:0 4px 24px rgba(0,0,0,0.08);outline:none;font-family:inherit;line-height:1.5;
+    transition:border-color .2s,box-shadow .2s;
+  }
+  .landing-search-wrap textarea:focus{border-color:#2EA7A7;box-shadow:0 4px 24px rgba(46,167,167,0.15);}
+  .landing-search-actions{display:flex;gap:10px;width:100%;}
+  .landing-search-actions .btn-search{
+    flex:1;padding:14px 24px;font-size:15px;border-radius:999px;border:none;
+    background:#2EA7A7;color:#fff;font-weight:600;cursor:pointer;transition:.2s;letter-spacing:0.2px;
+  }
+  .landing-search-actions .btn-search:hover{background:#238E8E;box-shadow:0 4px 16px rgba(46,167,167,0.35);}
+  .landing-search-actions .btn-browse{
+    padding:14px 24px;font-size:14px;border-radius:999px;border:none;
+    background:#F22C7A;color:#fff;font-weight:600;cursor:pointer;transition:.2s;white-space:nowrap;
+  }
+  .landing-search-actions .btn-browse:hover{background:#d41e68;box-shadow:0 4px 16px rgba(242,44,122,0.3);}
+
+  /* Category pills on landing */
+  .landing-category-pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:700px;}
+  .landing-cat-pill{
+    padding:7px 15px;border-radius:999px;border:1px solid #d4dde6;
+    background:#ffffff;color:#0F172A;font-size:13px;font-weight:500;cursor:pointer;
+    transition:.2s;white-space:nowrap;
+  }
+  .landing-cat-pill:hover{border-color:#2EA7A7;color:#2EA7A7;background:#f0fafa;}
+
+  /* Features strip */
+  .landing-features{
+    padding:72px 24px;background:#ffffff;
+    display:flex;flex-direction:column;align-items:center;gap:40px;
+  }
+  .landing-section-label{font-size:13px;font-weight:700;color:#2EA7A7;letter-spacing:0.8px;text-transform:uppercase;}
+  .landing-section-title{font-size:clamp(20px,3vw,30px);font-weight:700;color:#0F172A;text-align:center;margin:0;}
+  .landing-features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;width:100%;max-width:960px;}
+  .landing-feature-card{
+    background:#f8fafc;border:1px solid #E6EBED;border-radius:16px;
+    padding:28px 24px;display:flex;flex-direction:column;gap:12px;
+    cursor:pointer;transition:.2s;
+  }
+  .landing-feature-card:hover{border-color:#2EA7A7;box-shadow:0 4px 20px rgba(46,167,167,0.12);transform:translateY(-2px);}
+  .landing-feature-icon{font-size:24px;width:44px;height:44px;border-radius:12px;background:#edf9f9;display:flex;align-items:center;justify-content:center;}
+  .landing-feature-title{font-size:15px;font-weight:700;color:#0F172A;}
+  .landing-feature-desc{font-size:13px;color:#475569;line-height:1.5;}
+
+  /* Categories section */
+  .landing-categories{padding:72px 24px;background:#f5f8fa;display:flex;flex-direction:column;align-items:center;gap:32px;}
+  .landing-categories-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;width:100%;max-width:960px;}
+  .landing-category-card{
+    background:#ffffff;border:1px solid #E6EBED;border-radius:12px;padding:18px 20px;
+    cursor:pointer;transition:.2s;display:flex;align-items:center;gap:12px;
+  }
+  .landing-category-card:hover{border-color:#2EA7A7;color:#2EA7A7;box-shadow:0 2px 12px rgba(46,167,167,0.1);}
+  .landing-category-card span{font-size:13px;font-weight:600;color:inherit;line-height:1.3;}
+  .landing-category-dot{width:8px;height:8px;border-radius:50%;background:#2EA7A7;flex-shrink:0;}
+
+  /* About strip */
+  .landing-about{
+    padding:64px 24px;background:#0F3B45;
+    display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;
+  }
+  .landing-about h2{font-size:clamp(18px,2.5vw,26px);font-weight:700;color:#ffffff;margin:0;max-width:600px;}
+  .landing-about p{font-size:14px;color:rgba(255,255,255,0.7);max-width:560px;line-height:1.7;margin:0;}
+  .landing-about a{color:#2EA7A7;text-decoration:none;font-weight:600;}
+
+  /* Landing disclaimer */
+  .landing-disclaimer{background:#0a2d36;padding:28px 24px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;border-top:1px solid rgba(255,255,255,0.08);}
+  .landing-disclaimer p{font-size:12px;color:rgba(255,255,255,0.5);max-width:640px;line-height:1.7;margin:0;}
+  .landing-disclaimer a{color:#2EA7A7;text-decoration:none;}
+  .landing-disclaimer a:hover{text-decoration:underline;}
+  /* Landing footer */
+  .landing-footer{background:#0a2d36;padding:16px 24px;display:flex;align-items:center;justify-content:center;border-top:1px solid rgba(255,255,255,0.06);}
+  .landing-footer p{font-size:11px;color:rgba(255,255,255,0.3);margin:0;}
   .logo-chip { display:inline-flex; align-items:center; justify-content:center; padding:14px 28px; border-radius:16px;
     background:#ffffff; box-shadow:0 2px 12px rgba(0,0,0,0.1); border:1px solid #E6EBED; }
   .logo-chip img { filter:drop-shadow(0 1px 3px rgba(0,0,0,0.1)); height:38px; }
@@ -1064,24 +1176,107 @@
   <!-- FULLSCREEN AURORA (always visible) -->
   <div id="auroraCanvas" class="aurora-bg fullscreen"></div>
 
-  <!-- AI search overlay -->
+  <!-- Landing page -->
   <div id="aiLanding">
-    <div class="logo-chip"><img src="logos/clario.png" alt="Clario"></div>
 
-    <!-- Static tagline -->
-    <div class="static-tagline">A curated explorer of legal tech tools for in house legal teams in Australia</div>
+    <!-- Sticky nav -->
+    <nav class="landing-nav">
+      <a class="brand" id="landingNavBrand">
+        <img src="logos/clario.png" alt="Clario">
+        <span>Legal Tech Navigator</span>
+      </a>
+      <span class="spacer"></span>
+      <button class="landing-nav-sign-in" id="landingNavSignIn">Sign In</button>
+      <button class="landing-nav-menu-btn" id="landingNavMenuBtn">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
 
-    <!-- Search card -->
-    <div class="landing-search-wrap">
-      <div class="static-headline">Describe the legal-tech you're looking for</div>
-      <textarea id="aiQuery" rows="3" placeholder="e.g. contract management software for a mid-size law firm..."
-        style="width:100%;padding:16px 18px;border-radius:14px;border:1px solid #E6EBED;font-size:14px;resize:none;background:#ffffff;color:#0F172A;box-shadow:0 4px 20px rgba(0,0,0,0.08);outline:none;font-family:inherit;line-height:1.5;"></textarea>
-      <div style="display:flex;gap:12px;width:100%;align-items:center;">
-        <button id="aiSearchBtn" class="btn primary" style="flex:1;padding:14px 24px;font-size:15px;border-radius:999px;letter-spacing:0.2px;">Search</button>
-        <button id="viewAllBtnLanding" class="btn" style="padding:14px 24px;font-size:14px;border-radius:999px;white-space:nowrap;background:#F22C7A;border-color:transparent;color:#ffffff;font-weight:600;">Browse all tools</button>
+    <!-- Hero -->
+    <section class="landing-hero">
+      <div class="landing-hero-tagline">Australia's Legal Tech Database</div>
+      <h1 class="landing-hero-headline">Find the right legal tech for your team</h1>
+      <p class="landing-hero-sub">Search 600+ tools curated for in-house legal teams in Australia. Compare, shortlist, and generate reports.</p>
+
+      <div class="landing-search-wrap">
+        <textarea id="aiQuery" rows="3" placeholder="e.g. contract management software for a mid-size in-house team…"></textarea>
+        <div class="landing-search-actions">
+          <button id="aiSearchBtn" class="btn-search">Search</button>
+          <button id="viewAllBtnLanding" class="btn-browse">Browse all tools</button>
+        </div>
+        <div id="aiStatus" style="min-height:18px;font-size:13px;text-align:center;color:#6b7280;"></div>
       </div>
-      <div id="aiStatus" class="sub" style="min-height:18px;text-align:center;color:#6b7280;"></div>
+
+    </section>
+
+    <!-- Features -->
+    <section class="landing-features">
+      <div class="landing-section-label">What you can do</div>
+      <h2 class="landing-section-title">Everything you need to evaluate legal tech</h2>
+      <div class="landing-features-grid">
+        <div class="landing-feature-card" id="featureSearch">
+          <div class="landing-feature-icon">🔍</div>
+          <div class="landing-feature-title">AI Search</div>
+          <div class="landing-feature-desc">Describe what you need in plain English and get ranked, relevant results instantly.</div>
+        </div>
+        <div class="landing-feature-card" id="featureBrowse">
+          <div class="landing-feature-icon">📋</div>
+          <div class="landing-feature-title">Browse All Tools</div>
+          <div class="landing-feature-desc">Explore the full database with filters by category, AI capability, region, and more.</div>
+        </div>
+        <div class="landing-feature-card" id="featureCompare">
+          <div class="landing-feature-icon">⚖️</div>
+          <div class="landing-feature-title">Compare</div>
+          <div class="landing-feature-desc">Select up to 5 tools and view them side by side across key attributes.</div>
+        </div>
+        <div class="landing-feature-card" id="featureReports">
+          <div class="landing-feature-icon">📄</div>
+          <div class="landing-feature-title">Generate Reports</div>
+          <div class="landing-feature-desc">Shortlist tools and download a ready-to-share PDF report with AI-written summaries.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="landing-categories">
+      <div class="landing-section-label">Browse by category</div>
+      <h2 class="landing-section-title">16 legal tech categories covered</h2>
+      <div class="landing-categories-grid">
+        <div class="landing-category-card" data-cat="Contracting &amp; Document Automation"><div class="landing-category-dot"></div><span>Contracting &amp; Document Automation</span></div>
+        <div class="landing-category-card" data-cat="AI Legal Assistants &amp; Productivity Tools"><div class="landing-category-dot"></div><span>AI Legal Assistants &amp; Productivity Tools</span></div>
+        <div class="landing-category-card" data-cat="Compliance, Risk &amp; Governance"><div class="landing-category-dot"></div><span>Compliance, Risk &amp; Governance</span></div>
+        <div class="landing-category-card" data-cat="Matter, Workflow &amp; Intake Management"><div class="landing-category-dot"></div><span>Matter, Workflow &amp; Intake Management</span></div>
+        <div class="landing-category-card" data-cat="Litigation, Disputes &amp; Investigations"><div class="landing-category-dot"></div><span>Litigation, Disputes &amp; Investigations</span></div>
+        <div class="landing-category-card" data-cat="Corporate Governance &amp; Entity Management"><div class="landing-category-dot"></div><span>Corporate Governance &amp; Entity Management</span></div>
+        <div class="landing-category-card" data-cat="Legal Research &amp; Insights"><div class="landing-category-dot"></div><span>Legal Research &amp; Insights</span></div>
+        <div class="landing-category-card" data-cat="Outside Counsel &amp; Spend Management"><div class="landing-category-dot"></div><span>Outside Counsel &amp; Spend Management</span></div>
+        <div class="landing-category-card" data-cat="Legal Operations &amp; Analytics"><div class="landing-category-dot"></div><span>Legal Operations &amp; Analytics</span></div>
+        <div class="landing-category-card" data-cat="Intellectual Property, Technology &amp; Data"><div class="landing-category-dot"></div><span>Intellectual Property, Technology &amp; Data</span></div>
+        <div class="landing-category-card" data-cat="Employment &amp; HR Legal Support"><div class="landing-category-dot"></div><span>Employment &amp; HR Legal Support</span></div>
+        <div class="landing-category-card" data-cat="Cross-Border, Transactions &amp; Deal Management"><div class="landing-category-dot"></div><span>Cross-Border, Transactions &amp; Deal Management</span></div>
+        <div class="landing-category-card" data-cat="Knowledge, Search &amp; Precedent Management"><div class="landing-category-dot"></div><span>Knowledge, Search &amp; Precedent Management</span></div>
+        <div class="landing-category-card" data-cat="Business Partnering &amp; Self-Service Tools"><div class="landing-category-dot"></div><span>Business Partnering &amp; Self-Service Tools</span></div>
+        <div class="landing-category-card" data-cat="Integration &amp; Platform Infrastructure"><div class="landing-category-dot"></div><span>Integration &amp; Platform Infrastructure</span></div>
+        <div class="landing-category-card" data-cat="Legal Research &amp; Knowledge"><div class="landing-category-dot"></div><span>Legal Research &amp; Knowledge</span></div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="landing-about">
+      <h2>Built for in-house legal teams in Australia</h2>
+      <p>The Legal Tech Navigator is a free resource by <a href="#">Clario</a> — a curated, searchable database of 600+ legal technology tools. We track AI capabilities, regional availability, pricing, and market adoption so you don't have to.</p>
+    </section>
+
+    <!-- Disclaimer -->
+    <div class="landing-disclaimer">
+      <p>The Navigator helps identify and compare suitable legal technology options using data and AI-based matching. It's designed to support, not replace, your internal decision-making. <a href="/terms">Terms of Use</a></p>
     </div>
+
+    <!-- Footer -->
+    <div class="landing-footer">
+      <p>© 2025 Clario. All rights reserved.</p>
+    </div>
+
   </div>
 
   <!-- Staggered Menu Overlay -->
@@ -1258,22 +1453,27 @@
         </a>
       </li>
       <li class="menu-item">
-        <a href="#" class="menu-item-link" data-index="04" data-action="report-explainer">
+        <a href="#" class="menu-item-link" data-index="04" data-action="compare-tools">
+          Compare Tools
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="#" class="menu-item-link" data-index="05" data-action="report-explainer">
           How Reports Work
         </a>
       </li>
       <li class="menu-item">
-        <a href="#" class="menu-item-link" data-index="05" data-action="about-clario">
+        <a href="#" class="menu-item-link" data-index="06" data-action="about-clario">
           About Clario
         </a>
       </li>
       <li class="menu-item" id="signInMenuItem">
-        <a href="#" class="menu-item-link" data-index="06" data-action="sign-in">
+        <a href="#" class="menu-item-link" data-index="07" data-action="sign-in">
           Sign In
         </a>
       </li>
       <li class="menu-item" id="signOutMenuItem" style="display: none;">
-        <a href="#" class="menu-item-link" data-index="07" data-action="sign-out">
+        <a href="#" class="menu-item-link" data-index="08" data-action="sign-out">
           Sign Out
         </a>
       </li>
@@ -1287,7 +1487,7 @@
     </div>
   </div>
 
-  <!-- Top bar -->
+  <!-- Results header (hidden when landing is shown) -->
   <header>
     <div class="topbar">
       <div class="brand">
@@ -1295,6 +1495,11 @@
         <h1>Legal Tech Navigator</h1>
       </div>
       <span class="spacer"></span>
+      <!-- Mini search bar -->
+      <div style="display:flex;align-items:center;background:#F5F7F8;border:1px solid var(--border);border-radius:999px;padding:4px 8px 4px 14px;gap:6px;width:min(280px,30vw)">
+        <input id="headerSearchInput" type="search" placeholder="Search tools…" style="border:none;background:transparent;outline:none;font-size:13px;color:var(--text);width:100%;padding:0">
+        <button id="headerSearchBtn" style="background:#2EA7A7;border:none;border-radius:999px;color:#fff;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">Go</button>
+      </div>
       <button class="btn" id="compareHeaderBtn" style="display:none">
         Compare <span id="compareHeaderCount">(0)</span>
       </button>
@@ -1325,6 +1530,11 @@
         <div style="display:flex;align-items:center;gap:12px">
           <span class="sub" id="searchQuery"></span>
           <span class="sub" id="count"></span>
+          <select id="sortSelect" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);font-size:13px;font-weight:600;color:var(--text);background:#F5F7F8;cursor:pointer;outline:none;">
+            <option value="navigator">Navigator Score</option>
+            <option value="alpha">A – Z</option>
+            <option value="popular">Most Popular</option>
+          </select>
         </div>
       </div>
       <div class="box alt">
@@ -1490,16 +1700,15 @@
   var SCHEMA = [
     { key: 'Vendor Name', group: 'Vendor Identification', type: 'text' },
     { key: 'Vendor Overview', group: 'Vendor Identification', type: 'text' },
-    { key: 'HQ', group: 'Vendor Identification', type: 'single' },
     { key: 'Office Locations', group: 'Vendor Identification', type: 'text' },
-    { key: 'Regions Served', group: 'Vendor Identification', type: 'single', values: ['Australia','New Zealand','Asia-Pacific (APAC)','North America (US & Canada)','Europe (UK & EU)','United Kingdom','Middle East','Africa','Latin America','Unknown'] },
+    { key: 'Regions Served', group: 'Vendor Identification', type: 'single', values: ['Australia','New Zealand','Asia-Pacific (APAC)','North America (US & Canada)','Europe (UK & EU)','United Kingdom','Middle East','Africa','Latin America'] },
     { key: 'Year Founded', group: 'Vendor Identification', type: 'number-range' },
 
     { key: 'Product Name', group: 'Product Identification', type: 'text' },
     { key: 'Product Description', group: 'Product Identification', type: 'text' },
-    { key: 'Languages Supported', group: 'Product Identification', type: 'single', values: ['English only','English + Limited Other Languages','Multilingual (supports major global languages)','Unknown / To Verify'] },
+    { key: 'Languages Supported', group: 'Product Identification', type: 'single', values: ['English only','English + Limited Other Languages','Multilingual (supports major global languages)'] },
 
-    { key: 'Legal Functionality', group: 'Legal Functionality & Use Case', type: 'single', values: ['Contracting & Document Automation','Matter, Workflow & Intake Management','Legal Operations & Analytics','Outside Counsel & Spend Management','Compliance, Risk & Governance','Corporate Governance & Entity Management','Litigation, Disputes & Investigations','Intellectual Property, Technology & Data','Employment & HR Legal Support','Cross-Border, Transactions & Deal Management','Knowledge, Search & Precedent Management','AI Legal Assistants & Productivity Tools','Business Partnering & Self-Service Tools','Integration & Platform Infrastructure','Legal Research & Insights','Legal Research & Knowledge'] },
+    { key: 'Legal Functionality', group: 'Legal Functionality & Use Case', type: 'single' },
     { key: 'Functionality Sub-Category', group: 'Legal Functionality & Use Case', type: 'single' },
     { key: 'Main Problem Solved', group: 'Legal Functionality & Use Case', type: 'text' },
 
@@ -1510,16 +1719,15 @@
     { key: 'AI Powered', group: 'AI Capabilities & Innovation', type: 'single', values: ['Yes','No'] },
     { key: 'AI Platform Type', group: 'AI Capabilities & Innovation', type: 'single', values: ['Large Language Model (LLM) Platforms','Predictive / Machine Learning (ML) Platforms','Natural Language Processing (NLP) / Text Analytics','Computer Vision & Document Recognition','Recommendation & Decision Support Systems','Conversational / Copilot Layer','AI Integration / Orchestration Layer','Domain-Specific or Proprietary AI Engines.'] },
     { key: 'Deployment Model', group: 'AI Capabilities & Innovation', type: 'single', values: ['Cloud (SaaS)','Private Cloud','On-Premises','Hybrid','Desktop / Local Application.'] },
-    { key: 'Hosting Location', group: 'AI Capabilities & Innovation', type: 'single', values: ['Australia','Asia-Pacific (ex-AU)','United States','Europe / UK','Multi-Region / Distributed Cloud','Customer-Hosted / Private Cloud','Unknown / To Verify'] },
+    { key: 'Hosting Location', group: 'AI Capabilities & Innovation', type: 'single', values: ['Australia','Asia-Pacific (ex-AU)','United States','Europe / UK','Multi-Region / Distributed Cloud','Customer-Hosted / Private Cloud'] },
     { key: 'Hosting Provider', group: 'AI Capabilities & Innovation', type: 'single', values: ['AWS','Azure','Google Cloud','Other'] },
 
-    { key: 'ISO Certifications', group: 'Security, Privacy & Trust', type: 'single', values: ['ISO 27001','ISO 27017','ISO 27018','ISO 27701','ISO 22301','ISO 9001','ISO 20000'] },
     { key: 'Security & Compliance Certifications', group: 'Security, Privacy & Trust', type: 'single', values: ['SOC 1 (Type I or II)','SOC 2 (Type I or II)','SOC 3','GDPR Compliance (EU)','CCPA Compliance (US)','HIPAA Compliance (US)','FedRAMP, Authorization (US)','IRAP Assessment (AU)','CSA STAR Certification','Cyber Essentials / Plus (UK).'] },
 
     { key: 'Pricing Model', group: 'Commercials & Procurement', type: 'single', values: ['Subscription (SaaS)','Usage-Based / Consumption','Per Seat / License','Tiered / Plan-Based','Enterprise Custom Quote','Freemium / Free Trial','One-Time Purchase / Perpetual License.'] },
     { key: 'Approx. Price Range (AUD)', group: 'Commercials & Procurement', type: 'single', values: ['<$10K','$10K–$50K','$51K-$100K','$101K+'] },
-    { key: 'Demo / Proof of Concept Available', group: 'Commercials & Procurement', type: 'single', values: ['Yes','No','Unknown'] },
-    { key: 'Adoption Level', group: 'Commercials & Procurement', type: 'single', values: ['Emerging / New Entrant','Growing Adoption','Mainstream / Proven','Market Leader / Standard','Unknown / To Verify'] },
+    { key: 'Demo / Proof of Concept Available', group: 'Commercials & Procurement', type: 'single', values: ['Yes','No'] },
+    { key: 'Adoption Level', group: 'Commercials & Procurement', type: 'single', values: ['Emerging / New Entrant','Growing Adoption','Mainstream / Proven','Market Leader / Standard'] },
     { key: 'Ease of Purchase', group: 'Commercials & Procurement', type: 'single', values: ['Very Easy','Easy','Moderate','Complex'] },
 
     { key: 'Customer Reviews', group: 'Customer Reviews', type: 'text' },
@@ -1568,6 +1776,62 @@
   var rightSidebar = document.getElementById('rightSidebar');
   var compareOverlay = document.getElementById('compareOverlay');
 
+  // Canonical alias map — display name → raw values in data that it covers.
+  // OR logic within a group; AND logic between different filter fields.
+  var CANONICAL_ALIASES = {
+    'Legal Functionality': {
+      'Contracting & Document Automation':          ['Contracting & Document Automation'],
+      'Compliance, Risk & Governance':              ['Compliance, Risk & Governance','Compliance','Risk & Governance'],
+      'Litigation, Disputes & Investigations':      ['Litigation, Disputes & Investigations','Litigation','Disputes & Investigations'],
+      'Matter, Workflow & Intake Management':       ['Matter, Workflow & Intake Management','Matter','Workflow & Intake Management'],
+      'AI Legal Assistants & Productivity Tools':   ['AI Legal Assistants & Productivity Tools'],
+      'Intellectual Property, Technology & Data':   ['Intellectual Property, Technology & Data','Intellectual Property','Technology & Data'],
+      'Legal Operations & Analytics':               ['Legal Operations & Analytics'],
+      'Cross-Border, Transactions & Deal Management':['Cross-Border, Transactions & Deal Management','Cross-Border','Transactions & Deal Management'],
+      'Corporate Governance & Entity Management':   ['Corporate Governance & Entity Management'],
+      'Knowledge, Search & Precedent Management':   ['Knowledge, Search & Precedent Management','Knowledge','Search & Precedent Management'],
+      'Legal Research & Insights':                  ['Legal Research & Insights','Legal Research & Knowledge'],
+      'Business Partnering & Self-Service Tools':   ['Business Partnering & Self-Service Tools'],
+      'Integration & Platform Infrastructure':      ['Integration & Platform Infrastructure'],
+      'Outside Counsel & Spend Management':         ['Outside Counsel & Spend Management'],
+      'Employment & HR Legal Support':              ['Employment & HR Legal Support'],
+    },
+    'Functionality Sub-Category': {
+      'Contract Management':      ['Contract Management','Contract Lifecycle Management','contract lifecycle management','Contract Lifecycle Management (CLM)','Contract management','Contract Performance Management','AI for CLM','Contract Lifecycle Management including Workflows','Contract Lifecycle Management with Commercial Intelligence','Contract Lifecycle Management with AI-powered drafting','Contract Intelligence','Contract operations'],
+      'Document Drafting':        ['drafting','Drafting','Document Drafting','Document creation','Document generation','document drafting','Document Generation','AI Drafting','AI drafting','No-code document generation','document generation','Document automation','document automation','Document Automation','AI-enabled legal drafting and contract generation','Document assembly and eSignature integration'],
+      'Document Review':          ['Document review','document review','Document Review','review','Contract review','Contract Review','AI-Assisted Contract Review','Document review and analysis','Document Analysis','Document analysis','document analysis','Contract analysis','contract analysis','AI-powered contract review and drafting','Contract review and data extraction'],
+      'eDiscovery':               ['eDiscovery','e-Discovery','Ediscovery','eDiscovery Services','AI discovery','Digital Forensics & eDiscovery','e-discovery'],
+      'eSignature':               ['eSignature','eSignatures','e-signature','e-signing','Digital Signatures','E-signatures','eSignature and client verification','Digital Signatures and Remote Online Notarization'],
+      'Risk Management':          ['Risk Management','risk management','Risk','Enterprise Risk Management','Vendor Risk Management','Risk Analysis','risk assessment','Vendor Risk Management','Third Party Risk Management','Third-Party Risk Management'],
+      'Compliance Management':    ['Compliance Management','compliance','Compliance Automation','Regulatory Compliance','compliance analysis','compliance workflows','Regulatory Change Management','Regulatory monitoring and alerts','Marketing Compliance','compliance monitoring'],
+      'Governance':               ['Governance','governance','AI Governance','Controls & Governance','Controls Management','AI-powered governance insights','Risk & Governance'],
+      'Audit Management':         ['Audit Management','audit','Audit & Assurance','Internal Audit Management'],
+      'Matter Management':        ['Matter Management','matter management'],
+      'Workflow Automation':      ['workflow automation','Workflow Automation','Workflow automation','Workflow Optimization'],
+      'Legal Research':           ['legal research','Legal research','Legal Research','AI-powered legal research','Legal Research Workflow Tools','Legal research and workflow enhancements'],
+      'Due Diligence':            ['Due Diligence','Legal Due Diligence','Due Diligence Automation'],
+      'Virtual Data Room':        ['Virtual Data Room','Virtual Data Rooms'],
+      'Spend Management':         ['Spend Management','spend management','Legal e-billing','e-Billing','eBilling','Legal Spend Management','Billing','Billing & Payments','Legal billing compliance'],
+      'Policy Management':        ['Policy Management','policy management'],
+      'Privacy Management':       ['Privacy Management','privacy management','Data Privacy','data privacy management','GDPR compliance','Privacy Compliance','Data anonymization and privacy compliance'],
+      'Entity Management':        ['Entity Management','entity management'],
+      'Case Management':          ['Case Management','case management','Case management'],
+      'IP Management':            ['IP Management','IP Portfolio Management','Patent & Trademark Portfolio Management','patent analytics','IP Analytics','IP Research','Patent Analytics','IP management software','IP Tracking'],
+      'Analytics & Reporting':    ['Analytics','analytics','Reporting & Analytics','Reporting and Analytics','data analytics','Data & Analytics','Reporting','Reporting & Insights'],
+      'Client Portal':            ['Client Portal','Secure Client Portal','client portals','Client portal'],
+      'Client Intake':            ['Client Intake','Client Intake & Lead Management','Client intake and onboarding automation'],
+      'Knowledge Management':     ['Knowledge Management','knowledge management'],
+      'Board Management':         ['Board management','Board Management','board portal','Board Portal Management Software','Board Meeting Lifecycle Management'],
+      'Document Management':      ['Document Management','Document management','document management'],
+      'Investigations':           ['Investigations','investigations','Internal Investigations'],
+      'Early Case Assessment':    ['Early Case Assessment'],
+      'Legal Holds':              ['Legal Holds','legal hold','data preservation'],
+      'Trial Preparation':        ['Trial Preparation','Litigation Preparation'],
+      'Summarization':            ['summarization','Deposition summaries'],
+      'Deal Management':          ['Deal Management','M&A Deal Management','M&A Project Management','Transaction management'],
+    }
+  };
+
   var CONTROLS = new Map();
   var RIGHT_MODE = null;
   var compare = [];
@@ -1576,6 +1840,7 @@
 
   var HAS_SEARCHED = false; // hide list until first search/CSV
   var LAST_QUERY = ''; // Track the last search query
+  var ACTIVE_CATEGORY = ''; // Set when browsing by category — triggers ranked layout without showing query label
 
   // Shortlist state for recommended report
   var SHORTLIST_SELECTION = []; // Array of selected tool IDs for report
@@ -1693,13 +1958,15 @@
       filtersBox.appendChild(d); return d;
     }
     function uniqueValues(key){
+      // For fields with canonical alias groups, show only the canonical display names
+      if(CANONICAL_ALIASES[key]) return Object.keys(CANONICAL_ALIASES[key]).sort();
       var cfg=SCHEMA.find(s=>s.key===key);
       if(cfg && cfg.values) return cfg.values;
       var vals={};
       DATA.forEach(function(r){
         var arr=splitMulti(r[key]);
-        if(arr.length){ arr.forEach(v=>vals[v]=1); }
-        else if(r[key]){ vals[String(r[key])]=1; }
+        if(arr.length){ arr.forEach(v=>{ var n=v.replace(/\.+$/,'').trim(); if(n) vals[n]=1; }); }
+        else if(r[key]){ vals[String(r[key]).replace(/\.+$/,'').trim()]=1; }
       });
       return Object.keys(vals).sort();
     }
@@ -1749,9 +2016,6 @@
       else if(cfg.type==='multi') addMultiChips(hiddenSec,key,opts);
     });
 
-    var optRow=document.createElement('div'); optRow.className='filter-field';
-    optRow.innerHTML='<label>Options</label><label style="font-size:12px;color:#6b7280"><input id="dedupeVendor" type="checkbox" checked> Deduplicate identical rows</label>';
-    filtersBox.appendChild(optRow);
 
     // More Filters button
     var moreFiltersRow = document.createElement('div'); moreFiltersRow.className='filter-field'; moreFiltersRow.style.marginTop='12px';
@@ -1786,7 +2050,7 @@
     if(t){ if(quickBlob(rec).toLowerCase().indexOf(t)===-1) return false; }
 
     // Fields that contain multiple values in CSV (semicolon/comma separated)
-    var multiValueFields = ['Regions Served', 'Primary User Segment', 'AI Platform Type', 'ISO Certifications', 'Security & Compliance Certifications'];
+    var multiValueFields = ['Regions Served', 'Primary User Segment', 'AI Platform Type', 'Security & Compliance Certifications'];
 
     for (const [key, ctl] of CONTROLS.entries()){
       var val = ctl.get && ctl.get();
@@ -1794,13 +2058,26 @@
 
       var schema = SCHEMA.find(s=>s.key===key);
 
+      // For canonical alias fields: expand selected name to raw aliases, OR match within group
+      if(CANONICAL_ALIASES[key]){
+        var selVal = Array.isArray(val) ? val : [val];
+        var matched = selVal.some(function(chosen){
+          var aliases = (CANONICAL_ALIASES[key][chosen] || [chosen]).map(function(a){ return a.toLowerCase().replace(/\.+$/,'').trim(); });
+          var recVals = splitMulti(rec[key]).map(function(v){ return v.toLowerCase().replace(/\.+$/,'').trim(); });
+          return aliases.some(function(a){ return recVals.some(function(rv){ return rv === a; }); });
+        });
+        if(!matched) return false;
       // Use multiMatch for fields that can have multiple values in CSV
-      if(multiValueFields.includes(key)){
+      } else if(multiValueFields.includes(key)){
         if(!multiMatch(rec[key], Array.isArray(val)?val:[val], key)) return false;
       } else if(schema && schema.type==='number-range'){
         if(String(rec[key]||'') !== String(val)) return false;
       } else {
-        if(String(rec[key]||'') !== String(val)) return false;
+        var recVal = String(rec[key]||'').replace(/\.+$/,'').trim();
+        var selValStr = String(val).replace(/\.+$/,'').trim();
+        // Pricing Model: include tools with no pricing data (unknown = could match anything)
+        if(key === 'Pricing Model' && !recVal) continue;
+        if(recVal !== selValStr) return false;
       }
     }
     return true;
@@ -1822,6 +2099,9 @@
     var card = document.createElement('div');
     card.className = 'tool reveal-child' + (rank <= 4 ? ' rank-' + rank : '');
     card.dataset.id = rec.__id;
+    card.dataset.vendor = rec['Vendor Name'] || '';
+    card.dataset.score = rec['popularity_score'] || rec['navigator_score'] || '0';
+    card.dataset.popularity = rec['popularity_score'] || '0';
 
     // Add rank badge for top 4 results
     if(rank >= 1 && rank <= 4){
@@ -1854,7 +2134,6 @@
     // Build meta line with conditional dots
     var metaParts = [];
     if(rec['Vendor Name']) metaParts.push(esc(rec['Vendor Name']));
-    if(rec['HQ']) metaParts.push('<span>'+esc(rec['HQ'])+'</span>');
     if(url) metaParts.push('<a href="'+esc(url)+'" target="_blank" rel="noopener">Open ↗</a>');
     var metaLine = metaParts.join(' • ');
 
@@ -1862,14 +2141,8 @@
                           '<div class="meta">'+metaLine+'</div>';
     head.appendChild(titleWrap);
 
-    // Add popularity bar — labelled "Market Presence" during search to avoid
-    // being misread as a match/relevance score
-    var popScore = parseFloat(rec['popularity_score']) || 0;
-    var popBarLabel = HAS_SEARCHED ? 'Market Presence' : 'Navigator Score';
-    var popBar = document.createElement('div'); popBar.className='popularity-bar';
-    popBar.innerHTML = '<span class="popularity-bar-label">'+popBarLabel+'</span>'+
-                       '<div class="popularity-bar-track"><div class="popularity-bar-fill" style="width:'+popScore+'%"></div></div>'+
-                       '<span class="popularity-score">'+popScore.toFixed(0)+'</span>';
+    // Score bar hidden from users — data still used internally for ranking
+    var popBar = null;
 
     var desc = document.createElement('div'); desc.className='desc'; desc.textContent = rec['Product Description']||'';
     var chipRow = document.createElement('div'); chipRow.className='filter-row'; chipRow.innerHTML = chips;
@@ -1903,7 +2176,7 @@
     });
     act.appendChild(detailsBtn); act.appendChild(cmpBtn);
 
-    card.appendChild(head); card.appendChild(popBar); card.appendChild(desc); card.appendChild(chipRow); card.appendChild(act);
+    card.appendChild(head); card.appendChild(desc); card.appendChild(chipRow); card.appendChild(act);
     return card;
   }
 
@@ -1919,16 +2192,25 @@
     // Show search query if it exists
     if(LAST_QUERY){
       searchQueryEl.textContent = 'Results for: "' + LAST_QUERY + '"';
+    } else if(ACTIVE_CATEGORY){
+      searchQueryEl.textContent = ACTIVE_CATEGORY;
     } else {
       searchQueryEl.textContent = '';
     }
 
-    // If rows carry a semantic similarity score, sort by that; otherwise by popularity
+    // Sort: semantic score wins when present; otherwise respect sort dropdown
     const hasSemScore = rows.length > 0 && rows[0].__sem_score != null;
+    const sortMode = (document.getElementById('sortSelect') || {}).value || 'navigator';
     rows = rows.slice().sort((a, b) => {
       if(hasSemScore){
         return (b.__sem_score || 0) - (a.__sem_score || 0);
       }
+      if(sortMode === 'alpha'){
+        const nameA = (a.__display_name || a['Product Name'] || '').toLowerCase();
+        const nameB = (b.__display_name || b['Product Name'] || '').toLowerCase();
+        return nameA.localeCompare(nameB);
+      }
+      // navigator + popular both use popularity_score
       const scoreA = parseFloat(a['popularity_score']) || 0;
       const scoreB = parseFloat(b['popularity_score']) || 0;
       if (scoreB !== scoreA) return scoreB - scoreA;
@@ -1960,9 +2242,8 @@
 
     var totalResults = rows.length;
 
-    // Only use ranked layout when there's an active search query
-    // For "View All Tools" (no query), use standard grid layout
-    if(LAST_QUERY && LAST_QUERY.trim() !== ''){
+    // Ranked layout for AI search results AND category browse; flat grid for Browse All
+    if((LAST_QUERY && LAST_QUERY.trim() !== '') || ACTIVE_CATEGORY){
       // Create ranked layout container
       var rankedContainer = document.createElement('div');
       rankedContainer.className = 'ranked-results-container';
@@ -2711,8 +2992,6 @@
 
   function applyFilters(){
     var rows=DATA.filter(matchRecord);
-    var dedupe=document.getElementById('dedupeVendor');
-    if(dedupe && dedupe.checked) rows=keyByVendorTool(rows);
     renderList(rows);
     updateCompareCount();
     updateDimming();
@@ -2878,8 +3157,8 @@
     if(viewTable) viewTable.classList.remove('is-hidden');
   }
 
-  // Header buttons
-  document.querySelector('.brand').addEventListener('click', function(){
+  // Header buttons — target the results-header brand specifically (not the landing nav brand)
+  document.querySelector('header .brand').addEventListener('click', function(){
     // Return to landing page and clear state
     document.getElementById('aiLanding').style.display='flex';
     document.body.classList.add('has-landing');
@@ -2910,12 +3189,7 @@
     document.querySelectorAll('.filters select').forEach(sel => sel.value = '');
 
     // Reset all multi-select checkboxes
-    document.querySelectorAll('.filters input[type="checkbox"]').forEach(cb => {
-      // Don't uncheck the deduplicate checkbox
-      if(cb.id !== 'dedupeVendor'){
-        cb.checked = false;
-      }
-    });
+    document.querySelectorAll('.filters input[type="checkbox"]').forEach(cb => { cb.checked = false; });
 
     // Reapply filters to show all results
     applyFilters();
@@ -3006,10 +3280,11 @@
     const q = aiQuery.value.trim();
     if(!q){ aiStatus.textContent="Please type what you need."; return; }
     aiStatus.textContent="Thinking…";
-    LAST_QUERY = q; // Store the search query
+    LAST_QUERY = q;
+    ACTIVE_CATEGORY = ''; // Clear category mode when a real search runs
     SHORTLIST_SELECTION = [];
     compare = [];
-    SHORTLIST_USER_EDITED = false; // Fresh search — allow auto-populate
+    SHORTLIST_USER_EDITED = false;
     LAST_GENERATED_KEY = '';
 
     // Wait for the initial auth check to finish before deciding which path to use.
@@ -3161,9 +3436,7 @@
       // Fallback: keyword filter approach via /query
       // Clear old filter state first so previous search results don't bleed through
       document.querySelectorAll('.filters select').forEach(sel => sel.value = '');
-      document.querySelectorAll('.filters input[type="checkbox"]').forEach(cb => {
-        if(cb.id !== 'dedupeVendor') cb.checked = false;
-      });
+      document.querySelectorAll('.filters input[type="checkbox"]').forEach(cb => { cb.checked = false; });
 
       const res = await fetch("/query", {
         method:"POST",
@@ -3234,16 +3507,27 @@
   }
 
   aiBtn?.addEventListener('click', runAISearch);
+
+  // Header mini search bar
+  function runHeaderSearch() {
+    var input = document.getElementById('headerSearchInput');
+    if (!input || !input.value.trim()) return;
+    var q = input.value.trim();
+    ACTIVE_CATEGORY = '';
+    if (aiQuery) aiQuery.value = q;
+    runAISearch();
+  }
+  document.getElementById('headerSearchBtn')?.addEventListener('click', runHeaderSearch);
+  document.getElementById('headerSearchInput')?.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') runHeaderSearch();
+  });
   aiQuery?.addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); runAISearch(); }});
 
   // View All Tools button - shows all tools without any filters
   function viewAllTools(){
-    if (!window.AUTH_STATE || !window.AUTH_STATE.authenticated) {
-      openLoginModal();
-      return;
-    }
     HAS_SEARCHED = true;
     LAST_QUERY = '';
+    ACTIVE_CATEGORY = '';
     SHORTLIST_SELECTION = []; // Reset shortlist when viewing all
 
     // Clear the AI search input
@@ -3257,12 +3541,7 @@
     document.querySelectorAll('.filters select').forEach(sel => sel.value = '');
 
     // Reset all multi-select checkboxes
-    document.querySelectorAll('.filters input[type="checkbox"]').forEach(cb => {
-      // Don't uncheck the deduplicate checkbox
-      if(cb.id !== 'dedupeVendor'){
-        cb.checked = false;
-      }
-    });
+    document.querySelectorAll('.filters input[type="checkbox"]').forEach(cb => { cb.checked = false; });
 
     document.getElementById('aiLanding').style.display = 'none';
     document.body.classList.remove('has-landing');
@@ -3302,6 +3581,7 @@
   }
 
   menuBtn?.addEventListener('click', openMenu);
+  document.getElementById('landingNavMenuBtn')?.addEventListener('click', openMenu);
   menuCloseBtn?.addEventListener('click', closeMenu);
   menuOverlay?.addEventListener('click', closeMenu);
 
@@ -3315,6 +3595,10 @@
       if (action === 'view-tools') {
         closeMenu();
         viewAllTools();
+      } else if (action === 'compare-tools') {
+        closeMenu();
+        viewAllTools();
+        setTimeout(function(){ openHowToUseModal(); }, 300);
       } else if (action === 'report-explainer') {
         closeMenu();
         openReportExplainerModal();
@@ -3340,9 +3624,67 @@
     });
   });
 
-  // View All Tools button listener
+  // View All Tools button listeners
   document.getElementById('viewAllBtnHeader')?.addEventListener('click', viewAllTools);
   document.getElementById('viewAllBtnLanding')?.addEventListener('click', viewAllTools);
+
+  // Landing nav
+  document.getElementById('landingNavBrand')?.addEventListener('click', function(){
+    document.getElementById('aiLanding').style.display='flex';
+    document.body.classList.add('has-landing');
+    window.scrollTo(0,0);
+  });
+  document.getElementById('landingNavSignIn')?.addEventListener('click', function(){ if(typeof openLoginModal==='function') openLoginModal(); });
+
+  // Landing feature cards
+  document.getElementById('featureSearch')?.addEventListener('click', function(){
+    document.getElementById('aiQuery')?.focus();
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+  document.getElementById('featureBrowse')?.addEventListener('click', viewAllTools);
+  document.getElementById('featureCompare')?.addEventListener('click', viewAllTools);
+  document.getElementById('featureReports')?.addEventListener('click', function(){
+    document.getElementById('reportExplainerModal')?.classList.add('active');
+  });
+
+  // Category pills + category cards on landing → browse with filter pre-applied
+  async function browseByCategory(cat) {
+    if (window.AUTH_READY) await window.AUTH_READY;
+    HAS_SEARCHED = true;
+    LAST_QUERY = '';
+    ACTIVE_CATEGORY = cat;
+    SHORTLIST_SELECTION = [];
+    if(aiQuery) aiQuery.value = '';
+    if(aiStatus) aiStatus.textContent = '';
+    if(window.q) window.q.value = '';
+    document.querySelectorAll('.filters select').forEach(sel => {
+      if(sel.dataset && sel.closest) {
+        const group = sel.closest('[data-key]');
+        if(group && group.dataset.key === 'Legal Functionality') sel.value = cat;
+        else sel.value = '';
+      } else { sel.value = ''; }
+    });
+    // Set Legal Functionality filter via the select element
+    document.querySelectorAll('.filters select').forEach(sel => {
+      if(sel.dataset.key === 'Legal Functionality') sel.value = cat;
+    });
+    document.getElementById('aiLanding').style.display = 'none';
+    document.body.classList.remove('has-landing');
+    applyFilters();
+    document.getElementById('searchQuery').textContent = cat;
+    history.pushState({ view: 'category', cat }, '');
+  }
+  document.querySelectorAll('.landing-cat-pill').forEach(function(pill){
+    pill.addEventListener('click', function(){ browseByCategory(this.dataset.cat); });
+  });
+  document.querySelectorAll('.landing-category-card').forEach(function(card){
+    card.addEventListener('click', function(){ browseByCategory(this.dataset.cat); });
+  });
+
+  // Sort dropdown — re-run renderList so the sort applies to current data
+  document.getElementById('sortSelect')?.addEventListener('change', function(){
+    applyFilters();
+  });
 
   // Show differences checkbox listener
   document.addEventListener('change', function(e){
@@ -3420,7 +3762,8 @@
   document.querySelectorAll('.scoring-modal-overlay')[2]?.addEventListener('click', closeReportExplainerModal);
 
   // Init
-  document.body.classList.add('has-landing'); // Add landing class on load
+  document.body.classList.add('has-landing');
+  document.body.classList.add('auth-pending'); // gates auth-sensitive UI until session resolves
   initShortlistPanel();
   loadToolsFromAPI();  // load tools from Supabase (public, no auth required)
 
@@ -4275,6 +4618,8 @@ void main(){
       } finally {
         // Signal that auth state is now known — unblocks any queued searches
         if (_authReadyResolve) { _authReadyResolve(); _authReadyResolve = null; }
+        // Lift the auth-pending gate regardless of outcome
+        document.body.classList.remove('auth-pending');
       }
     }
 
@@ -4324,9 +4669,11 @@ void main(){
       posthog?.identify(user.id, { email: user.email, role: user.role });
 
 
-      // Hide topbar Sign In button, swap it for user email button
+      // Hide all Sign In surfaces
       const headerSignInBtn = document.getElementById('headerSignInBtn');
       if (headerSignInBtn) headerSignInBtn.style.display = 'none';
+      const landingNavSignIn = document.getElementById('landingNavSignIn');
+      if (landingNavSignIn) landingNavSignIn.style.display = 'none';
 
       // Add/update user menu button next to Sign In slot
       let userMenuBtn = document.getElementById('userMenuBtn');
@@ -4367,6 +4714,8 @@ void main(){
         // Show topbar Sign In button
         const headerSignInBtn = document.getElementById('headerSignInBtn');
         if (headerSignInBtn) headerSignInBtn.style.display = '';
+        const landingNavSignIn = document.getElementById('landingNavSignIn');
+        if (landingNavSignIn) landingNavSignIn.style.display = '';
 
         // Show "Sign In" menu item, hide "Sign Out"
         const signInMenuItem = document.getElementById('signInMenuItem');
