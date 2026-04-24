@@ -666,6 +666,11 @@
   .landing-nav-links a.primary{background:#2EA7A7;color:#fff;border-color:transparent;}
   .landing-nav-links a.primary:hover{background:#238E8E;}
   .landing-nav-sign-in{font-size:13px;font-weight:600;color:#2EA7A7;cursor:pointer;padding:7px 10px;border:none;background:none;}
+  /* Auth-pending: hide auth-sensitive UI until session check resolves */
+  body.auth-pending #landingNavSignIn{visibility:hidden;}
+  body.auth-pending .landing-search-wrap textarea{opacity:0.55;pointer-events:none;}
+  body.auth-pending #aiBtn{opacity:0.55;pointer-events:none;cursor:wait;}
+  body.auth-pending .landing-search-actions button{opacity:0.55;pointer-events:none;cursor:wait;}
 
   /* Hero section */
   .landing-hero{
@@ -3589,7 +3594,8 @@
   });
 
   // Category pills + category cards on landing → browse with filter pre-applied
-  function browseByCategory(cat) {
+  async function browseByCategory(cat) {
+    if (window.AUTH_READY) await window.AUTH_READY;
     HAS_SEARCHED = true;
     LAST_QUERY = '';
     ACTIVE_CATEGORY = cat;
@@ -3702,7 +3708,8 @@
   document.querySelectorAll('.scoring-modal-overlay')[2]?.addEventListener('click', closeReportExplainerModal);
 
   // Init
-  document.body.classList.add('has-landing'); // Add landing class on load
+  document.body.classList.add('has-landing');
+  document.body.classList.add('auth-pending'); // gates auth-sensitive UI until session resolves
   initShortlistPanel();
   loadToolsFromAPI();  // load tools from Supabase (public, no auth required)
 
@@ -4557,6 +4564,8 @@ void main(){
       } finally {
         // Signal that auth state is now known — unblocks any queued searches
         if (_authReadyResolve) { _authReadyResolve(); _authReadyResolve = null; }
+        // Lift the auth-pending gate regardless of outcome
+        document.body.classList.remove('auth-pending');
       }
     }
 
@@ -4606,9 +4615,11 @@ void main(){
       posthog?.identify(user.id, { email: user.email, role: user.role });
 
 
-      // Hide topbar Sign In button, swap it for user email button
+      // Hide all Sign In surfaces
       const headerSignInBtn = document.getElementById('headerSignInBtn');
       if (headerSignInBtn) headerSignInBtn.style.display = 'none';
+      const landingNavSignIn = document.getElementById('landingNavSignIn');
+      if (landingNavSignIn) landingNavSignIn.style.display = 'none';
 
       // Add/update user menu button next to Sign In slot
       let userMenuBtn = document.getElementById('userMenuBtn');
@@ -4649,6 +4660,8 @@ void main(){
         // Show topbar Sign In button
         const headerSignInBtn = document.getElementById('headerSignInBtn');
         if (headerSignInBtn) headerSignInBtn.style.display = '';
+        const landingNavSignIn = document.getElementById('landingNavSignIn');
+        if (landingNavSignIn) landingNavSignIn.style.display = '';
 
         // Show "Sign In" menu item, hide "Sign Out"
         const signInMenuItem = document.getElementById('signInMenuItem');
