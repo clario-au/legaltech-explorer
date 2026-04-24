@@ -1708,7 +1708,7 @@
     { key: 'Product Description', group: 'Product Identification', type: 'text' },
     { key: 'Languages Supported', group: 'Product Identification', type: 'single', values: ['English only','English + Limited Other Languages','Multilingual (supports major global languages)','Unknown / To Verify'] },
 
-    { key: 'Legal Functionality', group: 'Legal Functionality & Use Case', type: 'single', values: ['Contracting & Document Automation','Matter, Workflow & Intake Management','Legal Operations & Analytics','Outside Counsel & Spend Management','Compliance, Risk & Governance','Corporate Governance & Entity Management','Litigation, Disputes & Investigations','Intellectual Property, Technology & Data','Employment & HR Legal Support','Cross-Border, Transactions & Deal Management','Knowledge, Search & Precedent Management','AI Legal Assistants & Productivity Tools','Business Partnering & Self-Service Tools','Integration & Platform Infrastructure','Legal Research & Insights','Legal Research & Knowledge'] },
+    { key: 'Legal Functionality', group: 'Legal Functionality & Use Case', type: 'single' },
     { key: 'Functionality Sub-Category', group: 'Legal Functionality & Use Case', type: 'single' },
     { key: 'Main Problem Solved', group: 'Legal Functionality & Use Case', type: 'text' },
 
@@ -1775,6 +1775,62 @@
   var rightBody = document.getElementById('rightBody');
   var rightSidebar = document.getElementById('rightSidebar');
   var compareOverlay = document.getElementById('compareOverlay');
+
+  // Canonical alias map — display name → raw values in data that it covers.
+  // OR logic within a group; AND logic between different filter fields.
+  var CANONICAL_ALIASES = {
+    'Legal Functionality': {
+      'Contracting & Document Automation':          ['Contracting & Document Automation'],
+      'Compliance, Risk & Governance':              ['Compliance, Risk & Governance','Compliance','Risk & Governance'],
+      'Litigation, Disputes & Investigations':      ['Litigation, Disputes & Investigations','Litigation','Disputes & Investigations'],
+      'Matter, Workflow & Intake Management':       ['Matter, Workflow & Intake Management','Matter','Workflow & Intake Management'],
+      'AI Legal Assistants & Productivity Tools':   ['AI Legal Assistants & Productivity Tools'],
+      'Intellectual Property, Technology & Data':   ['Intellectual Property, Technology & Data','Intellectual Property','Technology & Data'],
+      'Legal Operations & Analytics':               ['Legal Operations & Analytics'],
+      'Cross-Border, Transactions & Deal Management':['Cross-Border, Transactions & Deal Management','Cross-Border','Transactions & Deal Management'],
+      'Corporate Governance & Entity Management':   ['Corporate Governance & Entity Management'],
+      'Knowledge, Search & Precedent Management':   ['Knowledge, Search & Precedent Management','Knowledge','Search & Precedent Management'],
+      'Legal Research & Insights':                  ['Legal Research & Insights','Legal Research & Knowledge'],
+      'Business Partnering & Self-Service Tools':   ['Business Partnering & Self-Service Tools'],
+      'Integration & Platform Infrastructure':      ['Integration & Platform Infrastructure'],
+      'Outside Counsel & Spend Management':         ['Outside Counsel & Spend Management'],
+      'Employment & HR Legal Support':              ['Employment & HR Legal Support'],
+    },
+    'Functionality Sub-Category': {
+      'Contract Management':      ['Contract Management','Contract Lifecycle Management','contract lifecycle management','Contract Lifecycle Management (CLM)','Contract management','Contract Performance Management','AI for CLM','Contract Lifecycle Management including Workflows','Contract Lifecycle Management with Commercial Intelligence','Contract Lifecycle Management with AI-powered drafting','Contract Intelligence','Contract operations'],
+      'Document Drafting':        ['drafting','Drafting','Document Drafting','Document creation','Document generation','document drafting','Document Generation','AI Drafting','AI drafting','No-code document generation','document generation','Document automation','document automation','Document Automation','AI-enabled legal drafting and contract generation','Document assembly and eSignature integration'],
+      'Document Review':          ['Document review','document review','Document Review','review','Contract review','Contract Review','AI-Assisted Contract Review','Document review and analysis','Document Analysis','Document analysis','document analysis','Contract analysis','contract analysis','AI-powered contract review and drafting','Contract review and data extraction'],
+      'eDiscovery':               ['eDiscovery','e-Discovery','Ediscovery','eDiscovery Services','AI discovery','Digital Forensics & eDiscovery','e-discovery'],
+      'eSignature':               ['eSignature','eSignatures','e-signature','e-signing','Digital Signatures','E-signatures','eSignature and client verification','Digital Signatures and Remote Online Notarization'],
+      'Risk Management':          ['Risk Management','risk management','Risk','Enterprise Risk Management','Vendor Risk Management','Risk Analysis','risk assessment','Vendor Risk Management','Third Party Risk Management','Third-Party Risk Management'],
+      'Compliance Management':    ['Compliance Management','compliance','Compliance Automation','Regulatory Compliance','compliance analysis','compliance workflows','Regulatory Change Management','Regulatory monitoring and alerts','Marketing Compliance','compliance monitoring'],
+      'Governance':               ['Governance','governance','AI Governance','Controls & Governance','Controls Management','AI-powered governance insights','Risk & Governance'],
+      'Audit Management':         ['Audit Management','audit','Audit & Assurance','Internal Audit Management'],
+      'Matter Management':        ['Matter Management','matter management'],
+      'Workflow Automation':      ['workflow automation','Workflow Automation','Workflow automation','Workflow Optimization'],
+      'Legal Research':           ['legal research','Legal research','Legal Research','AI-powered legal research','Legal Research Workflow Tools','Legal research and workflow enhancements'],
+      'Due Diligence':            ['Due Diligence','Legal Due Diligence','Due Diligence Automation'],
+      'Virtual Data Room':        ['Virtual Data Room','Virtual Data Rooms'],
+      'Spend Management':         ['Spend Management','spend management','Legal e-billing','e-Billing','eBilling','Legal Spend Management','Billing','Billing & Payments','Legal billing compliance'],
+      'Policy Management':        ['Policy Management','policy management'],
+      'Privacy Management':       ['Privacy Management','privacy management','Data Privacy','data privacy management','GDPR compliance','Privacy Compliance','Data anonymization and privacy compliance'],
+      'Entity Management':        ['Entity Management','entity management'],
+      'Case Management':          ['Case Management','case management','Case management'],
+      'IP Management':            ['IP Management','IP Portfolio Management','Patent & Trademark Portfolio Management','patent analytics','IP Analytics','IP Research','Patent Analytics','IP management software','IP Tracking'],
+      'Analytics & Reporting':    ['Analytics','analytics','Reporting & Analytics','Reporting and Analytics','data analytics','Data & Analytics','Reporting','Reporting & Insights'],
+      'Client Portal':            ['Client Portal','Secure Client Portal','client portals','Client portal'],
+      'Client Intake':            ['Client Intake','Client Intake & Lead Management','Client intake and onboarding automation'],
+      'Knowledge Management':     ['Knowledge Management','knowledge management'],
+      'Board Management':         ['Board management','Board Management','board portal','Board Portal Management Software','Board Meeting Lifecycle Management'],
+      'Document Management':      ['Document Management','Document management','document management'],
+      'Investigations':           ['Investigations','investigations','Internal Investigations'],
+      'Early Case Assessment':    ['Early Case Assessment'],
+      'Legal Holds':              ['Legal Holds','legal hold','data preservation'],
+      'Trial Preparation':        ['Trial Preparation','Litigation Preparation'],
+      'Summarization':            ['summarization','Deposition summaries'],
+      'Deal Management':          ['Deal Management','M&A Deal Management','M&A Project Management','Transaction management'],
+    }
+  };
 
   var CONTROLS = new Map();
   var RIGHT_MODE = null;
@@ -1902,6 +1958,8 @@
       filtersBox.appendChild(d); return d;
     }
     function uniqueValues(key){
+      // For fields with canonical alias groups, show only the canonical display names
+      if(CANONICAL_ALIASES[key]) return Object.keys(CANONICAL_ALIASES[key]).sort();
       var cfg=SCHEMA.find(s=>s.key===key);
       if(cfg && cfg.values) return cfg.values;
       var vals={};
@@ -2000,17 +2058,26 @@
 
       var schema = SCHEMA.find(s=>s.key===key);
 
+      // For canonical alias fields: expand selected name to raw aliases, OR match within group
+      if(CANONICAL_ALIASES[key]){
+        var selVal = Array.isArray(val) ? val : [val];
+        var matched = selVal.some(function(chosen){
+          var aliases = (CANONICAL_ALIASES[key][chosen] || [chosen]).map(function(a){ return a.toLowerCase().replace(/\.+$/,'').trim(); });
+          var recVals = splitMulti(rec[key]).map(function(v){ return v.toLowerCase().replace(/\.+$/,'').trim(); });
+          return aliases.some(function(a){ return recVals.some(function(rv){ return rv === a; }); });
+        });
+        if(!matched) return false;
       // Use multiMatch for fields that can have multiple values in CSV
-      if(multiValueFields.includes(key)){
+      } else if(multiValueFields.includes(key)){
         if(!multiMatch(rec[key], Array.isArray(val)?val:[val], key)) return false;
       } else if(schema && schema.type==='number-range'){
         if(String(rec[key]||'') !== String(val)) return false;
       } else {
         var recVal = String(rec[key]||'').replace(/\.+$/,'').trim();
-        var selVal = String(val).replace(/\.+$/,'').trim();
+        var selValStr = String(val).replace(/\.+$/,'').trim();
         // Pricing Model: include tools with no pricing data (unknown = could match anything)
         if(key === 'Pricing Model' && !recVal) continue;
-        if(recVal !== selVal) return false;
+        if(recVal !== selValStr) return false;
       }
     }
     return true;
