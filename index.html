@@ -1361,21 +1361,6 @@
         <p>Additional filter options can be found under the More Filters section.</p>
         <p>Filters update in real time and remain active as you browse.</p>
 
-        <h3>4. Comparing Tools</h3>
-        <h4>Adding tools to compare</h4>
-        <p>Select tools from the results list to add them to comparison mode.</p>
-
-        <h4>Comparison view</h4>
-        <p>In comparison mode, selected tools are displayed side by side so you can easily compare key attributes.</p>
-
-        <h4>AI comparison summary</h4>
-        <p>Within the comparison view, you can generate an AI-powered summary that:</p>
-        <p>Compares tools against one another</p>
-        <p>Highlights key differences</p>
-        <p>Outlines strengths and limitations</p>
-        <p>Provides high-level suggestions to support decision-making</p>
-
-        <img src="logos/comparison.gif" alt="Comparison feature demonstration" style="width: 100%; max-width: 600px; margin: 20px auto; display: block; border-radius: 8px; border: 1px solid rgba(99, 102, 241, 0.3);">
       </div>
     </div>
   </div>
@@ -1425,6 +1410,7 @@
       <div class="edit-selection-footer">
         <span class="edit-selection-count" id="editSelectionCount">0 selected</span>
         <div class="edit-selection-buttons">
+          <button class="edit-selection-btn-cancel" id="editSelectionDeselectAll">Deselect all</button>
           <button class="edit-selection-btn-cancel" id="editSelectionCancel">Cancel</button>
           <button class="edit-selection-btn-apply" id="editSelectionApply">Apply</button>
         </div>
@@ -1531,9 +1517,8 @@
           <span class="sub" id="searchQuery"></span>
           <span class="sub" id="count"></span>
           <select id="sortSelect" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);font-size:13px;font-weight:600;color:var(--text);background:#F5F7F8;cursor:pointer;outline:none;">
-            <option value="navigator">Navigator Score</option>
-            <option value="alpha">A – Z</option>
-            <option value="popular">Most Popular</option>
+            <option value="navigator">Relevance</option>
+            <option value="alpha">Alphabetical</option>
           </select>
         </div>
       </div>
@@ -2174,7 +2159,8 @@
         updateDimming();
       });
     });
-    act.appendChild(detailsBtn); act.appendChild(cmpBtn);
+    act.appendChild(detailsBtn);
+    if(LAST_QUERY || ACTIVE_CATEGORY){ act.appendChild(cmpBtn); }
 
     card.appendChild(head); card.appendChild(desc); card.appendChild(chipRow); card.appendChild(act);
     return card;
@@ -2331,8 +2317,8 @@
     var itemsContainer = document.getElementById('shortlistItems');
     var generateBtn = document.getElementById('shortlistGenerateBtn');
 
-    // Only show panel when there's an active search query
-    if(!LAST_QUERY || LAST_QUERY.trim() === '' || sortedRows.length === 0){
+    // Only show panel when there's an active search query or category filter
+    if(((!LAST_QUERY || LAST_QUERY.trim() === '') && !ACTIVE_CATEGORY) || sortedRows.length === 0){
       wrapper.classList.add('no-panel');
       panel.classList.add('is-hidden');
       SHORTLIST_SELECTION = [];
@@ -2344,6 +2330,20 @@
 
     // Store sorted results for reference
     SHORTLIST_RESULTS = sortedRows;
+
+    // Purge any stale SHORTLIST_SELECTION entries not present in current results.
+    // This prevents cached/auth-transition mismatches where the shortlist shows tools
+    // that aren't in the current filtered results.
+    if(SHORTLIST_SELECTION.length > 0){
+      var resultIds = sortedRows.map(function(r){ return r.__id; });
+      var validIds = SHORTLIST_SELECTION.filter(function(id){ return resultIds.indexOf(id) !== -1; });
+      if(validIds.length !== SHORTLIST_SELECTION.length){
+        SHORTLIST_SELECTION = validIds;
+        compare = validIds.slice();
+        updateCompareCount();
+        if(SHORTLIST_SELECTION.length === 0){ SHORTLIST_USER_EDITED = false; }
+      }
+    }
 
     // Only auto-populate on a fresh search (selection is empty AND user hasn't manually edited).
     // Re-renders from applyFilters or compare button clicks must NOT override user edits.
@@ -2632,6 +2632,7 @@
     var header = document.getElementById('shortlistHeader');
     var cancelBtn = document.getElementById('editSelectionCancel');
     var applyBtn = document.getElementById('editSelectionApply');
+    var deselectAllBtn = document.getElementById('editSelectionDeselectAll');
     var modalOverlay = document.querySelector('.edit-selection-overlay');
 
     if(editBtn) editBtn.addEventListener('click', openEditSelectionModal);
@@ -2648,6 +2649,14 @@
     if(header) header.addEventListener('click', toggleShortlistPanel);
     if(cancelBtn) cancelBtn.addEventListener('click', closeEditSelectionModal);
     if(applyBtn) applyBtn.addEventListener('click', applyEditSelection);
+    if(deselectAllBtn) deselectAllBtn.addEventListener('click', function(){
+      TEMP_SELECTION = [];
+      document.querySelectorAll('.edit-selection-item').forEach(function(el){
+        el.classList.remove('selected', 'disabled');
+      });
+      updateEditSelectionCount();
+      updateEditSelectionDisabled();
+    });
     if(modalOverlay) modalOverlay.addEventListener('click', closeEditSelectionModal);
   }
 
@@ -3654,6 +3663,8 @@
     LAST_QUERY = '';
     ACTIVE_CATEGORY = cat;
     SHORTLIST_SELECTION = [];
+    SHORTLIST_USER_EDITED = false;
+    LAST_GENERATED_KEY = '';
     if(aiQuery) aiQuery.value = '';
     if(aiStatus) aiStatus.textContent = '';
     if(window.q) window.q.value = '';
