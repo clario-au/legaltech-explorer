@@ -26,12 +26,13 @@ from pdf_renderer import render_pdf
 # Import Supabase authentication
 from supabase_auth import (
     sign_in, sign_out, sign_up, get_user_from_token, refresh_session,
-    request_password_reset, update_password, admin_create_user, admin_invite_user,
-    admin_list_users, is_configured as supabase_configured
+    request_password_reset, update_password, resend_verification,
+    admin_create_user, admin_invite_user, admin_set_user_status,
+    admin_list_users, is_configured as supabase_configured, supabase_admin
 )
 
 # Import usage tracking (still using PostgreSQL)
-from auth_models import log_usage, get_user_stats, get_all_users_stats
+from auth_models import log_usage, get_user_stats, get_all_users_stats, set_user_status
 
 # =========================
 # Boot + OpenAI client
@@ -42,26 +43,85 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-app = FastAPI(title="Legal-Tech Filter API", version="0.2.0")
+app = FastAPI(title="Legal-Tech Filter API", version="0.2.0", docs_url=None, redoc_url=None, openapi_url=None)
 
 # Jinja2 templates for report generation
 templates = Jinja2Templates(directory="templates")
 
-# CORS (dev-friendly)
+# CORS — restrict to known origins only
+ALLOWED_ORIGINS = [
+    "https://legaltech-explorer.onrender.com",
+    "http://127.0.0.1:5500",   # local dev (VS Code Live Server)
+    "http://localhost:5500",
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://127.0.0.1:5500",
-        "http://localhost:5500",
-        "http://0.0.0.0:5500",
-        "*",
-    ],
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=ALLOWED_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
 )
+
+# Security headers middleware
+from starlette.middleware.base import BaseHTTPMiddleware
+
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        # Clickjacking protection (also covered by CSP frame-ancestors below)
+        response.headers["X-Frame-Options"] = "DENY"
+        # Prevent MIME-type sniffing
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        # Limit referrer info sent to third parties
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        # Enforce HTTPS for 1 year (only meaningful in production)
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+        # Content Security Policy:
+        # - script-src: self + jsdelivr CDN (PapaParse + DOMPurify); unsafe-inline required for
+        #   existing inline <script> blocks — blocks unknown remote script sources
+        # - connect-src self: even if XSS fires, it cannot exfiltrate data to external servers
+        # - frame-ancestors none: secondary clickjacking protection
+        # Logos are static assets — cache aggressively in browser
+        if request.url.path.startswith("/logos/"):
+            response.headers["Cache-Control"] = "public, max-age=86400, stale-while-revalidate=604800"
+        response.headers["Content-Security-Policy"] = (
+            "default-src 'self'; "
+            "script-src 'self' 'unsafe-inline' cdn.jsdelivr.net us.i.posthog.com; "
+            "style-src 'self' 'unsafe-inline' fonts.googleapis.com; "
+            "img-src 'self' data: blob:; "
+            "connect-src 'self' us.i.posthog.com; "
+            "font-src 'self' fonts.gstatic.com; "
+            "frame-ancestors 'none'; "
+            "object-src 'none'; "
+            "base-uri 'self';"
+        )
+        return response
+
+app.add_middleware(SecurityHeadersMiddleware)
 
 # Mount static files for logos
 app.mount("/logos", StaticFiles(directory="logos"), name="logos")
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# =========================
+# In-Memory Cache
+# =========================
+# Structure: { cache_key: {"data": ..., "expires": timestamp} }
+_cache: Dict[str, dict] = {}
+CACHE_TTL_SEARCH  = 60 * 5        # 5 minutes — search/query results (short: changes as we tune)
+CACHE_TTL_REPORT  = 60 * 60 * 24  # 24 hours  — PDF reports (expensive to regenerate)
+CACHE_TTL = CACHE_TTL_SEARCH       # default
+
+def cache_get(key: str):
+    entry = _cache.get(key)
+    if entry and time.time() < entry["expires"]:
+        return entry["data"]
+    if entry:
+        del _cache[key]
+    return None
+
+def cache_set(key: str, data, ttl: int = CACHE_TTL_SEARCH):
+    _cache[key] = {"data": data, "expires": time.time() + ttl}
 
 # =========================
 # Rate Limiting
@@ -93,6 +153,81 @@ def check_rate_limit(user_email: str) -> bool:
     # Add current timestamp
     rate_limit_store[user_email].append(now)
     return True
+
+# =========================
+# Auth Rate Limiting
+# =========================
+# Store: {(ip, endpoint): [timestamp, ...]}
+auth_rate_limit_store: Dict[str, List[float]] = defaultdict(list)
+# Store: {(ip, email): [failure_timestamp, ...]}
+login_failure_store: Dict[str, List[float]] = defaultdict(list)
+
+# Per-endpoint limits: (max_requests, window_seconds)
+AUTH_RATE_LIMITS = {
+    "login":               (5,  60),   # 5 attempts / minute
+    "signup":              (3,  600),  # 3 attempts / 10 minutes
+    "forgot-password":     (3,  3600), # 3 emails / hour
+    "resend-verification": (3,  3600), # 3 emails / hour
+    "refresh":             (10, 60),   # 10 refreshes / minute
+    "exchange-token":      (5,  60),   # 5 exchanges / minute
+    "update-password":     (5,  60),   # 5 attempts / minute
+}
+
+# Login lockout: block IP+email after this many failures within the window
+LOGIN_LOCKOUT_MAX    = 10
+LOGIN_LOCKOUT_WINDOW = 900  # 15 minutes
+
+
+def get_client_ip(request: Request) -> str:
+    """Extract client IP, respecting X-Forwarded-For from reverse proxies."""
+    forwarded = request.headers.get("X-Forwarded-For")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    return request.client.host if request.client else "unknown"
+
+
+def check_auth_rate_limit(ip: str, endpoint: str) -> bool:
+    """
+    Sliding-window rate check for auth endpoints keyed by IP + endpoint name.
+    Returns True if within limit, False if exceeded.
+    """
+    limit, window = AUTH_RATE_LIMITS.get(endpoint, (5, 60))
+    key = f"{ip}:{endpoint}"
+    now = time.time()
+
+    auth_rate_limit_store[key] = [
+        ts for ts in auth_rate_limit_store[key] if now - ts < window
+    ]
+
+    if len(auth_rate_limit_store[key]) >= limit:
+        return False
+
+    auth_rate_limit_store[key].append(now)
+    return True
+
+
+def check_login_lockout(ip: str, email: str) -> bool:
+    """
+    Returns True (allow) if the IP+email combination has not exceeded the
+    failure threshold within LOGIN_LOCKOUT_WINDOW seconds.
+    """
+    key = f"{ip}:{email}"
+    now = time.time()
+    login_failure_store[key] = [
+        ts for ts in login_failure_store[key] if now - ts < LOGIN_LOCKOUT_WINDOW
+    ]
+    return len(login_failure_store[key]) < LOGIN_LOCKOUT_MAX
+
+
+def record_login_failure(ip: str, email: str) -> None:
+    key = f"{ip}:{email}"
+    login_failure_store[key].append(time.time())
+
+
+def clear_login_failures(ip: str, email: str) -> None:
+    key = f"{ip}:{email}"
+    login_failure_store.pop(key, None)
+
 
 # =========================
 # Schema your UI understands
@@ -441,15 +576,25 @@ def get_cookie_secure():
     return os.getenv("ENVIRONMENT", "development") == "production"
 
 @app.post("/auth/login")
-async def login(req: LoginRequest, response: Response):
+async def login(req: LoginRequest, response: Response, request: Request):
     """Login endpoint - authenticates user via Supabase"""
+    ip = get_client_ip(request)
+    if not check_auth_rate_limit(ip, "login"):
+        raise HTTPException(status_code=429, detail="Too many login attempts. Please wait before trying again.")
+    if not check_login_lockout(ip, req.email):
+        raise HTTPException(status_code=429, detail="Account temporarily locked due to repeated failures. Please try again later.")
+
     result = sign_in(req.email, req.password)
 
     if "error" in result:
+        record_login_failure(ip, req.email)
         raise HTTPException(status_code=401, detail=result["error"])
 
     user = result["user"]
     session = result["session"]
+
+    # Successful login — clear any recorded failures for this IP+email
+    clear_login_failures(ip, req.email)
 
     # Set access token as HTTP-only cookie
     response.set_cookie(
@@ -476,8 +621,8 @@ async def login(req: LoginRequest, response: Response):
         "user": {
             "email": user["email"],
             "role": user.get("role", "user")
-        },
-        "access_token": session["access_token"]  # Also return for frontend storage
+        }
+        # access_token intentionally omitted — delivered via HTTP-only cookie only
     }
 
 @app.post("/auth/logout")
@@ -512,9 +657,14 @@ async def get_me(user: Optional[dict] = Depends(get_current_user)):
 @app.post("/auth/refresh")
 async def refresh_token_endpoint(
     response: Response,
+    request: Request,
     refresh_token: Optional[str] = Cookie(None, alias="sb_refresh_token")
 ):
     """Refresh access token using refresh token"""
+    ip = get_client_ip(request)
+    if not check_auth_rate_limit(ip, "refresh"):
+        raise HTTPException(status_code=429, detail="Too many refresh attempts. Please wait before trying again.")
+
     if not refresh_token:
         raise HTTPException(status_code=401, detail="No refresh token")
 
@@ -547,17 +697,67 @@ async def refresh_token_endpoint(
         max_age=86400 * 7
     )
 
-    return {
-        "success": True,
-        "access_token": session["access_token"]
-    }
+    return {"success": True}
+
+@app.post("/auth/exchange-token")
+async def exchange_token_endpoint(req: Request, response: Response):
+    """
+    Exchange tokens from a Supabase email link (recovery/invite) for HTTP-only cookies.
+    The frontend posts {access_token, refresh_token} from the URL hash so they never
+    need to be stored in JS memory or sent as Authorization headers.
+    """
+    ip = get_client_ip(req)
+    if not check_auth_rate_limit(ip, "exchange-token"):
+        raise HTTPException(status_code=429, detail="Too many requests. Please wait before trying again.")
+
+    try:
+        body = await req.json()
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid request body")
+
+    access_token = body.get("access_token")
+    refresh_token = body.get("refresh_token")
+
+    if not access_token:
+        raise HTTPException(status_code=400, detail="access_token required")
+
+    user = get_user_from_token(access_token)
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+    response.set_cookie(
+        key="sb_access_token",
+        value=access_token,
+        httponly=True,
+        secure=get_cookie_secure(),
+        samesite="lax",
+        max_age=3600
+    )
+    if refresh_token:
+        response.set_cookie(
+            key="sb_refresh_token",
+            value=refresh_token,
+            httponly=True,
+            secure=get_cookie_secure(),
+            samesite="lax",
+            max_age=86400 * 7
+        )
+
+    return {"success": True}
 
 @app.post("/auth/forgot-password")
-async def forgot_password(req: LoginRequest):
+async def forgot_password(req: LoginRequest, request: Request):
     """Request password reset email"""
+    ip = get_client_ip(request)
+    if not check_auth_rate_limit(ip, "forgot-password"):
+        raise HTTPException(status_code=429, detail="Too many reset requests. Please wait before trying again.")
+    # Also throttle per email to prevent using different IPs to spam one address
+    if not check_auth_rate_limit(req.email, "forgot-password"):
+        raise HTTPException(status_code=429, detail="Too many reset requests. Please wait before trying again.")
+
     # Get the site URL for redirect - redirect to main page, frontend handles token
     site_url = os.getenv("SITE_URL", "https://legaltech-explorer.onrender.com")
-    redirect_url = site_url  # Redirect to main page, not /reset-password
+    redirect_url = site_url.rstrip('/') + '/auth/callback'
 
     result = request_password_reset(req.email, redirect_url)
 
@@ -565,8 +765,12 @@ async def forgot_password(req: LoginRequest):
     return {"success": True, "message": "If an account exists, a reset email has been sent"}
 
 @app.post("/auth/signup")
-async def signup(req: SignUpRequest):
+async def signup(req: SignUpRequest, request: Request):
     """Public sign-up — Supabase sends a verification email automatically"""
+    ip = get_client_ip(request)
+    if not check_auth_rate_limit(ip, "signup"):
+        raise HTTPException(status_code=429, detail="Too many signup attempts. Please wait before trying again.")
+
     if len(req.password) < 8:
         raise HTTPException(status_code=400, detail="Password must be at least 8 characters")
 
@@ -583,21 +787,38 @@ async def signup(req: SignUpRequest):
         "message": "Account created. Please check your email to verify your account before signing in."
     }
 
+
+class ResendVerificationRequest(BaseModel):
+    email: str
+
+@app.post("/auth/resend-verification")
+async def resend_verification_endpoint(req: ResendVerificationRequest, request: Request):
+    """Resend email verification"""
+    ip = get_client_ip(request)
+    if not check_auth_rate_limit(ip, "resend-verification"):
+        raise HTTPException(status_code=429, detail="Too many requests. Please wait before trying again.")
+    if not check_auth_rate_limit(req.email, "resend-verification"):
+        raise HTTPException(status_code=429, detail="Too many requests. Please wait before trying again.")
+
+    result = resend_verification(req.email)
+    if "error" in result:
+        raise HTTPException(status_code=400, detail=result["error"])
+    return {"success": True, "message": "Verification email resent. Please check your inbox."}
+
+
 class UpdatePasswordRequest(BaseModel):
     password: str
 
 @app.post("/auth/update-password")
 async def update_password_endpoint(
     req: UpdatePasswordRequest,
-    access_token: Optional[str] = Cookie(None),
-    authorization: Optional[str] = Header(None)
+    request: Request,
+    token: Optional[str] = Cookie(None, alias="sb_access_token")
 ):
-    """Update user's password (requires valid recovery session)"""
-    # Get token from cookie or header
-    token = access_token
-    if not token and authorization:
-        if authorization.startswith("Bearer "):
-            token = authorization[7:]
+    """Update user's password (requires valid recovery session via HTTP-only cookie)"""
+    ip = get_client_ip(request)
+    if not check_auth_rate_limit(ip, "update-password"):
+        raise HTTPException(status_code=429, detail="Too many attempts. Please wait before trying again.")
 
     if not token:
         raise HTTPException(status_code=401, detail="Not authenticated")
@@ -651,16 +872,6 @@ async def create_user_endpoint(req: LoginRequest, admin: dict = Depends(require_
 
 @app.get("/admin/users")
 async def list_users_endpoint(admin: dict = Depends(require_admin)):
-    """Admin endpoint to list all users"""
-    result = admin_list_users()
-
-    if "error" in result:
-        raise HTTPException(status_code=500, detail=result["error"])
-
-    return result
-
-@app.get("/admin/users")
-async def list_users_endpoint(admin: dict = Depends(require_admin)):
     """Admin endpoint to list all users with usage statistics"""
     users = get_all_users_stats()
     return {"users": users}
@@ -683,6 +894,12 @@ async def set_user_status_endpoint(email: str, req: UserStatusRequest, admin: di
     success = set_user_status(email, req.status)
     if not success:
         raise HTTPException(status_code=404, detail="User not found")
+
+    # Mirror the status to Supabase app_metadata so get_user_from_token
+    # enforces it on every authenticated request, even with a live session
+    sb_result = admin_set_user_status(email, req.status)
+    if "error" in sb_result:
+        print(f"[Auth] Warning: failed to sync status to Supabase for {email}: {sb_result['error']}")
 
     return {
         "success": True,
@@ -711,6 +928,22 @@ async def login_page():
     response.headers["Expires"] = "0"
     return response
 
+@app.get("/terms")
+async def terms_page():
+    """Serve Terms of Use page"""
+    response = FileResponse("terms.html")
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    return response
+
+@app.get("/auth/callback")
+async def auth_callback():
+    """Minimal auth callback page — no analytics, handles Supabase token exchange"""
+    response = FileResponse("auth/callback.html")
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
+
 @app.get("/merged_pref_top50.csv")
 def serve_csv(user: dict = Depends(require_auth)):
     return FileResponse("merged_pref_top50.csv", media_type="text/csv")
@@ -723,14 +956,66 @@ def serve_updated_csv(user: dict = Depends(require_auth)):
     response.headers["Expires"] = "0"
     return response
 
+@app.get("/tools")
+def get_tools(user: Optional[dict] = Depends(get_current_user)):
+    """Return all legal tools from Supabase as JSON. Public endpoint — no auth required."""
+    if not supabase_admin:
+        raise HTTPException(status_code=503, detail="Database not configured")
+    try:
+        response = supabase_admin.table("legal_tools").select("*").execute()
+        # Strip embedding vectors (server-side only) and resolve logo URLs
+        tools = []
+        for t in response.data:
+            tool = {k: v for k, v in t.items() if k != "embedding"}
+            tool["__logo_url"] = get_logo_url(t.get("Vendor Name", ""))
+            tools.append(tool)
+        return JSONResponse(content={"tools": tools})
+    except Exception as e:
+        logger.error(f"[Tools] Failed to fetch tools from Supabase: {e}")
+        raise HTTPException(status_code=500, detail="Failed to load tools")
+
 @app.get("/health")
 def health():
-    return {"ok": True, "has_key": bool(OPENAI_API_KEY), "model": OPENAI_MODEL}
+    return {"ok": True}
 
 
 # =========================
 # Report Generation
 # =========================
+
+# Build a lookup of vendor_name -> logo URL once at startup to avoid
+# repeated filesystem scans on every /tools request
+_LOGO_URL_CACHE: Dict[str, Optional[str]] = {}
+
+def _build_logo_cache():
+    """Walk the logos directory once and populate _LOGO_URL_CACHE."""
+    if not os.path.isdir("logos"):
+        return
+    files = set(os.listdir("logos"))
+    # Cache is populated on-demand per vendor but we pre-scan the dir
+    # so os.path.exists calls are replaced by a set lookup
+    _LOGO_URL_CACHE["__files__"] = files  # type: ignore
+
+_build_logo_cache()
+
+def get_logo_url(vendor_name: str) -> Optional[str]:
+    """Return the URL path to the vendor logo if it exists on disk, or None."""
+    if vendor_name in _LOGO_URL_CACHE:
+        return _LOGO_URL_CACHE[vendor_name]
+    files = _LOGO_URL_CACHE.get("__files__") or set()
+    name_raw = re.sub(r'\s+', '', vendor_name)
+    name_slug = re.sub(r'[^a-z0-9]', '', vendor_name.lower())
+    result = None
+    for name in [name_raw, name_slug]:
+        for ext in ['png', 'jpg', 'jpeg', 'webp']:
+            if f"{name}.{ext}" in files:
+                result = f"/logos/{name}.{ext}"
+                break
+        if result:
+            break
+    _LOGO_URL_CACHE[vendor_name] = result
+    return result
+
 
 def get_logo_b64(vendor_name: str) -> Optional[str]:
     """Load a vendor logo from disk and return a base64 data URI, or None."""
@@ -775,75 +1060,99 @@ def clean_query_text(query: str) -> str:
 
 
 def get_structured_comparison(tools: List[Dict[str, Any]]) -> Dict:
-    """Call OpenAI to produce a 4-section structured comparison for the report."""
+    """Call OpenAI to produce per-tool analysis for the V3 report layout."""
     tool_summaries = ""
     for t in tools:
-        name = t.get('Product Name') or t.get('Vendor Name', '')
-        desc = (t.get('Product Description') or t.get('Vendor Overview', ''))[:250]
-        func = t.get('Legal Functionality', '')
-        ai   = t.get('AI Powered', '')
-        ease = t.get('Ease of Purchase', '')
-        price = t.get('Pricing Model', '')
+        name  = t.get('Product Name') or t.get('Vendor Name', '')
+        desc  = (t.get('Product Description') or t.get('Vendor Overview', ''))[:300]
+        func  = t.get('Legal Functionality', '')
+        ai    = t.get('AI Powered', '')
+        prob  = t.get('Main problem solved', '')
+        mat   = t.get('Maturity Entry Level', '')
         tool_summaries += (
             f"\n**{name}**\n"
             f"- Description: {desc}\n"
             f"- Legal Functionality: {func}\n"
+            f"- Main Problem Solved: {prob}\n"
             f"- AI Powered: {ai}\n"
-            f"- Ease of Purchase: {ease}\n"
-            f"- Pricing: {price}\n"
+            f"- AI Maturity: {mat}\n"
         )
 
     system_msg = (
         "You are an expert legal technology analyst writing a professional shortlist report for in-house legal teams. "
-        "Analyze the provided legal tech tools and return a JSON object with exactly these 4 keys:\n"
-        "- \"similarities\": array of 3-4 strings. Each string should be a substantive observation (2-3 sentences) "
-        "that applies to ALL tools — covering shared capabilities, deployment models, target audiences, or market positioning.\n"
-        "- \"differences\": array of objects {\"tool\": \"<product name>\", \"text\": \"<3-4 sentences>\"}, "
-        "one per tool. Describe in depth what makes each tool functionally and strategically distinct — "
-        "its unique approach, standout features, and how it differs from the others in scope or focus.\n"
-        "- \"strengths\": array of objects {\"tool\": \"<product name>\", \"text\": \"<3-4 sentences>\"}, "
-        "one per tool. Cover the tool's primary strength and the specific value it delivers, "
-        "then note any meaningful limitation or trade-off a buyer should be aware of.\n"
-        "- \"best_case\": array of objects {\"tool\": \"<product name>\", \"text\": \"<2-3 sentences>\"}, "
-        "one per tool. Describe the ideal organisation, team size, maturity level, or use-case scenario "
-        "where this tool would deliver the most value.\n"
-        "Write in a professional, authoritative tone suitable for a C-suite legal audience. "
+        "Analyze the provided legal tech tools and return a JSON object with one key \"tools\" containing an array of objects, "
+        "one per tool in the SAME ORDER as provided. Each object must have exactly these keys:\n"
+        "- \"name\": the tool's product name (string)\n"
+        "- \"best_for\": a 3-6 word phrase describing the primary use case (e.g. 'Legal intake automation')\n"
+        "- \"key_strength\": a 3-6 word phrase describing the standout strength (e.g. 'Strong workflow automation')\n"
+        "- \"consideration\": a 3-8 word phrase describing the main limitation or trade-off (e.g. 'Narrower feature scope')\n"
+        "- \"at_a_glance_blurb\": 1-2 sentences (max 30 words) describing when this tool is best suited. "
+        "Start with 'Best suited where...', 'Most relevant where...' or 'Appropriate where...'\n"
+        "- \"strengths\": 1-2 sentences describing the tool's primary strengths for in-house legal teams\n"
+        "- \"weaknesses\": 1-2 sentences describing the main limitations or trade-offs buyers should consider\n"
+        "- \"best_use_case\": 1-2 sentences describing the ideal team, organisation size, or scenario for this tool\n"
+        "Write in a professional, authoritative tone suitable for senior legal counsel. "
         "Return ONLY valid JSON. No markdown, no code blocks, no prose outside the JSON."
     )
     user_msg = f"Analyze these legal tech tools:\n{tool_summaries}"
 
     try:
         result = call_openai_json(system_msg, user_msg)
-        for key in ('similarities', 'differences', 'strengths', 'best_case'):
-            if key not in result:
-                result[key] = []
+        if 'tools' not in result or not isinstance(result['tools'], list):
+            raise ValueError("Missing 'tools' array in AI response")
         return result
     except Exception as e:
         logger.error(f"[Report] Comparison AI call failed: {e}")
-        tool_names = [t.get('Product Name') or t.get('Vendor Name', '') for t in tools]
-        return {
-            "similarities": ["All tools are designed for legal teams."],
-            "differences": [{"tool": n, "text": ""} for n in tool_names],
-            "strengths":   [{"tool": n, "text": ""} for n in tool_names],
-            "best_case":   [{"tool": n, "text": ""} for n in tool_names],
-        }
+        fallback_tools = []
+        for t in tools:
+            name = t.get('Product Name') or t.get('Vendor Name', '')
+            fallback_tools.append({
+                "name": name,
+                "best_for": "",
+                "key_strength": "",
+                "consideration": "",
+                "at_a_glance_blurb": "",
+                "strengths": "",
+                "weaknesses": "",
+                "best_use_case": "",
+            })
+        return {"tools": fallback_tools}
 
 
 def merge_report_pdfs(dynamic_bytes: bytes) -> bytes:
-    """Merge static pages (1,2,5) with dynamic pages (3,4) into a single PDF."""
+    """Merge V3 static pages with 5 dynamic pages into a 12-page PDF.
+
+    Final page order:
+      1  Cover                  (static[0])
+      2  About the Navigator    (static[1])
+      3  At a glance            (dynamic[0])
+      4  Key Considerations     (static[2])
+      5  How to use this report (static[3])
+      6  Section divider        (static[4])
+      7  Overview table         (dynamic[1])
+      8  Tool 1 detail          (dynamic[2])
+      9  Tool 2 detail          (dynamic[3])
+     10  Tool 3 detail          (dynamic[4])
+     11  Next steps             (static[5])
+     12  Back cover             (static[6])
+    """
     from pypdf import PdfReader, PdfWriter
     writer = PdfWriter()
-    static_path = "static/report_static_pages.pdf"
+    static_path = "static/report_static_pages_v3.pdf"
 
-    static_reader = PdfReader(static_path)
-    writer.add_page(static_reader.pages[0])   # Page 1 — Cover
-    writer.add_page(static_reader.pages[1])   # Page 2 — How Navigator works
+    s = PdfReader(static_path)
+    d = PdfReader(io.BytesIO(dynamic_bytes))
 
-    dynamic_reader = PdfReader(io.BytesIO(dynamic_bytes))
-    for page in dynamic_reader.pages:         # Pages 3 & 4 — dynamic
-        writer.add_page(page)
-
-    writer.add_page(static_reader.pages[2])   # Page 5 — About Clario
+    writer.add_page(s.pages[0])   # 1  Cover
+    writer.add_page(s.pages[1])   # 2  About Navigator
+    writer.add_page(d.pages[0])   # 3  At a glance
+    writer.add_page(s.pages[2])   # 4  Key Considerations
+    writer.add_page(s.pages[3])   # 5  How to use
+    writer.add_page(s.pages[4])   # 6  Section divider
+    for i in range(1, len(d.pages)):  # 7-10  Overview + tool detail pages
+        writer.add_page(d.pages[i])
+    writer.add_page(s.pages[5])   # 11 Next steps
+    writer.add_page(s.pages[6])   # 12 Back cover
 
     out = io.BytesIO()
     writer.write(out)
@@ -880,7 +1189,7 @@ async def report_preview(request: Request, user: dict = Depends(require_auth)):
 
 @app.post("/report")
 async def generate_report(req: ReportRequest, user: dict = Depends(require_auth)):
-    """Generate a 5-page PDF report: static pages 1,2,5 merged with dynamic pages 3,4."""
+    """Generate a 12-page PDF report: V3 static pages merged with 5 dynamic pages."""
     if not req.tools:
         raise HTTPException(status_code=400, detail="No tools provided")
 
@@ -890,6 +1199,18 @@ async def generate_report(req: ReportRequest, user: dict = Depends(require_auth)
         "query": clean_query_text(req.meta.query or ""),
         "generated_at": req.meta.generated_at or today,
     }
+
+    # Check cache — key is sorted vendor names + query
+    tool_names = sorted(t.get('Vendor Name', '') for t in tools)
+    report_cache_key = f"report:{':'.join(tool_names)}:{meta['query']}"
+    cached_pdf = cache_get(report_cache_key)
+    if cached_pdf is not None:
+        logger.info(f"[Cache] /report hit: {tool_names}")
+        return StreamingResponse(
+            iter([cached_pdf]),
+            media_type="application/pdf",
+            headers={"Content-Disposition": f"attachment; filename=Navigator-Snapshot-Report-{today}.pdf"}
+        )
 
     # Load logos as base64 data URIs so Playwright doesn't need HTTP requests
     logos = [get_logo_b64(t.get('Vendor Name', '')) for t in tools]
@@ -913,8 +1234,9 @@ async def generate_report(req: ReportRequest, user: dict = Depends(require_auth)
         merged_bytes = merge_report_pdfs(dynamic_pdf_bytes)
     except Exception as e:
         logger.error(f"[Report] PDF merge failed: {e}")
-        # Fall back to dynamic-only if merge fails
         merged_bytes = dynamic_pdf_bytes
+
+    cache_set(report_cache_key, merged_bytes, ttl=CACHE_TTL_REPORT)
 
     filename = f"Navigator-Snapshot-Report-{today}.pdf"
     return StreamingResponse(
@@ -922,6 +1244,51 @@ async def generate_report(req: ReportRequest, user: dict = Depends(require_auth)
         media_type="application/pdf",
         headers={"Content-Disposition": f"attachment; filename={filename}"}
     )
+
+class SearchRequest(BaseModel):
+    query: str
+    limit: int = 25
+
+@app.post("/search")
+async def semantic_search(req: SearchRequest, user: dict = Depends(rate_limit_dependency)):
+    """Semantic search using pgvector embeddings stored in Supabase."""
+    if not supabase_admin:
+        raise HTTPException(status_code=503, detail="Database not configured")
+
+    try:
+        log_usage(user['id'], user['email'], '/search', req.query)
+
+        cache_key = f"search:{req.query.strip().lower()}:{req.limit}"
+        cached = cache_get(cache_key)
+        if cached is not None:
+            logger.info(f"[Cache] /search hit: {req.query[:60]}")
+            return cached
+
+        # Embed the query
+        embed_response = client.embeddings.create(
+            model="text-embedding-3-small",
+            input=req.query.strip()
+        )
+        query_vector = embed_response.data[0].embedding
+
+        # Call pgvector RPC
+        rpc_result = supabase_admin.rpc("match_tools", {
+            "query_embedding": query_vector,
+            "match_threshold": 0.45,
+            "match_count": min(req.limit * 3, 100)
+        }).execute()
+
+        response_data = {
+            "results": rpc_result.data,
+            "query": req.query
+        }
+        cache_set(cache_key, response_data)
+        return response_data
+
+    except Exception as e:
+        logger.error(f"[Search] Semantic search failed: {e}")
+        raise HTTPException(status_code=500, detail="Search failed. Please try again.")
+
 
 @app.post("/query")
 async def generate_filters(req: Query, user: dict = Depends(rate_limit_dependency)):
@@ -966,11 +1333,20 @@ async def generate_filters(req: Query, user: dict = Depends(rate_limit_dependenc
         # Log the query
         log_usage(user['id'], user['email'], '/query', req.query)
 
+        # Check cache first
+        cache_key = f"query:{req.query.strip().lower()}"
+        cached = cache_get(cache_key)
+        if cached is not None:
+            logger.info(f"[Cache] /query hit: {req.query[:60]}")
+            return cached
+
         model_obj = call_openai_json(system_msg, user_msg)
         clean = normalize_to_schema(model_obj)
+        cache_set(cache_key, clean)
         return clean
     except Exception as e:
-        return JSONResponse(status_code=500, content={"error": str(e)})
+        logger.error(f"[Query] Failed: {e}")
+        return JSONResponse(status_code=500, content={"error": "Query processing failed. Please try again."})
 
 @app.post("/summarize")
 async def summarize_comparison(req: ComparisonRequest, user: dict = Depends(rate_limit_dependency)):
@@ -1012,11 +1388,21 @@ async def summarize_comparison(req: ComparisonRequest, user: dict = Depends(rate
         tool_names = [t.get('name', 'Unknown') for t in req.tools]
         log_usage(user['id'], user['email'], '/summarize', f"Comparing: {', '.join(tool_names)}")
 
+        # Check cache
+        summarize_cache_key = f"summarize:{':'.join(sorted(tool_names))}"
+        cached = cache_get(summarize_cache_key)
+        if cached is not None:
+            logger.info(f"[Cache] /summarize hit: {tool_names}")
+            return cached
+
         result = call_openai_json(system_msg, user_msg)
         if isinstance(result, dict) and 'summary' in result:
-            return {"summary": result['summary']}
+            response = {"summary": result['summary']}
         else:
-            # Fallback if the response doesn't have expected format
-            return {"summary": str(result)}
+            response = {"summary": str(result)}
+
+        cache_set(summarize_cache_key, response)
+        return response
     except Exception as e:
-        return JSONResponse(status_code=500, content={"error": str(e)})
+        logger.error(f"[Summarize] Failed: {e}")
+        return JSONResponse(status_code=500, content={"error": "Summary generation failed. Please try again."})

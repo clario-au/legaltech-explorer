@@ -1,0 +1,67 @@
+How to Use the Legal-Tech Explorer
+
+The Legal-Tech Explorer helps in-house legal teams discover and compare legal technology tools available in Australia.
+
+1. Getting Started
+
+There are two main ways to find the tools you need:
+
+Search using natural language
+Describe what you’re looking for in plain English (for example: “AI contract automation for in-house teams”).
+Your search automatically applies relevant filters, which you can view and adjust manually at any time.
+
+Browse all tools
+Select View All Tools to explore the full database without applying filters.
+
+The total number of tools available is displayed at the top of the page.
+
+2. Browsing Tools
+
+Tools are displayed in a grid layout, allowing you to scan and explore available options quickly.
+
+Click on any tool to view its details
+
+Results update automatically as filters are applied or adjusted
+
+3. Filtering Tools
+
+Use the Filters panel to refine your results.
+
+A wide range of filters is available, covering areas such as:
+
+AI capability
+
+Product maturity
+
+Adoption level
+
+Practice areas
+
+Regions served
+
+Features and capabilities
+
+Additional filter options can be found under the More Filters section.
+
+Filters update in real time and remain active as you browse.
+
+4. Comparing Tools
+Adding tools to compare
+
+Select tools from the results list to add them to comparison mode.
+
+Comparison view
+
+In comparison mode, selected tools are displayed side by side so you can easily compare key attributes.
+
+AI comparison summary
+
+Within the comparison view, you can generate an AI-powered summary that:
+
+Compares tools against one another
+
+Highlights key differences
+
+Outlines strengths and limitations
+
+Provides high-level suggestions to support decision-making

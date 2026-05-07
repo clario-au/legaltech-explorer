@@ -1,26 +1,4 @@
 <!DOCTYPE html>
-{# -----------------------------------------------------------------------
-   Jinja2 macro: returns a conservative font-size (pt) based on total
-   character count of the panel's content. Errs on the side of smaller
-   text to guarantee content fits within the fixed panel height.
------------------------------------------------------------------------ #}
-{%- macro panel_font(items) -%}
-  {%- set ns = namespace(total=0) -%}
-  {%- for item in items -%}
-    {%- if item is mapping -%}
-      {%- set ns.total = ns.total + (item.get('text', '') | length) + (item.get('tool', '') | length) -%}
-    {%- else -%}
-      {%- set ns.total = ns.total + (item | string | length) -%}
-    {%- endif -%}
-  {%- endfor -%}
-  {%- if ns.total > 900 -%}6.5pt
-  {%- elif ns.total > 700 -%}7pt
-  {%- elif ns.total > 500 -%}7.5pt
-  {%- elif ns.total > 300 -%}8pt
-  {%- elif ns.total > 150 -%}8.5pt
-  {%- else -%}9pt
-  {%- endif -%}
-{%- endmacro -%}
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -34,9 +12,6 @@
       print-color-adjust: exact;
     }
 
-    /* =====================================================================
-       PAGE CONTAINER
-    ===================================================================== */
     .page {
       width: 297mm;
       height: 210mm;
@@ -44,6 +19,10 @@
       overflow: hidden;
       break-after: page;
       page-break-after: always;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      padding: 9mm 11mm 8mm 11mm;
     }
     .page:last-child {
       break-after: auto;
@@ -51,385 +30,495 @@
     }
 
     /* =====================================================================
-       PAGE 3 — COMPARISON
+       PAGE 1 — AT A GLANCE
+       Layout: title → intro → [table left | cards right] → next-step box
     ===================================================================== */
-    .page-comparison {
-      display: flex;
-      background: #f5f4f0;
-    }
-
-    /* --- Left dark column --- */
-    .comp-left {
-      width: 86mm;
-      min-width: 86mm;
-      background: #0d2040;
-      padding: 14mm 8mm 10mm 10mm;
-      display: flex;
-      flex-direction: column;
-      border-radius: 0 0 40px 0;
-      position: relative;
-    }
-    .big-number {
-      font-size: 80pt;
-      font-weight: 900;
-      color: #2EA7A7;
-      line-height: 1;
-      margin-bottom: 3mm;
-    }
-    .best-fit-label {
-      font-size: 14pt;
-      font-weight: 400;
-      color: #ffffff;
-      line-height: 1.35;
-      margin-bottom: 5mm;
-    }
-    .search-label {
-      font-size: 7.5pt;
-      color: #7ecaca;
-      font-style: italic;
-      margin-bottom: 6mm;
-    }
-    .logo-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 3mm;
-      margin-top: auto;
-    }
-    .logo-card {
-      background: rgba(255,255,255,0.10);
-      border-radius: 8px;
-      padding: 5px 9px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      min-height: 36px;
-    }
-    .logo-card img {
-      height: 26px;
-      max-width: 80px;
-      object-fit: contain;
-    }
-    .logo-card-initial {
-      width: 26px;
-      height: 26px;
-      background: #2EA7A7;
-      color: #fff;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .glance-title {
+      font-size: 28pt;
       font-weight: 700;
-      font-size: 10pt;
+      color: #0f2040;
+      margin-bottom: 3mm;
       flex-shrink: 0;
     }
-    .logo-card-name {
-      color: #ffffff;
-      font-size: 8.5pt;
-      font-weight: 600;
+    .glance-intro {
+      font-size: 10.5pt;
+      color: #2a3a50;
+      line-height: 1.6;
+      margin-bottom: 4mm;
+      flex-shrink: 0;
     }
+    .glance-intro strong { font-weight: 700; color: #0f2040; }
 
-    /* --- Right content area --- */
-    .comp-right {
-      flex: 1;
-      padding: 8mm 8mm 8mm 6mm;
-      display: flex;
-      flex-direction: column;
-    }
-    .panels-grid {
+    /* Two-column: table (left) + cards (right) */
+    .glance-content-row {
+      flex-shrink: 0;
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 1fr;
-      gap: 5mm;
-      height: 100%;
+      grid-template-columns: 1fr 90mm;
+      gap: 6mm;
     }
-    .panel {
-      border-radius: 10px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    /* Pushes next-step box to the bottom */
+    .glance-spacer { flex: 1; }
+
+    /* Summary table */
+    .glance-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8pt;
+      align-self: start;
     }
-    .panel-header {
-      background: #1d3461;
-      color: #ffffff;
+    .glance-table thead th {
+      background: #ffffff;
+      color: #0f2040;
       font-weight: 700;
+      padding: 9px 10px;
+      text-align: left;
+      border: 1px solid #cdd5e0;
+      font-size: 8.5pt;
+    }
+    .glance-table tbody tr:nth-child(odd)  { background: #eef3f8; }
+    .glance-table tbody tr:nth-child(even) { background: #ffffff; }
+    .glance-table td {
+      padding: 13px 10px;
+      color: #1e2535;
+      vertical-align: middle;
+      border: 1px solid #e0e4ea;
       font-size: 9pt;
-      text-align: center;
-      padding: 5px 10px;
-      letter-spacing: 0.3px;
+      line-height: 1.5;
     }
-    .panel-body {
-      background: #e4f0f8;
-      flex: 1;
-      padding: 7px 11px;
-      font-size: 7.5pt;
-      color: #1a2a3a;
-      line-height: 1.45;
-      overflow: hidden;
+    .tool-name-cell {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 600;
+      white-space: nowrap;
     }
-    .panel-body ul {
-      list-style: disc;
-      padding-left: 13px;
+    .tool-name-cell img {
+      height: 18px;
+      max-width: 50px;
+      object-fit: contain;
     }
-    .panel-body ul li {
-      margin-bottom: 3px;
-    }
-    .panel-body ul li strong {
-      font-weight: 700;
+    .tool-initial-sm {
+      width: 18px; height: 18px;
+      background: #2EA7A7; color: #fff;
+      border-radius: 3px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 7.5pt; flex-shrink: 0;
     }
 
-    /* Clario logo — bottom-right of comparison page */
-    .comp-branding {
-      position: absolute;
-      bottom: 6mm;
-      right: 7mm;
+    /* Right: stacked tool cards */
+    .glance-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 4mm;
+      justify-content: center;
+    }
+    .glance-card-name {
+      font-size: 10.5pt;
+      font-weight: 700;
+      color: #0f2040;
+      margin-bottom: 1mm;
+    }
+    .glance-card-list {
+      padding-left: 4mm;
+      list-style: disc;
+    }
+    .glance-card-list li {
+      font-size: 9pt;
+      color: #2a3a50;
+      line-height: 1.55;
+    }
+
+    /* Suggested Next Steps — full-width dark navy box, reaches bottom edge */
+    .glance-next-step {
+      background: #0f2040;
+      border-radius: 0;
+      padding: 6mm 11mm 17mm 11mm;
+      margin-top: 4mm;
+      margin-left: -11mm;
+      margin-right: -11mm;
+      margin-bottom: -8mm;
+      flex-shrink: 0;
+    }
+    .glance-next-step-label {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 1.5mm;
+    }
+    .glance-next-step-text {
+      font-size: 9pt;
+      color: #a8c4d8;
+      line-height: 1.55;
     }
 
     /* =====================================================================
-       PAGE 4 — DETAIL TABLE
+       PAGE 2 — OVERVIEW TABLE
+       Layout: title → filters bar → grid (headers + 3 tool rows)
     ===================================================================== */
-    .page-table {
+    .overview-title {
+      font-size: 18pt;
+      font-weight: 400;
+      color: #0f2040;
+      margin-bottom: 3mm;
+      flex-shrink: 0;
+    }
+    .overview-title strong { font-weight: 700; }
+
+    .overview-filters-bar {
+      display: inline-flex;
+      align-items: stretch;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 4mm;
+      flex-shrink: 0;
+    }
+    .overview-filters-label {
+      background: #0f2040;
+      color: #ffffff;
+      font-size: 8pt;
+      font-weight: 600;
+      padding: 4px 11px;
+      display: flex;
+      align-items: center;
+    }
+    .overview-filters-value {
+      background: #e8ecf2;
+      color: #2a3a50;
+      font-size: 8pt;
+      padding: 4px 11px;
+      display: flex;
+      align-items: center;
+    }
+
+    /*
+      Overview grid: 5 columns × (1 header row + N tool rows)
+      grid-template-rows: auto = header, then 1fr per tool (fills remaining height)
+    */
+    .overview-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 58mm 1fr 1fr 1fr;
+      grid-auto-rows: auto;
+      min-height: 0;
+    }
+    /* fill remaining height across tool rows */
+    .overview-grid.tools-3 {
+      grid-template-rows: auto 1fr 1fr 1fr;
+    }
+    .overview-grid.tools-2 {
+      grid-template-rows: auto 1fr 1fr;
+    }
+    .overview-grid.tools-1 {
+      grid-template-rows: auto 1fr;
+    }
+
+    /* Header row cells */
+    .ov-hdr {
+      font-size: 9.5pt;
+      font-weight: 700;
+      color: #0f2040;
+      padding: 6px 8px;
+      border-bottom: 2px solid #0f2040;
       background: #ffffff;
       display: flex;
-      flex-direction: column;
+      align-items: flex-end;
     }
+    .ov-hdr:first-child { border-right: 1px solid #e0e4ea; }
 
-    .table-title-bar {
-      background: #1d3461;
-      color: #ffffff;
-      padding: 7px 14px;
-      font-size: 13pt;
-      font-weight: 400;
-      flex-shrink: 0;
-    }
-    .table-title-bar strong {
-      font-weight: 700;
-      color: #2EA7A7;
-    }
+    /* Tool rows: alternating background */
+    .ov-tool-row-odd  { background: #ffffff; }
+    .ov-tool-row-even { background: #f5f7fa; }
 
-    .logo-header-row {
-      background: #c5e8f5;
-      display: grid;
-      grid-template-columns: 72mm 1fr 1fr 1fr;
-      align-items: center;
-      flex-shrink: 0;
-      padding: 5px 0;
-    }
-    .logo-header-spacer { /* empty first cell */ }
-    .logo-header-cell {
+    /* Each cell in a tool row */
+    .ov-cell {
+      padding: 5mm 5mm;
+      border-bottom: 1px solid #e0e4ea;
+      border-right: 1px solid #e0e4ea;
       display: flex;
-      justify-content: center;
       align-items: center;
-      padding: 3px 8px;
+      overflow: hidden;
     }
-    .logo-header-cell img {
-      max-height: 38px;
-      max-width: 110px;
+    .ov-cell:last-child { border-right: none; }
+
+    /* Logo + name cell */
+    .ov-logo-cell {
+      flex-direction: column;
+      justify-content: center;
+      gap: 2.5mm;
+    }
+    .ov-logo-cell img {
+      max-height: 32px;
+      max-width: 100px;
       object-fit: contain;
     }
-    .logo-header-cell .logo-text-fallback {
+    .ov-initial {
+      width: 32px; height: 32px;
+      background: #2EA7A7; color: #fff;
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 13pt;
+    }
+    .ov-tool-name-label {
+      font-size: 9.5pt;
       font-weight: 700;
-      font-size: 9pt;
-      color: #1d3461;
-      text-align: center;
+      color: #0f2040;
     }
 
-    .data-table {
+    /* Content cells (strengths / weaknesses / best use) */
+    .ov-text-cell {
+      font-size: 9.5pt;
+      color: #1e2535;
+      line-height: 1.6;
+      align-items: flex-start;
+    }
+
+    /* =====================================================================
+       PAGES 3-5 — INDIVIDUAL TOOL DETAIL
+       Layout: centered title → [logo col | data table col]
+    ===================================================================== */
+    .tool-title {
+      font-size: 17pt;
+      font-weight: 400;
+      color: #0f2040;
+      text-align: center;
+      margin-bottom: 5mm;
+      flex-shrink: 0;
+    }
+    .tool-title strong { font-weight: 700; }
+
+    /* Two columns: logo left, table right */
+    .tool-layout {
       flex: 1;
+      display: grid;
+      grid-template-columns: 58mm 1fr;
+      gap: 8mm;
+      min-height: 0;
+      align-items: center;
+    }
+    .tool-logo-col {
       display: flex;
       flex-direction: column;
-    }
-    .data-row {
-      display: grid;
-      grid-template-columns: 72mm 1fr 1fr 1fr;
-      border-bottom: 1px solid #e8ecf0;
-    }
-    .data-row:nth-child(odd)  { background: #ffffff; }
-    .data-row:nth-child(even) { background: #f0f2f5; }
-
-    .row-label {
-      padding: 4px 10px;
-      font-size: 7pt;
-      color: #4a5568;
-      border-right: 1px solid #dde3e9;
-      display: flex;
       align-items: center;
-    }
-    .row-val {
-      padding: 4px 8px;
-      font-size: 7pt;
-      color: #1e2535;
-      border-right: 1px solid #dde3e9;
-      display: flex;
-      align-items: center;
-    }
-    .row-val:last-child {
-      border-right: none;
-    }
-    .row-val.ai-check {
       justify-content: center;
     }
-    .row-val.ai-check svg {
-      width: 16px;
-      height: 16px;
+    .tool-logo-col img {
+      max-width: 52mm;
+      max-height: 38mm;
+      object-fit: contain;
+    }
+    .tool-initial-large {
+      width: 70px; height: 70px;
+      background: #2EA7A7; color: #fff;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 28pt;
+    }
+
+    /* Data table on right side */
+    .tool-data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5pt;
+    }
+    .tool-data-table tr { border-bottom: 1px solid #e0e4ea; }
+    .tool-data-table tr:nth-child(odd)  { background: #f5f7fa; }
+    .tool-data-table tr:nth-child(even) { background: #ffffff; }
+    .tool-data-table td {
+      padding: 11px 12px;
+      vertical-align: top;
+      line-height: 1.6;
+    }
+    .tool-data-table td:first-child {
+      font-weight: 700;
+      color: #2EA7A7;
+      width: 50mm;
+      white-space: nowrap;
+      border-right: 1px solid #e0e4ea;
+    }
+    .tool-data-table td:last-child {
+      color: #1e2535;
     }
   </style>
 </head>
 <body>
 
 <!-- =====================================================================
-     PAGE 3 — COMPARISON
+     PAGE 1 — AT A GLANCE
 ===================================================================== -->
-<div class="page page-comparison">
+<div class="page">
 
-  <!-- Left dark column -->
-  <div class="comp-left">
-    <div class="big-number">{{ tools | length }}</div>
-    <div class="best-fit-label">Best fit legal<br>tech tools</div>
-    {% if meta.query %}
-    <div class="search-label">Search: {{ meta.query }}</div>
-    {% endif %}
+  <div class="glance-title">At a glance</div>
 
-    <div class="logo-stack">
+  <div class="glance-intro">
+    In-house legal teams are under increasing pressure to improve efficiency while managing growing workloads and expectations
+    around technology and AI. The Clario Legal Tech Navigator simplifies the legal tech search process by translating legal team
+    requirements into a shortlist of technology tools that align with those needs.<br><br>
+    Based on the filters applied through the Navigator, <strong>{{ tools | length }} legal technology tool{{ 's' if tools|length != 1 }} have</strong> been identified as strong matches:
+  </div>
+
+  <!-- Table (left) + Tool cards (right) -->
+  <div class="glance-content-row">
+
+    <!-- Summary table -->
+    <table class="glance-table">
+      <thead>
+        <tr>
+          <th>Tool</th>
+          <th>Best For</th>
+          <th>Key Strength</th>
+          <th>Consideration</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for tool in tools %}
+        {% set ct = comparison.get('tools', [])[loop.index0] if comparison.get('tools') and loop.index0 < (comparison.get('tools') | length) else {} %}
+        <tr>
+          <td>
+            <div class="tool-name-cell">
+              {% set lg = logos[loop.index0] if logos and loop.index0 < (logos | length) else None %}
+              {% if lg %}<img src="{{ lg }}" alt="">{% else %}<div class="tool-initial-sm">{{ (tool.get('Product Name') or tool.get('Vendor Name') or '?')[0] | upper }}</div>{% endif %}
+              {{ tool.get('Product Name') or tool.get('Vendor Name', '') }}
+            </div>
+          </td>
+          <td>{{ ct.get('best_for', '') }}</td>
+          <td>{{ ct.get('key_strength', '') }}</td>
+          <td>{{ ct.get('consideration', '') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Right: tool blurb cards -->
+    <div class="glance-cards">
       {% for tool in tools %}
-      <div class="logo-card">
-        {% set lg = logos[loop.index0] if logos and loop.index0 < logos|length else None %}
-        {% if lg %}
-          <img src="{{ lg }}" alt="{{ tool.get('Vendor Name', '') }}">
-        {% else %}
-          <div class="logo-card-initial">{{ (tool.get('Vendor Name', '?') or '?')[0].upper() }}</div>
-        {% endif %}
-        <span class="logo-card-name">{{ tool.get('Product Name') or tool.get('Vendor Name', '') }}</span>
+      {% set ct = comparison.get('tools', [])[loop.index0] if comparison.get('tools') and loop.index0 < (comparison.get('tools') | length) else {} %}
+      <div>
+        <div class="glance-card-name">{{ tool.get('Product Name') or tool.get('Vendor Name', '') }}</div>
+        <ul class="glance-card-list">
+          <li>{{ ct.get('at_a_glance_blurb', '') }}</li>
+        </ul>
       </div>
       {% endfor %}
     </div>
+
   </div>
 
-  <!-- Right panels -->
-  <div class="comp-right">
-    <div class="panels-grid">
+  <div class="glance-spacer"></div>
 
-      <div class="panel">
-        <div class="panel-header">Key Similarities</div>
-        <div class="panel-body" style="font-size:{{ panel_font(comparison.get('similarities', [])) }}">
-          <ul>
-            {% for item in comparison.get('similarities', []) %}
-            <li>{{ item | safe }}</li>
-            {% endfor %}
-          </ul>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-header">Key Differences</div>
-        <div class="panel-body" style="font-size:{{ panel_font(comparison.get('differences', [])) }}">
-          <ul>
-            {% for item in comparison.get('differences', []) %}
-            <li><strong>{{ item.get('tool', '') }}</strong> {{ item.get('text', '') | safe }}</li>
-            {% endfor %}
-          </ul>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-header">Strengths</div>
-        <div class="panel-body" style="font-size:{{ panel_font(comparison.get('strengths', [])) }}">
-          <ul>
-            {% for item in comparison.get('strengths', []) %}
-            <li><strong>{{ item.get('tool', '') }}:</strong> {{ item.get('text', '') | safe }}</li>
-            {% endfor %}
-          </ul>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-header">Best Case</div>
-        <div class="panel-body" style="font-size:{{ panel_font(comparison.get('best_case', [])) }}">
-          <ul>
-            {% for item in comparison.get('best_case', []) %}
-            <li><strong>{{ item.get('tool', '') }}:</strong> {{ item.get('text', '') | safe }}</li>
-            {% endfor %}
-          </ul>
-        </div>
-      </div>
-
+  <!-- Suggested Next Step -->
+  <div class="glance-next-step">
+    <div class="glance-next-step-label">Suggested Next Steps</div>
+    <div class="glance-next-step-text">
+      Progress two to three vendors to structured demonstrations to evaluate usability, integration requirements and implementation
+      effort. Using consistent use cases during demonstrations will make it easier to compare options and reach a confident decision.
+      If helpful, Clario can support this stage by coordinating vendor introductions, structuring demonstrations and capturing evaluation outcomes.
     </div>
-  </div>
-
-  <!-- Clario branding -->
-  <div class="comp-branding">
-    <svg width="72" height="22" viewBox="0 0 72 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <text x="0" y="17" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#1d3461">Clario</text>
-      <path d="M56 3 L63 11 L56 19" stroke="#2EA7A7" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
   </div>
 
 </div>
 
 
 <!-- =====================================================================
-     PAGE 4 — DETAIL TABLE
+     PAGE 2 — OVERVIEW TABLE (tools as rows)
 ===================================================================== -->
-<div class="page page-table">
+<div class="page">
 
-  <div class="table-title-bar">Top <strong>{{ tools | length }}</strong> legal tech tools in detail</div>
+  <div class="overview-title">Your prioritised legal tech tools: <strong>Overview</strong></div>
 
-  <!-- Logo header row -->
-  <div class="logo-header-row">
-    <div class="logo-header-spacer"></div>
-    {% for tool in tools %}
-    <div class="logo-header-cell">
-      {% set lg = logos[loop.index0] if logos and loop.index0 < logos|length else None %}
-      {% if lg %}
-        <img src="{{ lg }}" alt="{{ tool.get('Vendor Name', '') }}">
-      {% else %}
-        <span class="logo-text-fallback">{{ tool.get('Vendor Name', '') }}</span>
-      {% endif %}
-    </div>
-    {% endfor %}
+  <div class="overview-filters-bar">
+    <div class="overview-filters-label">Filters applied</div>
+    <div class="overview-filters-value">{{ meta.query or '—' }}</div>
   </div>
 
-  <!-- Data rows -->
-  <div class="data-table">
-    {% set table_fields = [
-      ("Vendor name",         "Vendor Name"),
-      ("Vendor overview",     "Vendor Overview"),
-      ("Product name",        "Product Name"),
-      ("Product description", "Product Description"),
-      ("Language supported",  "Languages Supported"),
-      ("Legal functionality", "Legal Functionality"),
-      ("Main problem solved", "Main problem solved"),
-      ("Primary user segment","Primary User Segment"),
-      ("AI maturity stage",   "Maturity Entry Level"),
-      ("Industry focus",      "Industry Focus"),
-      ("AI powered",          "AI Powered"),
-      ("AI platform",         "AI Platform Type"),
-      ("Ease of purchase",    "Ease of Purchase"),
-      ("Pricing model",       "Pricing Model"),
-    ] %}
+  <div class="overview-grid tools-{{ tools | length }}">
 
-    {% for label, key in table_fields %}
-    <div class="data-row">
-      <div class="row-label">{{ label }}</div>
-      {% for tool in tools %}
-        {% if key == "AI Powered" %}
-        <div class="row-val ai-check">
-          {% if tool.get(key, '') in ['Yes', 'Core Feature'] %}
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="10" fill="#2EA7A7" fill-opacity="0.15" stroke="#2EA7A7" stroke-width="1.5"/>
-            <path d="M7.5 12.5l3 3 6-6.5" stroke="#2EA7A7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          {% endif %}
-        </div>
-        {% else %}
-        <div class="row-val">{{ tool.get(key, '') or '' }}</div>
-        {% endif %}
-      {% endfor %}
+    <!-- Header row -->
+    <div class="ov-hdr"></div>
+    <div class="ov-hdr">Strengths</div>
+    <div class="ov-hdr">Weaknesses</div>
+    <div class="ov-hdr">Best Use Case</div>
+
+    <!-- One row per tool -->
+    {% for tool in tools %}
+    {% set ct = comparison.get('tools', [])[loop.index0] if comparison.get('tools') and loop.index0 < (comparison.get('tools') | length) else {} %}
+    {% set lg = logos[loop.index0] if logos and loop.index0 < (logos | length) else None %}
+    {% set row_class = 'ov-tool-row-odd' if loop.index is odd else 'ov-tool-row-even' %}
+
+    <!-- Logo + name -->
+    <div class="ov-cell ov-logo-cell {{ row_class }}">
+      {% if lg %}<img src="{{ lg }}" alt="">{% else %}<div class="ov-initial">{{ (tool.get('Product Name') or tool.get('Vendor Name') or '?')[0] | upper }}</div>{% endif %}
+      <div class="ov-tool-name-label">{{ (tool.get('Product Name') or tool.get('Vendor Name', '')) | upper }}</div>
     </div>
+    <!-- Strengths -->
+    <div class="ov-cell ov-text-cell {{ row_class }}">{{ ct.get('strengths', '') }}</div>
+    <!-- Weaknesses -->
+    <div class="ov-cell ov-text-cell {{ row_class }}">{{ ct.get('weaknesses', '') }}</div>
+    <!-- Best Use Case -->
+    <div class="ov-cell ov-text-cell {{ row_class }}">{{ ct.get('best_use_case', '') }}</div>
+
     {% endfor %}
   </div>
 
 </div>
+
+
+<!-- =====================================================================
+     PAGES 3-5 — INDIVIDUAL TOOL DETAIL (one per tool)
+===================================================================== -->
+{% for tool in tools %}
+{% set lg = logos[loop.index0] if logos and loop.index0 < (logos | length) else None %}
+
+<div class="page">
+
+  <div class="tool-title">Your prioritised legal tech tool: <strong>{{ tool.get('Product Name') or tool.get('Vendor Name', '') }}</strong></div>
+
+  <div class="tool-layout">
+
+    <!-- Left: large logo -->
+    <div class="tool-logo-col">
+      {% if lg %}
+        <img src="{{ lg }}" alt="{{ tool.get('Vendor Name', '') }}">
+      {% else %}
+        <div class="tool-initial-large">{{ (tool.get('Product Name') or tool.get('Vendor Name') or '?')[0] | upper }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Right: data table -->
+    <table class="tool-data-table">
+      {% if tool.get('Vendor Overview') %}
+      <tr><td>Vendor Overview</td><td>{{ tool.get('Vendor Overview') }}</td></tr>
+      {% endif %}
+      {% if tool.get('Product Description') %}
+      <tr><td>Product Description</td><td>{{ tool.get('Product Description') }}</td></tr>
+      {% endif %}
+      {% if tool.get('Legal Functionality') %}
+      <tr><td>Legal Functionality</td><td>{{ tool.get('Legal Functionality') }}</td></tr>
+      {% endif %}
+      {% if tool.get('Main problem solved') %}
+      <tr><td>Main problem solved</td><td>{{ tool.get('Main problem solved') }}</td></tr>
+      {% endif %}
+      {% if tool.get('Primary User Segment') %}
+      <tr><td>Primary User Segment</td><td>{{ tool.get('Primary User Segment') }}</td></tr>
+      {% endif %}
+      {% if tool.get('Industry Focus') %}
+      <tr><td>Industry Focus</td><td>{{ tool.get('Industry Focus') }}</td></tr>
+      {% endif %}
+      {% if tool.get('Maturity Entry Level') %}
+      <tr><td>AI Maturity Stage</td><td>{{ tool.get('Maturity Entry Level') }}</td></tr>
+      {% endif %}
+      {% if tool.get('AI Powered') %}
+      <tr><td>AI Powered</td><td>{{ tool.get('AI Powered') }}</td></tr>
+      {% endif %}
+      {% if tool.get('Ease of Purchase') %}
+      <tr><td>Ease of Purchase</td><td>{{ tool.get('Ease of Purchase') }}</td></tr>
+      {% endif %}
+      <tr><td>Main Language Supported</td><td>English</td></tr>
+    </table>
+
+  </div>
+
+</div>
+{% endfor %}
 
 </body>
 </html>

@@ -133,14 +133,16 @@ def get_user_from_token(access_token: str) -> Optional[dict]:
         response = supabase.auth.get_user(access_token)
 
         if response and response.user:
-            # Get user metadata for role
-            user_metadata = response.user.user_metadata or {}
             app_metadata = response.user.app_metadata or {}
+
+            # Reject disabled accounts — checked against admin-controlled app_metadata
+            if app_metadata.get("disabled"):
+                return None
 
             return {
                 "id": response.user.id,
                 "email": response.user.email,
-                "role": app_metadata.get("role", user_metadata.get("role", "user")),
+                "role": app_metadata.get("role", "user"),
                 "created_at": str(response.user.created_at)
             }
         return None
@@ -174,6 +176,24 @@ def refresh_session(refresh_token: str) -> dict:
 
 
 # ===== Password Reset =====
+
+def resend_verification(email: str) -> dict:
+    """
+    Resend email verification to a user
+    Returns: {"success": True} or {"error": "..."}
+    """
+    if not supabase:
+        return {"error": "Supabase not configured"}
+
+    try:
+        supabase.auth.resend({
+            "type": "signup",
+            "email": email
+        })
+        return {"success": True}
+    except Exception as e:
+        return {"error": str(e)}
+
 
 def request_password_reset(email: str, redirect_url: str) -> dict:
     """
@@ -276,7 +296,7 @@ def admin_invite_user(email: str, role: str = "user", redirect_url: str = None) 
 
     try:
         options = {
-            "data": {"role": role}
+            "data": {}
         }
         if redirect_url:
             options["redirect_to"] = redirect_url
@@ -287,6 +307,11 @@ def admin_invite_user(email: str, role: str = "user", redirect_url: str = None) 
         )
 
         if response.user:
+            # Write role into app_metadata (admin-controlled) — never user_metadata
+            supabase_admin.auth.admin.update_user_by_id(
+                response.user.id,
+                {"app_metadata": {"role": role}}
+            )
             return {"success": True, "user_id": response.user.id}
         return {"error": "Failed to send invite"}
     except Exception as e:
@@ -332,6 +357,40 @@ def admin_list_users() -> dict:
             })
 
         return {"users": users}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def admin_set_user_status(email: str, status: str) -> dict:
+    """
+    Enable or disable a user account in Supabase.
+    Writes disabled flag to app_metadata so get_user_from_token enforces it
+    on every authenticated request without a separate DB lookup.
+    Returns: {"success": True} or {"error": "..."}
+    """
+    if not supabase_admin:
+        return {"error": "Supabase admin not configured"}
+
+    if status not in ("active", "disabled"):
+        return {"error": "Status must be 'active' or 'disabled'"}
+
+    try:
+        # Find the user by email
+        all_users = supabase_admin.auth.admin.list_users()
+        target = next((u for u in all_users if u.email == email), None)
+        if not target:
+            return {"error": "User not found in Supabase"}
+
+        disabled = status == "disabled"
+        # Preserve existing app_metadata fields while updating disabled flag
+        existing = target.app_metadata or {}
+        updated_metadata = {**existing, "disabled": disabled}
+
+        supabase_admin.auth.admin.update_user_by_id(
+            target.id,
+            {"app_metadata": updated_metadata}
+        )
+        return {"success": True}
     except Exception as e:
         return {"error": str(e)}
 

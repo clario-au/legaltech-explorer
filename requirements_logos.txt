@@ -1,0 +1,7 @@
+# Requirements for fetch_logos.py script
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+pillow>=10.0.0
+python-slugify>=8.0.0
+pandas>=2.0.0
+urllib3>=2.0.0
