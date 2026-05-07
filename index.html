@@ -1724,6 +1724,9 @@
   ];
 
   var DATA = [];
+  // Resolves once DATA is populated from /tools — mirrors the AUTH_READY pattern.
+  var _dataReadyResolve;
+  window.DATA_READY = new Promise(function(resolve){ _dataReadyResolve = resolve; });
 
   function esc(s){ return (s||'').toString().replace(/[&<>"]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
   function splitMulti(v){
@@ -3089,6 +3092,7 @@
       if(!res.ok) throw new Error(`HTTP ${res.status}`);
       const json = await res.json();
       DATA = normalizeRows(json.tools);
+      if (_dataReadyResolve) { _dataReadyResolve(); _dataReadyResolve = null; }
       console.log('DATA loaded from Supabase, records:', DATA.length);
       // Prefetch all logos in the background so they're cached before first search
       DATA.forEach(function(t){
@@ -3297,11 +3301,9 @@
     SHORTLIST_USER_EDITED = false;
     LAST_GENERATED_KEY = '';
 
-    // Wait for the initial auth check to finish before deciding which path to use.
-    // Without this, a fast search fires before the session cookie is verified,
-    // AUTH_STATE.authenticated is still false, and the user gets client-side
-    // keyword results (sorted by popularity) instead of AI search.
+    // Wait for auth check, then for DATA — both must be ready before searching.
     if(window.AUTH_READY){ await window.AUTH_READY; }
+    if(window.DATA_READY){ await window.DATA_READY; }
 
     // If user is not authenticated, use client-side keyword search
     if(!window.AUTH_STATE || !window.AUTH_STATE.authenticated){
@@ -3534,7 +3536,8 @@
   aiQuery?.addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); runAISearch(); }});
 
   // View All Tools button - shows all tools without any filters
-  function viewAllTools(){
+  async function viewAllTools(){
+    if(window.DATA_READY) await window.DATA_READY;
     HAS_SEARCHED = true;
     LAST_QUERY = '';
     ACTIVE_CATEGORY = '';
@@ -3660,6 +3663,7 @@
   // Category pills + category cards on landing → browse with filter pre-applied
   async function browseByCategory(cat) {
     if (window.AUTH_READY) await window.AUTH_READY;
+    if (window.DATA_READY) await window.DATA_READY;
     HAS_SEARCHED = true;
     LAST_QUERY = '';
     ACTIVE_CATEGORY = cat;
@@ -3782,7 +3786,8 @@
   // ===== Browser History (back/forward support) =====
   history.replaceState({ view: 'landing' }, '');
 
-  window.addEventListener('popstate', function(e) {
+  window.addEventListener('popstate', async function(e) {
+    if(window.DATA_READY) await window.DATA_READY;
     var state = e.state;
     if (!state || state.view === 'landing') {
       // Back to landing
@@ -4666,16 +4671,13 @@ void main(){
     // Debounce timer — prevents the Sign In button flickering during auth re-checks
     var _anonUITimer = null;
 
-    function updateUIForAuthenticatedUser() {
+    async function updateUIForAuthenticatedUser() {
       // Cancel any pending switch to anonymous state
       if (_anonUITimer) { clearTimeout(_anonUITimer); _anonUITimer = null; }
 
-      // If tools haven't loaded yet (page init ran before session was established),
-      // load them now. This covers: login after page load, token refresh, and
-      // the initial auth-check path when the cookie was already valid.
-      if (!DATA || DATA.length === 0) {
-        loadToolsFromAPI();
-      }
+      // Tools are always fetched on init (public endpoint). Just wait for that
+      // fetch to finish rather than firing a second one.
+      if (window.DATA_READY) await window.DATA_READY;
 
       const user = window.AUTH_STATE.user;
       posthog?.identify(user.id, { email: user.email, role: user.role });
