@@ -104,7 +104,7 @@
   .toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;position:sticky;top:0;z-index:10;padding:4px 0;margin-top:-4px;margin-left:-4px;margin-right:-4px;padding-left:4px;padding-right:4px}
   .col-title{font-size:12px;font-weight:800;letter-spacing:.28px;text-transform:uppercase;color:#6b7280}
   .box{background:#ffffff;border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow)}
-  .box.alt{background:transparent;overflow:auto;max-height:100%;border:none;box-shadow:none;padding:0}
+  .box.alt{background:transparent;overflow-y:auto;flex:1;min-height:0;border:none;box-shadow:none;padding:0}
   aside.left .box, aside.right .box{overflow-y:auto;flex:1;min-height:0}
 
   .tabs{display:flex;gap:6px}
@@ -629,13 +629,14 @@
   .popularity-bar-fill{height:100%;background:linear-gradient(90deg, #238E8E 0%, #2EA7A7 50%, #3dc5c5 100%);border-radius:999px;transition:width .3s ease;position:relative}
   .popularity-score{font-size:12px;font-weight:700;color:#2EA7A7;min-width:35px;text-align:right}
 
-  .left, main, .right{overflow:auto;outline:none;max-height:calc(100vh - 80px);padding-right:8px}
+  .left, .right{overflow:auto;outline:none;max-height:calc(100vh - 80px);padding-right:8px}
+  main{overflow:hidden;max-height:calc(100vh - 80px);}
 
   /* Custom scrollbar styling */
-  .left::-webkit-scrollbar, main::-webkit-scrollbar, .right::-webkit-scrollbar, .compare-wrap::-webkit-scrollbar, #aiSummaryBox::-webkit-scrollbar, .box.alt::-webkit-scrollbar, aside.left .box::-webkit-scrollbar, aside.right .box::-webkit-scrollbar{width:8px}
-  .left::-webkit-scrollbar-track, main::-webkit-scrollbar-track, .right::-webkit-scrollbar-track, .compare-wrap::-webkit-scrollbar-track, #aiSummaryBox::-webkit-scrollbar-track, .box.alt::-webkit-scrollbar-track, aside.left .box::-webkit-scrollbar-track, aside.right .box::-webkit-scrollbar-track{background:var(--scroll-track);border-radius:4px}
-  .left::-webkit-scrollbar-thumb, main::-webkit-scrollbar-thumb, .right::-webkit-scrollbar-thumb, .compare-wrap::-webkit-scrollbar-thumb, #aiSummaryBox::-webkit-scrollbar-thumb, .box.alt::-webkit-scrollbar-thumb, aside.left .box::-webkit-scrollbar-thumb, aside.right .box::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:4px}
-  .left::-webkit-scrollbar-thumb:hover, main::-webkit-scrollbar-thumb:hover, .right::-webkit-scrollbar-thumb:hover, .compare-wrap::-webkit-scrollbar-thumb:hover, #aiSummaryBox::-webkit-scrollbar-thumb:hover, .box.alt::-webkit-scrollbar-thumb:hover, aside.left .box::-webkit-scrollbar-thumb:hover, aside.right .box::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hover)}
+  .left::-webkit-scrollbar, .right::-webkit-scrollbar, .compare-wrap::-webkit-scrollbar, #aiSummaryBox::-webkit-scrollbar, .box.alt::-webkit-scrollbar, aside.left .box::-webkit-scrollbar, aside.right .box::-webkit-scrollbar{width:8px}
+  .left::-webkit-scrollbar-track, .right::-webkit-scrollbar-track, .compare-wrap::-webkit-scrollbar-track, #aiSummaryBox::-webkit-scrollbar-track, .box.alt::-webkit-scrollbar-track, aside.left .box::-webkit-scrollbar-track, aside.right .box::-webkit-scrollbar-track{background:var(--scroll-track);border-radius:4px}
+  .left::-webkit-scrollbar-thumb, .right::-webkit-scrollbar-thumb, .compare-wrap::-webkit-scrollbar-thumb, #aiSummaryBox::-webkit-scrollbar-thumb, .box.alt::-webkit-scrollbar-thumb, aside.left .box::-webkit-scrollbar-thumb, aside.right .box::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:4px}
+  .left::-webkit-scrollbar-thumb:hover, .right::-webkit-scrollbar-thumb:hover, .compare-wrap::-webkit-scrollbar-thumb:hover, #aiSummaryBox::-webkit-scrollbar-thumb:hover, .box.alt::-webkit-scrollbar-thumb:hover, aside.left .box::-webkit-scrollbar-thumb:hover, aside.right .box::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hover)}
 
   /* Landing page */
   #aiLanding{display:none;flex-direction:column;min-height:100vh;background:#f5f8fa;}
@@ -1383,12 +1384,12 @@
 
         <h3>3. What the report contains</h3>
         <p>Your report is structured as a ready-to-share PDF document. It includes:</p>
-        <p><strong>At a Glance</strong> — a high-level summary table across all shortlisted tools, including Navigator Scores and a suggested next step</p>
+        <p><strong>At a Glance</strong> — a high-level summary table across all shortlisted tools with best fit, key strengths, and considerations, plus a suggested next step</p>
         <p><strong>Overview Table</strong> — a side-by-side comparison of key attributes such as functionality, AI maturity, user segment, and ease of purchase</p>
         <p><strong>Individual Tool Pages</strong> — one page per tool with a detailed breakdown of its capabilities, alongside an AI-generated summary of strengths, considerations, and best-fit use cases</p>
 
         <h3>4. Clario context pages</h3>
-        <p>The report is wrapped in Clario-branded pages that provide background on the Navigator methodology, how to interpret the scores, and how Clario can support the next stage of your evaluation if needed.</p>
+        <p>The report is wrapped in Clario-branded pages that provide background on the Navigator methodology and how Clario can support the next stage of your evaluation if needed.</p>
 
         <h3>5. Downloading your report</h3>
         <p>Once generated, the report downloads automatically as a PDF. You can share it directly with colleagues or stakeholders as part of your vendor evaluation process.</p>
