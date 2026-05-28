@@ -6,7 +6,9 @@ Defaults to OpenAI (gpt-4o). Set OPENAI_API_KEY in .env or pass api_key directly
 import json
 from openai import OpenAI
 
-SYSTEM_PROMPT = """You are a professional legal recruitment specialist. Transform a lawyer's detailed CV into a concise client-facing profile.
+SYSTEM_PROMPT = """You are a professional legal recruitment specialist. Transform a lawyer's detailed CV into a comprehensive client-facing profile.
+
+CORE PRINCIPLE: More is always better. It is far easier for the client to remove content than to recover lost detail. When in doubt, include it. Never cut for the sake of brevity.
 
 You will return a JSON object with this exact structure:
 
@@ -41,30 +43,37 @@ A role is substantive if it appears as a named position with a company and date 
 The only roles that may be omitted here are junior/associate roles from early career — those
 go in prior_experience. If in doubt, include the role.
 
-- Order by importance / prestige, not by date. Put the most impressive or senior roles first.
-  An in-house GC role at a blue-chip company typically ranks ahead of an earlier partner role
-  unless the partner role was at a more prestigious firm.
+- Preserve the exact order roles appear in the source CV. Do not reorder by prestige, seniority, or any other criterion.
 - If the lawyer held multiple roles at the same employer, merge them into ONE entry.
   Use the full date span (earliest start – latest end) and the most representative/senior title.
-- Select 4–8 bullet points per role. For consulting / independent GC roles with multiple distinct
-  client engagements, include up to 10. For short-tenure roles (under 18 months), 2–4 is fine.
-  Prioritise: named transactions with dollar values, strategic mandates, regulatory achievements,
-  leadership highlights, named clients or jurisdictions.
-- Drop only: generic filler advisory, routine governance boilerplate, standard compliance tasks
-  that add no distinction. Never drop an entire role.
+- BULLET COUNT: Include ALL substantive bullet points from the source CV for each role.
+  Aim for 8–15 bullets per major role. For consulting / independent GC roles with multiple
+  distinct client engagements, include every named engagement — there is no upper limit.
+  For short-tenure roles (under 18 months), include at least 4–6 bullets.
+  Never cut a bullet simply to keep the list short. If the source CV has 20 bullet points
+  for a role, include all 20.
+  Prioritise in order: named transactions with dollar values, strategic mandates, regulatory
+  achievements, leadership highlights, named clients or jurisdictions — but do not drop the
+  lower-priority bullets; include everything.
+- Drop ONLY: pure boilerplate filler with zero specificity (e.g. "Provided legal advice" with
+  no further detail, "Attended meetings"). If a bullet names any client, deal, jurisdiction,
+  dollar value, or specific outcome, it must be kept regardless of how routine it appears.
+  Never drop an entire role.
 - Bullet style depends on the role type:
   * Consulting / independent / portfolio roles: use "**Named Engagement or Topic**: full sentence."
     The bold lead-in names the specific client, deal, or mandate category (1–5 words).
     Plain action-verb bullets (no bold lead-in) are also fine for general scope statements.
   * In-house (GC, Senior Counsel, etc.) or law firm roles: plain action-verb sentences only,
     no bold lead-in. Start with a strong verb: "Directed…", "Led…", "Negotiated…", "Managed…"
-- Copy the source text near-verbatim. Locate the matching sentence in the CV, then reproduce it
-  word-for-word with only these edits: convert first-person ("I led…") to third-person ("Led…"),
-  fix tense to simple past (except current roles which stay present/past-mix), and capitalise
-  the first word. Do NOT rephrase, shorten, or omit any part of the original sentence. Every
-  named asset, dollar figure, acronym, jurisdiction list, counterparty name, and qualifying clause
-  must appear in the output bullet exactly as it appears in the source. If you cannot find the
-  sentence in the source CV, write it from scratch at comparable length and specificity.
+- VERBATIM COPYING — CRITICAL: Locate the matching sentence in the CV and reproduce it
+  WORD-FOR-WORD. The only permitted edits are: convert first-person ("I led…") to third-person
+  ("Led…"), fix tense to simple past (except current roles), and capitalise the first word.
+  DO NOT rephrase, paraphrase, shorten, summarise, or reword any part of the original sentence.
+  Every named asset, dollar figure, acronym, jurisdiction list, counterparty name, qualifying
+  clause, and parenthetical must appear in the output bullet exactly as it appears in the source —
+  not compressed, not merged with another sentence, not "simplified". If the original bullet is
+  three lines long, your output bullet must be three lines long. If you cannot locate the exact
+  source sentence, reproduce it at full original length and specificity.
 - Format dates with an en-dash: "Month Year – Month Year" or "Month Year – Present".
 - Separate bullet strings with a literal newline (\\n) in the description string.
 
@@ -90,7 +99,7 @@ def transform_cv(text: str, api_key: str) -> dict:
 
     response = client.chat.completions.create(
         model="gpt-4o",
-        max_tokens=6000,
+        max_tokens=10000,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": f"Transform this CV into the structured profile format:\n\n{text}"},
