@@ -37,19 +37,28 @@ NAME
 - First name and surname only. Drop middle names.
 
 EXPERIENCES
-CRITICAL — COMPLETENESS: Include EVERY role at Senior Counsel level or above without exception.
-Count the named roles in the CV first; your experiences array MUST contain the same count.
-A role is substantive if it appears as a named position with a company and date range.
-The only roles that may be omitted here are junior/associate roles from early career — those
-go in prior_experience. If in doubt, include the role.
+STEP 1 — ROLE INVENTORY (do this before generating any JSON):
+Scan the entire CV and list every substantive role in the order it appears. A role is substantive
+if it appears as a named position with a date range, regardless of how the section is headed.
+This includes roles listed under headers such as "Specialised Executive Mandates",
+"Independent General Counsel", "Strategic Legal Consultant", or similar — these are full
+experience entries, not summaries or appendices. The only roles to exclude are those clearly
+labelled Associate or Junior Counsel from early career (those go in prior_experience).
 
-- Preserve the exact order roles appear in the source CV. Do not reorder by prestige, seniority, or any other criterion.
+STEP 2 — VERIFY COUNT: Your experiences array MUST contain exactly the same number of entries
+as your Step 1 inventory. If the count does not match, you have dropped a role — add it back.
+
+- Preserve the exact order roles appear in the source CV. Do not reorder.
+- For consulting / independent / portfolio roles that appear under a section heading rather than
+  a named employer: use the section heading or the lawyer's stated title (e.g. "Independent
+  General Counsel & Strategic Legal Consultant") as the role, and use the geographic scope
+  (e.g. "Asia Pacific") or the section heading as the company field.
 - If the lawyer held multiple roles at the same employer, merge them into ONE entry.
   Use the full date span (earliest start – latest end) and the most representative/senior title.
 - BULLET COUNT: Include ALL substantive bullet points from the source CV for each role.
   Aim for 8–15 bullets per major role. For consulting / independent GC roles with multiple
-  distinct client engagements, include every named engagement — there is no upper limit.
-  For short-tenure roles (under 18 months), include at least 4–6 bullets.
+  distinct client engagements, include every named engagement and every sub-bullet beneath it —
+  there is no upper limit. For short-tenure roles (under 18 months), include at least 4–6 bullets.
   Never cut a bullet simply to keep the list short. If the source CV has 20 bullet points
   for a role, include all 20.
   Prioritise in order: named transactions with dollar values, strategic mandates, regulatory
@@ -63,6 +72,7 @@ go in prior_experience. If in doubt, include the role.
   * Consulting / independent / portfolio roles: use "**Named Engagement or Topic**: full sentence."
     The bold lead-in names the specific client, deal, or mandate category (1–5 words).
     Plain action-verb bullets (no bold lead-in) are also fine for general scope statements.
+    Sub-bullets beneath a named engagement should each become their own bullet in the description.
   * In-house (GC, Senior Counsel, etc.) or law firm roles: plain action-verb sentences only,
     no bold lead-in. Start with a strong verb: "Directed…", "Led…", "Negotiated…", "Managed…"
 - VERBATIM COPYING — CRITICAL: Locate the matching sentence in the CV and reproduce it
@@ -71,11 +81,11 @@ go in prior_experience. If in doubt, include the role.
   DO NOT rephrase, paraphrase, shorten, summarise, or reword any part of the original sentence.
   Every named asset, dollar figure, acronym, jurisdiction list, counterparty name, qualifying
   clause, and parenthetical must appear in the output bullet exactly as it appears in the source —
-  not compressed, not merged with another sentence, not "simplified". If the original bullet is
-  three lines long, your output bullet must be three lines long. If you cannot locate the exact
-  source sentence, reproduce it at full original length and specificity.
+  not compressed, not merged with another sentence, not "simplified". If you cannot locate the
+  exact source sentence, reproduce it at full original length and specificity.
 - Format dates with an en-dash: "Month Year – Month Year" or "Month Year – Present".
 - Separate bullet strings with a literal newline (\\n) in the description string.
+  Use \\n only as a separator between bullets — never within a single bullet's text.
 
 PRIOR_EXPERIENCE
 - One sentence summarising early-career / junior associate roles (firm names + locations).
@@ -99,7 +109,7 @@ def transform_cv(text: str, api_key: str) -> dict:
 
     response = client.chat.completions.create(
         model="gpt-4o",
-        max_tokens=10000,
+        max_tokens=16000,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": f"Transform this CV into the structured profile format:\n\n{text}"},

@@ -28,30 +28,17 @@ def _extract_pdf(path: str) -> str:
 
 def _extract_docx(path: str) -> str:
     from docx import Document
-    from docx.text.paragraph import Paragraph
-    from docx.table import Table
+    from docx.oxml.ns import qn
 
     doc = Document(path)
     parts = []
 
-    for element in doc.element.body:
-        tag = element.tag.split("}")[-1] if "}" in element.tag else element.tag
-
-        if tag == "p":
-            para = Paragraph(element, doc)
-            text = para.text.strip()
-            if text:
-                parts.append(text)
-
-        elif tag == "tbl":
-            table = Table(element, doc)
-            for row in table.rows:
-                seen = []
-                for cell in row.cells:
-                    text = cell.text.strip()
-                    if text and text not in seen:
-                        seen.append(text)
-                if seen:
-                    parts.append(" | ".join(seen))
+    # iter() does a full depth-first walk of the XML tree, capturing text from
+    # regular paragraphs, table cells, text boxes, and SDT content controls alike.
+    for p_el in doc.element.body.iter(qn("w:p")):
+        texts = [t.text for t in p_el.iter(qn("w:t")) if t.text]
+        line = "".join(texts).strip()
+        if line:
+            parts.append(line)
 
     return "\n".join(parts)
