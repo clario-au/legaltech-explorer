@@ -442,41 +442,6 @@
 <!-- =====================================================================
      COVER PAGE — personalised dynamic cover (replaces static cover[0])
 ===================================================================== -->
-<div class="page cover-page">
-  <div class="cover-accent-bar"></div>
-  <div class="cover-body">
-
-    <div class="cover-top">
-      <div class="cover-brand">Clario</div>
-      <div class="cover-brand-sub">Legal Technology Services</div>
-    </div>
-
-    <div class="cover-center">
-      <div class="cover-title">Legal Tech<br>Navigator</div>
-      <div class="cover-subtitle">Snapshot Report</div>
-    </div>
-
-    <div class="cover-bottom">
-      <div class="cover-divider"></div>
-      <div class="cover-meta">
-        {% if user_name or user_company %}
-        <div class="cover-meta-block">
-          <span class="cover-label">Prepared for</span>
-          {% if user_name %}<span class="cover-value">{{ user_name }}</span>{% endif %}
-          {% if user_company %}<span class="cover-org">{{ user_company }}</span>{% endif %}
-        </div>
-        {% endif %}
-        <div class="cover-meta-block">
-          <span class="cover-label">Generated</span>
-          <span class="cover-value">{{ meta.generated_at }}</span>
-        </div>
-        <span class="cover-confidential">Confidential — prepared by Clario</span>
-      </div>
-    </div>
-
-  </div>
-</div>
-
 
 <!-- =====================================================================
      PAGE 1 — AT A GLANCE

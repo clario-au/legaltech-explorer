@@ -1150,24 +1150,23 @@ def merge_report_pdfs(dynamic_bytes: bytes) -> bytes:
     """Merge V3 static pages with dynamic pages into a 12-page PDF.
 
     Dynamic PDF page order (from report.html):
-      d[0]  Personalised cover  (new — replaces static cover)
-      d[1]  At a glance
-      d[2]  Overview table
-      d[3]  Tool 1 detail
-      d[4]  Tool 2 detail
-      d[5]  Tool 3 detail
+      d[0]  At a glance
+      d[1]  Overview table
+      d[2]  Tool 1 detail
+      d[3]  Tool 2 detail
+      d[4]  Tool 3 detail
 
     Final merged page order:
-      1  Cover                  (dynamic[0] — personalised)
+      1  Cover                  (static[0])
       2  About the Navigator    (static[1])
-      3  At a glance            (dynamic[1])
+      3  At a glance            (dynamic[0])
       4  Key Considerations     (static[2])
       5  How to use this report (static[3])
       6  Section divider        (static[4])
-      7  Overview table         (dynamic[2])
-      8  Tool 1 detail          (dynamic[3])
-      9  Tool 2 detail          (dynamic[4])
-     10  Tool 3 detail          (dynamic[5])
+      7  Overview table         (dynamic[1])
+      8  Tool 1 detail          (dynamic[2])
+      9  Tool 2 detail          (dynamic[3])
+     10  Tool 3 detail          (dynamic[4])
      11  Next steps             (static[5])
      12  Back cover             (static[6])
     """
@@ -1178,13 +1177,13 @@ def merge_report_pdfs(dynamic_bytes: bytes) -> bytes:
     s = PdfReader(static_path)
     d = PdfReader(io.BytesIO(dynamic_bytes))
 
-    writer.add_page(d.pages[0])   # 1  Cover (dynamic — personalised)
+    writer.add_page(s.pages[0])   # 1  Cover (static)
     writer.add_page(s.pages[1])   # 2  About Navigator
-    writer.add_page(d.pages[1])   # 3  At a glance
+    writer.add_page(d.pages[0])   # 3  At a glance
     writer.add_page(s.pages[2])   # 4  Key Considerations
     writer.add_page(s.pages[3])   # 5  How to use
     writer.add_page(s.pages[4])   # 6  Section divider
-    for i in range(2, len(d.pages)):  # 7-10  Overview + tool detail pages
+    for i in range(1, len(d.pages)):  # 7-10  Overview + tool detail pages
         writer.add_page(d.pages[i])
     writer.add_page(s.pages[5])   # 11 Next steps
     writer.add_page(s.pages[6])   # 12 Back cover
