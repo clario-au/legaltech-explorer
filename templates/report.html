@@ -338,9 +338,145 @@
     .tool-data-table td:last-child {
       color: #1e2535;
     }
+
+    /* =====================================================================
+       COVER PAGE — dynamic, personalised
+    ===================================================================== */
+    .cover-page {
+      background: #0f2040;
+      display: flex;
+      flex-direction: row;
+      padding: 0;
+    }
+    .cover-accent-bar {
+      width: 8mm;
+      background: #2EA7A7;
+      flex-shrink: 0;
+    }
+    .cover-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 14mm 14mm 10mm 14mm;
+    }
+    .cover-top {
+      flex-shrink: 0;
+    }
+    .cover-brand {
+      font-size: 13pt;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .cover-brand-sub {
+      font-size: 9pt;
+      color: #7a9ab8;
+      margin-top: 1.5mm;
+      letter-spacing: 0.03em;
+    }
+    .cover-center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .cover-title {
+      font-size: 34pt;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.15;
+      margin-bottom: 3mm;
+    }
+    .cover-subtitle {
+      font-size: 14pt;
+      font-weight: 400;
+      color: #2EA7A7;
+      letter-spacing: 0.04em;
+    }
+    .cover-bottom {
+      flex-shrink: 0;
+    }
+    .cover-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.15);
+      margin-bottom: 5mm;
+    }
+    .cover-meta {
+      display: flex;
+      align-items: flex-start;
+      gap: 12mm;
+    }
+    .cover-meta-block {
+      display: flex;
+      flex-direction: column;
+      gap: 1mm;
+    }
+    .cover-label {
+      font-size: 7pt;
+      color: #7a9ab8;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+    }
+    .cover-value {
+      font-size: 10pt;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .cover-org {
+      font-size: 9pt;
+      color: #a8c4d8;
+      margin-top: 0.5mm;
+    }
+    .cover-confidential {
+      font-size: 7.5pt;
+      color: rgba(255,255,255,0.25);
+      margin-left: auto;
+      align-self: flex-end;
+    }
   </style>
 </head>
 <body>
+
+<!-- =====================================================================
+     COVER PAGE — personalised dynamic cover (replaces static cover[0])
+===================================================================== -->
+<div class="page cover-page">
+  <div class="cover-accent-bar"></div>
+  <div class="cover-body">
+
+    <div class="cover-top">
+      <div class="cover-brand">Clario</div>
+      <div class="cover-brand-sub">Legal Technology Services</div>
+    </div>
+
+    <div class="cover-center">
+      <div class="cover-title">Legal Tech<br>Navigator</div>
+      <div class="cover-subtitle">Snapshot Report</div>
+    </div>
+
+    <div class="cover-bottom">
+      <div class="cover-divider"></div>
+      <div class="cover-meta">
+        {% if user_name or user_company %}
+        <div class="cover-meta-block">
+          <span class="cover-label">Prepared for</span>
+          {% if user_name %}<span class="cover-value">{{ user_name }}</span>{% endif %}
+          {% if user_company %}<span class="cover-org">{{ user_company }}</span>{% endif %}
+        </div>
+        {% endif %}
+        <div class="cover-meta-block">
+          <span class="cover-label">Generated</span>
+          <span class="cover-value">{{ meta.generated_at }}</span>
+        </div>
+        <span class="cover-confidential">Confidential — prepared by Clario</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 
 <!-- =====================================================================
      PAGE 1 — AT A GLANCE

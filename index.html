@@ -4350,6 +4350,22 @@ void main(){
             <input type="email" id="signUpEmail" name="email" required autocomplete="email">
           </div>
 
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="auth-form-group" style="margin-bottom:0">
+              <label for="signUpFirstName">First Name <span style="color:#6b7280;font-weight:400;font-size:12px">(optional)</span></label>
+              <input type="text" id="signUpFirstName" name="firstName" autocomplete="given-name">
+            </div>
+            <div class="auth-form-group" style="margin-bottom:0">
+              <label for="signUpLastName">Last Name <span style="color:#6b7280;font-weight:400;font-size:12px">(optional)</span></label>
+              <input type="text" id="signUpLastName" name="lastName" autocomplete="family-name">
+            </div>
+          </div>
+
+          <div class="auth-form-group">
+            <label for="signUpCompany">Company / Organisation <span style="color:#6b7280;font-weight:400;font-size:12px">(optional)</span></label>
+            <input type="text" id="signUpCompany" name="company" autocomplete="organization">
+          </div>
+
           <div class="auth-form-group">
             <label for="signUpPassword">Password</label>
             <div class="password-input-wrapper">
@@ -4538,6 +4554,22 @@ void main(){
       <p class="subtitle">Set your password to complete registration</p>
 
       <form id="setPasswordForm">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="auth-form-group" style="margin-bottom:0">
+            <label for="setFirstName">First Name <span style="color:#9aa3b8;font-weight:400;font-size:12px">(optional)</span></label>
+            <input type="text" id="setFirstName" name="firstName" autocomplete="given-name">
+          </div>
+          <div class="auth-form-group" style="margin-bottom:0">
+            <label for="setLastName">Last Name <span style="color:#9aa3b8;font-weight:400;font-size:12px">(optional)</span></label>
+            <input type="text" id="setLastName" name="lastName" autocomplete="family-name">
+          </div>
+        </div>
+
+        <div class="auth-form-group">
+          <label for="setCompany">Company / Organisation <span style="color:#9aa3b8;font-weight:400;font-size:12px">(optional)</span></label>
+          <input type="text" id="setCompany" name="company" autocomplete="organization">
+        </div>
+
         <div class="auth-form-group">
           <label for="setNewPassword">Password</label>
           <div class="password-input-wrapper">
@@ -4975,7 +5007,10 @@ void main(){
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email: document.getElementById('signUpEmail').value,
-            password
+            password,
+            first_name: document.getElementById('signUpFirstName').value.trim(),
+            last_name: document.getElementById('signUpLastName').value.trim(),
+            company: document.getElementById('signUpCompany').value.trim()
           })
         });
 
@@ -5205,6 +5240,21 @@ void main(){
         const result = await response.json();
 
         if (response.ok) {
+          // Optionally save name/company if provided
+          const firstName = (document.getElementById('setFirstName')?.value || '').trim();
+          const lastName  = (document.getElementById('setLastName')?.value || '').trim();
+          const company   = (document.getElementById('setCompany')?.value || '').trim();
+          if (firstName || lastName || company) {
+            try {
+              await fetch('/auth/update-profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ first_name: firstName, last_name: lastName, company })
+              });
+            } catch (_) {}
+          }
+
           successDiv.textContent = 'Account setup complete! Redirecting...';
           successDiv.style.display = 'block';
 

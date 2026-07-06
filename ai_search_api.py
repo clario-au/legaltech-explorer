@@ -26,7 +26,7 @@ from pdf_renderer import render_pdf
 # Import Supabase authentication
 from supabase_auth import (
     sign_in, sign_out, sign_up, get_user_from_token, refresh_session,
-    request_password_reset, update_password, resend_verification,
+    request_password_reset, update_password, update_user_profile, resend_verification,
     admin_create_user, admin_invite_user, admin_set_user_status,
     admin_list_users, is_configured as supabase_configured, supabase_admin
 )
@@ -348,6 +348,9 @@ class RegisterRequest(BaseModel):
 class SignUpRequest(BaseModel):
     email: str
     password: str
+    first_name: Optional[str] = ""
+    last_name: Optional[str] = ""
+    company: Optional[str] = ""
 
 class InviteRequest(BaseModel):
     email: str
@@ -774,7 +777,12 @@ async def signup(req: SignUpRequest, request: Request):
     if len(req.password) < 8:
         raise HTTPException(status_code=400, detail="Password must be at least 8 characters")
 
-    result = sign_up(req.email, req.password)
+    result = sign_up(
+        req.email, req.password,
+        first_name=req.first_name or "",
+        last_name=req.last_name or "",
+        company=req.company or "",
+    )
 
     if "error" in result:
         error = result["error"]
@@ -804,6 +812,25 @@ async def resend_verification_endpoint(req: ResendVerificationRequest, request: 
     if "error" in result:
         raise HTTPException(status_code=400, detail=result["error"])
     return {"success": True, "message": "Verification email resent. Please check your inbox."}
+
+
+class UpdateProfileRequest(BaseModel):
+    first_name: Optional[str] = ""
+    last_name: Optional[str] = ""
+    company: Optional[str] = ""
+
+@app.post("/auth/update-profile")
+async def update_profile_endpoint(req: UpdateProfileRequest, user: dict = Depends(require_auth)):
+    """Update the authenticated user's name and company in Supabase user_metadata."""
+    result = update_user_profile(
+        user["id"],
+        first_name=req.first_name or "",
+        last_name=req.last_name or "",
+        company=req.company or "",
+    )
+    if "error" in result:
+        raise HTTPException(status_code=400, detail=result["error"])
+    return {"success": True}
 
 
 class UpdatePasswordRequest(BaseModel):
@@ -1120,19 +1147,27 @@ def get_structured_comparison(tools: List[Dict[str, Any]]) -> Dict:
 
 
 def merge_report_pdfs(dynamic_bytes: bytes) -> bytes:
-    """Merge V3 static pages with 5 dynamic pages into a 12-page PDF.
+    """Merge V3 static pages with dynamic pages into a 12-page PDF.
 
-    Final page order:
-      1  Cover                  (static[0])
+    Dynamic PDF page order (from report.html):
+      d[0]  Personalised cover  (new — replaces static cover)
+      d[1]  At a glance
+      d[2]  Overview table
+      d[3]  Tool 1 detail
+      d[4]  Tool 2 detail
+      d[5]  Tool 3 detail
+
+    Final merged page order:
+      1  Cover                  (dynamic[0] — personalised)
       2  About the Navigator    (static[1])
-      3  At a glance            (dynamic[0])
+      3  At a glance            (dynamic[1])
       4  Key Considerations     (static[2])
       5  How to use this report (static[3])
       6  Section divider        (static[4])
-      7  Overview table         (dynamic[1])
-      8  Tool 1 detail          (dynamic[2])
-      9  Tool 2 detail          (dynamic[3])
-     10  Tool 3 detail          (dynamic[4])
+      7  Overview table         (dynamic[2])
+      8  Tool 1 detail          (dynamic[3])
+      9  Tool 2 detail          (dynamic[4])
+     10  Tool 3 detail          (dynamic[5])
      11  Next steps             (static[5])
      12  Back cover             (static[6])
     """
@@ -1143,13 +1178,13 @@ def merge_report_pdfs(dynamic_bytes: bytes) -> bytes:
     s = PdfReader(static_path)
     d = PdfReader(io.BytesIO(dynamic_bytes))
 
-    writer.add_page(s.pages[0])   # 1  Cover
+    writer.add_page(d.pages[0])   # 1  Cover (dynamic — personalised)
     writer.add_page(s.pages[1])   # 2  About Navigator
-    writer.add_page(d.pages[0])   # 3  At a glance
+    writer.add_page(d.pages[1])   # 3  At a glance
     writer.add_page(s.pages[2])   # 4  Key Considerations
     writer.add_page(s.pages[3])   # 5  How to use
     writer.add_page(s.pages[4])   # 6  Section divider
-    for i in range(1, len(d.pages)):  # 7-10  Overview + tool detail pages
+    for i in range(2, len(d.pages)):  # 7-10  Overview + tool detail pages
         writer.add_page(d.pages[i])
     writer.add_page(s.pages[5])   # 11 Next steps
     writer.add_page(s.pages[6])   # 12 Back cover
@@ -1181,9 +1216,19 @@ async def report_preview(request: Request, user: dict = Depends(require_auth)):
          "Pricing": "Freemium", "Jurisdiction": "Australia / NZ", "Description": "Automated clause extraction and risk flagging for M&A and compliance workflows."},
     ]
     mock_meta = {"query": "contract review tools for in-house team", "generated_at": "2026-03-03"}
+    user_name = " ".join(filter(None, [user.get("first_name", ""), user.get("last_name", "")])).strip()
     return templates.TemplateResponse(
         "report.html",
-        {"request": request, "tools": mock_tools, "meta": mock_meta, "user": user}
+        {
+            "request": request,
+            "tools": mock_tools,
+            "meta": mock_meta,
+            "user": user,
+            "logos": [None, None, None],
+            "comparison": {"tools": []},
+            "user_name": user_name,
+            "user_company": user.get("company", ""),
+        }
     )
 
 
@@ -1200,9 +1245,15 @@ async def generate_report(req: ReportRequest, user: dict = Depends(require_auth)
         "generated_at": req.meta.generated_at or today,
     }
 
-    # Check cache — key is sorted vendor names + query
+    # Extract personalisation from the authenticated user
+    user_name = " ".join(filter(None, [
+        user.get("first_name", ""), user.get("last_name", "")
+    ])).strip()
+    user_company = user.get("company", "")
+
+    # Check cache — key scoped per user + tools + query so personalised covers don't collide
     tool_names = sorted(t.get('Vendor Name', '') for t in tools)
-    report_cache_key = f"report:{':'.join(tool_names)}:{meta['query']}"
+    report_cache_key = f"report:{user['id']}:{':'.join(tool_names)}:{meta['query']}"
     cached_pdf = cache_get(report_cache_key)
     if cached_pdf is not None:
         logger.info(f"[Cache] /report hit: {tool_names}")
@@ -1218,9 +1269,10 @@ async def generate_report(req: ReportRequest, user: dict = Depends(require_auth)
     # Get structured AI comparison (4 sections)
     comparison = get_structured_comparison(tools)
 
-    # Render dynamic pages 3 & 4 as HTML
+    # Render dynamic pages (cover + at-a-glance + overview + tool detail pages)
     html = templates.get_template("report.html").render(
-        request=None, tools=tools, meta=meta, logos=logos, comparison=comparison
+        request=None, tools=tools, meta=meta, logos=logos, comparison=comparison,
+        user_name=user_name, user_company=user_company,
     )
 
     try:
