@@ -1023,6 +1023,59 @@
     aside.left, aside.right{order:2} main{order:1}
   }
 
+  /* ====== MOBILE (≤767px) ====== */
+  @media (max-width:767px){
+    /* Compact single-line header */
+    .topbar{gap:8px;padding:10px 12px}
+    .topbar h1{font-size:14px;white-space:nowrap}
+    .topbar .brand{gap:6px}
+    .topbar .brand-logo{height:16px;padding:4px 7px}
+    .topbar .header-search{display:none !important} /* inline display:flex needs the override; Quick Search lives inside Filters on mobile */
+    .topbar .btn{padding:6px 10px;font-size:12px}
+    #landingMenuBtn{margin-left:0}
+
+    /* While a drawer is open, lift .wrap above the sticky header (z-index:20);
+       .wrap{z-index:1} otherwise caps its children below the header */
+    body.state-filters .wrap, body.state-right .wrap{z-index:70}
+
+    /* Filters: full-screen drawer instead of a panel pushed below the results */
+    body.state-filters aside.left{
+      position:fixed;inset:0;z-index:60;order:0;
+      background:var(--bg);
+      padding:14px;overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
+      max-height:none; /* .left caps at calc(100vh - 80px) which leaves a gap at the bottom */
+    }
+    body.state-filters aside.left .toolbar{position:sticky;top:0;z-index:2;background:var(--bg);padding:6px 0;margin:-6px 0 0}
+    body.state-filters aside.left .col-title{color:#cfe6e6}
+
+    /* Details: full-screen overlay instead of appearing below the fold */
+    body.state-right aside.right{
+      position:fixed;inset:0;z-index:60;order:0;
+      background:var(--bg);
+      padding:14px;overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
+      max-height:none; /* .right caps at calc(100vh - 80px) which leaves a gap at the bottom */
+    }
+    body.state-right aside.right .toolbar{position:sticky;top:0;z-index:2;background:var(--bg);padding:6px 0;margin:-6px 0 0}
+    body.state-right aside.right .col-title{color:#cfe6e6}
+    #expandRight{display:none} /* expand is meaningless when already full screen */
+
+    /* Compare overlay: inline background is transparent, which lets the app
+       content bleed through on small screens */
+    #compareOverlay{background:var(--bg) !important}
+
+    /* Details table: stack label above value so nothing clips off-screen */
+    #details table, #details tbody, #details tr, #details th, #details td{display:block;width:100%;box-sizing:border-box}
+    #details th{border-radius:8px 8px 0 0;border-bottom:none}
+    #details td{border-radius:0 0 8px 8px;margin-bottom:8px;word-break:break-word;overflow-wrap:anywhere}
+    #details td a{word-break:break-all}
+  }
+  @media (max-width:400px){
+    .topbar h1{display:none} /* logo alone identifies the brand; the full title doesn't fit beside the buttons */
+    #headerSignInBtn{white-space:nowrap}
+  }
+
   /* Scoring Modal Styles */
   .scoring-modal {
     position: fixed;
@@ -1483,7 +1536,7 @@
       </div>
       <span class="spacer"></span>
       <!-- Mini search bar -->
-      <div style="display:flex;align-items:center;background:#F5F7F8;border:1px solid var(--border);border-radius:999px;padding:4px 8px 4px 14px;gap:6px;width:min(280px,30vw)">
+      <div class="header-search" style="display:flex;align-items:center;background:#F5F7F8;border:1px solid var(--border);border-radius:999px;padding:4px 8px 4px 14px;gap:6px;width:min(280px,30vw)">
         <input id="headerSearchInput" type="search" placeholder="Search tools…" style="border:none;background:transparent;outline:none;font-size:13px;color:var(--text);width:100%;padding:0">
         <button id="headerSearchBtn" style="background:#2EA7A7;border:none;border-radius:999px;color:#fff;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">Go</button>
       </div>
