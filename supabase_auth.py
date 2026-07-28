@@ -36,7 +36,13 @@ def is_configured() -> bool:
 
 # ===== User Authentication =====
 
-def sign_up(email: str, password: str) -> dict:
+def sign_up(
+    email: str,
+    password: str,
+    first_name: str = "",
+    last_name: str = "",
+    company: str = "",
+) -> dict:
     """
     Sign up a new user with email and password
     Returns: {"user": {...}, "session": {...}} or {"error": "..."}
@@ -45,10 +51,16 @@ def sign_up(email: str, password: str) -> dict:
         return {"error": "Supabase not configured"}
 
     try:
-        response = supabase.auth.sign_up({
-            "email": email,
-            "password": password
-        })
+        payload: dict = {"email": email, "password": password}
+        user_meta = {k: v for k, v in {
+            "first_name": first_name,
+            "last_name": last_name,
+            "company": company,
+        }.items() if v}
+        if user_meta:
+            payload["options"] = {"data": user_meta}
+
+        response = supabase.auth.sign_up(payload)
 
         if response.user:
             return {
@@ -139,16 +151,40 @@ def get_user_from_token(access_token: str) -> Optional[dict]:
             if app_metadata.get("disabled"):
                 return None
 
+            user_meta = response.user.user_metadata or {}
             return {
                 "id": response.user.id,
                 "email": response.user.email,
                 "role": app_metadata.get("role", "user"),
-                "created_at": str(response.user.created_at)
+                "created_at": str(response.user.created_at),
+                "first_name": user_meta.get("first_name", ""),
+                "last_name": user_meta.get("last_name", ""),
+                "company": user_meta.get("company", ""),
             }
         return None
     except Exception as e:
         print(f"[Auth] Token validation error: {e}")
         return None
+
+
+def update_user_profile(user_id: str, first_name: str = "", last_name: str = "", company: str = "") -> dict:
+    """
+    Update user_metadata (name/company) for an existing user via the admin client.
+    Returns: {"success": True} or {"error": "..."}
+    """
+    if not supabase_admin:
+        return {"error": "Supabase admin not configured"}
+
+    try:
+        user_meta = {
+            "first_name": first_name,
+            "last_name": last_name,
+            "company": company,
+        }
+        supabase_admin.auth.admin.update_user_by_id(user_id, {"user_metadata": user_meta})
+        return {"success": True}
+    except Exception as e:
+        return {"error": str(e)}
 
 
 def refresh_session(refresh_token: str) -> dict:
