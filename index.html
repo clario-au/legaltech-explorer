@@ -4072,9 +4072,11 @@ void main(){
       inset: 0;
       z-index: 20000;
       display: none;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 20px;
+      overflow-y: auto;
     }
 
     .auth-modal.active {
@@ -4100,6 +4102,8 @@ void main(){
       z-index: 1;
       display: flex;
       overflow: hidden;
+      margin: auto 0;
+      flex-shrink: 0;
     }
 
     .auth-modal-benefits {
