@@ -1250,7 +1250,7 @@
     <section class="landing-hero">
       <div class="landing-hero-tagline">Australia's Legal Tech Database</div>
       <h1 class="landing-hero-headline">Find the right legal tech for your team</h1>
-      <p class="landing-hero-sub">Search 600+ tools curated for in-house legal teams in Australia. Compare, shortlist, and generate reports.</p>
+      <p class="landing-hero-sub">Search 590+ tools curated for in-house legal teams in Australia. Compare, shortlist, and generate reports.</p>
 
       <div class="landing-search-wrap">
         <textarea id="aiQuery" rows="3" placeholder="e.g. contract management software for a mid-size in-house team…"></textarea>
@@ -1318,7 +1318,7 @@
     <!-- About -->
     <section class="landing-about">
       <h2>Built for in-house legal teams in Australia</h2>
-      <p>The Legal Tech Navigator is a free resource by <a href="#">Aclaria</a> — a curated, searchable database of 600+ legal technology tools. We track AI capabilities, regional availability, pricing, and market adoption so you don't have to.</p>
+      <p>The Legal Tech Navigator is a free resource by <a href="#">Aclaria</a> — a curated, searchable database of 590+ legal technology tools. We track AI capabilities, regional availability, pricing, and market adoption so you don't have to.</p>
       <p class="data-updated-note" style="font-size:13px;color:#6b7280;margin-top:8px;">Database last updated: 6 October 2026. Research review: August–October 2026.</p>
     </section>
 
@@ -2119,8 +2119,11 @@
         var recVal = String(rec[key]||'').replace(/\.+$/,'').trim();
         var selValStr = String(val).replace(/\.+$/,'').trim();
         // Pricing Model: include tools with no pricing data (unknown = could match anything)
-        if(key === 'Pricing Model' && !recVal) continue;
-        if(recVal !== selValStr) return false;
+        if(key === 'Pricing Model'){
+          if(!recVal) continue;
+          var pricingModels = recVal.split(/[;,]+/).map(function(v){ return v.replace(/\.+$/,'').trim(); });
+          if(!pricingModels.includes(selValStr)) return false;
+        } else if(recVal !== selValStr) return false;
       }
     }
     return true;
