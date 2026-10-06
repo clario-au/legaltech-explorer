@@ -1,0 +1,23 @@
+name: Keep-alive ping
+
+# Daily hit against the live /tools endpoint. This endpoint queries Supabase
+# directly (not a cached/static route), so it both keeps the Render service
+# warm and counts as API activity against the Supabase project — preventing
+# the free-tier project from auto-pausing after 7 days of no activity.
+on:
+  schedule:
+    - cron: '0 3 * * *'  # daily at 03:00 UTC
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping /tools (touches Supabase + keeps Render warm)
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 https://legaltech-explorer.onrender.com/tools)
+          echo "Response code: $code"
+          if [ "$code" -ne 200 ]; then
+            echo "::warning::Keep-alive ping returned $code (expected 200)"
+            exit 1
+          fi
