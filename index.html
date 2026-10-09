@@ -2729,82 +2729,6 @@
     var name=document.createElement('div'); name.innerHTML='<div class="title">'+esc(rec.__display_name||'')+'</div>';
     top.appendChild(name);
 
-    // Add popularity breakdown with DYNAMIC WEIGHT RE-NORMALIZATION
-    var popScore = parseFloat(rec['popularity_score']) || 0;
-
-    // Define base weights for each component
-    var baseWeights = {
-      adoption: 0.30,
-      maturity: 0.20,
-      trends: 0.25,
-      ai: 0.10,
-      regions: 0.08,
-      completeness: 0.07
-    };
-
-    // Calculate component base scores (0-100)
-    var adoptionMap = {
-      'Market Leader / Standard':100,
-      'Mainstream / Proven':75,
-      'Growing Adoption':50,
-      'Emerging / Niche':25,
-      'Limited / Specialized':10
-    };
-    var adoptionBase = adoptionMap[rec['Adoption Level']]||null;
-
-    var maturityMap = {
-      'Enterprise-grade':100,
-      'Enterprise-Grade':100,
-      'Advanced':75,
-      'Intermediate':50,
-      'Quick Win':25
-    };
-    var maturityBase = maturityMap[rec['Maturity Entry Level']]||null;
-
-    var aiBase = (rec['AI Powered']==='Yes'||rec['AI Powered']==='Core Feature'?100:0);
-
-    var regionCount = rec['Regions Served']?(rec['Regions Served'].split(',').length):0;
-    var regionBase = regionCount > 0 ? Math.min(regionCount * 20, 100) : null;
-
-    var completeness = Object.keys(rec).filter(k=>rec[k]&&!/^_/.test(k)).length / Object.keys(rec).length;
-    var completenessBase = completeness > 0 ? completeness * 100 : null;
-
-    // Google Trends: ALWAYS included, defaults to 0 if no data (never null)
-    var trendsBase = parseFloat(rec['google_trends_score']) || 0;
-
-    // Build array of available components with their data
-    var components = [];
-    if(adoptionBase !== null) components.push({name:'Adoption Level', base:adoptionBase, baseWeight:baseWeights.adoption});
-    if(maturityBase !== null) components.push({name:'Maturity', base:maturityBase, baseWeight:baseWeights.maturity});
-    components.push({name:'Google Trends', base:trendsBase, baseWeight:baseWeights.trends}); // Always included (0 if no data)
-    components.push({name:'AI-Powered', base:aiBase, baseWeight:baseWeights.ai}); // Always included
-    if(regionBase !== null) components.push({name:'Regions Served', base:regionBase, baseWeight:baseWeights.regions});
-    if(completenessBase !== null) components.push({name:'Data Completeness', base:completenessBase, baseWeight:baseWeights.completeness});
-
-    // Calculate total available weight
-    var totalAvailableWeight = components.reduce(function(sum, c){ return sum + c.baseWeight; }, 0);
-
-    // Re-normalize weights to sum to 100%
-    components.forEach(function(c){
-      c.normalizedWeight = (c.baseWeight / totalAvailableWeight);
-      c.weightPercent = (c.normalizedWeight * 100).toFixed(0);
-    });
-
-    // Build breakdown HTML (Google Trends excluded from display only - still used in score)
-    var breakdownItems = '';
-    components.forEach(function(c){
-      if(c.name === 'Google Trends') return;
-      breakdownItems += '<div class="popularity-breakdown-item">'+
-        '<span class="popularity-breakdown-label">'+c.name+' ('+c.weightPercent+'%)</span>'+
-        '<span class="popularity-breakdown-value">'+c.base.toFixed(0)+'/100</span>'+
-        '</div>';
-    });
-
-    var breakdown = document.createElement('div');
-    breakdown.className = 'popularity-breakdown';
-    breakdown.innerHTML = '<div class="popularity-breakdown-header"><span>Navigator Score: '+popScore.toFixed(0)+'</span><span class="popularity-breakdown-toggle">▼</span></div>'+
-      '<div class="popularity-breakdown-content">'+breakdownItems+'</div>';
-
     var tbl=document.createElement('table'); tbl.style.width='100%'; tbl.style.borderCollapse='separate'; tbl.style.borderSpacing='0 8px';
     Object.keys(rec).forEach(function(k){
       if(/^_/.test(k) || /^__/.test(k)) return;
@@ -2823,20 +2747,7 @@
       } else { td.textContent=s; }
       tr.appendChild(td); tbl.appendChild(tr);
     });
-    details.innerHTML=''; details.appendChild(top); details.appendChild(breakdown);
-
-    // Add click handler for breakdown toggle
-    breakdown.querySelector('.popularity-breakdown-header').addEventListener('click', function(){
-      var content = breakdown.querySelector('.popularity-breakdown-content');
-      var toggle = breakdown.querySelector('.popularity-breakdown-toggle');
-      if(content.classList.contains('expanded')){
-        content.classList.remove('expanded');
-        toggle.textContent = '▼';
-      } else {
-        content.classList.add('expanded');
-        toggle.textContent = '▲';
-      }
-    });
+    details.innerHTML=''; details.appendChild(top);
 
     details.appendChild(tbl);
   }
