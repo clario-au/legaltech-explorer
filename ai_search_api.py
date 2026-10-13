@@ -17,6 +17,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, RedirectResponse, JSONResponse, HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from starlette.concurrency import run_in_threadpool
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -31,8 +32,8 @@ from supabase_auth import (
     admin_list_users, is_configured as supabase_configured, supabase_admin
 )
 
-# Import usage tracking (still using PostgreSQL)
-from auth_models import log_usage, get_user_stats, get_all_users_stats, set_user_status
+# Usage tracking (Supabase usage_logs table)
+from usage_store import log_usage, get_user_stats, get_usage_counts
 
 # =========================
 # Boot + OpenAI client
@@ -48,12 +49,17 @@ app = FastAPI(title="Legal-Tech Filter API", version="0.2.0", docs_url=None, red
 # Jinja2 templates for report generation
 templates = Jinja2Templates(directory="templates")
 
-# CORS — restrict to known origins only
-ALLOWED_ORIGINS = [
+# CORS — restrict to known origins only.
+# The frontend is served from the same origin, so this only matters for other callers.
+# Extra origins (e.g. local dev) can be added via comma-separated EXTRA_CORS_ORIGINS.
+SITE_URL = os.getenv("SITE_URL", "https://legaltech-explorer.onrender.com").rstrip("/")
+ALLOWED_ORIGINS = sorted({
+    SITE_URL,
+    "https://navigator.aclaria.com.au",
     "https://legaltech-explorer.onrender.com",
-    "http://127.0.0.1:5500",   # local dev (VS Code Live Server)
-    "http://localhost:5500",
-]
+    "https://legaltech-explorer-staging449.onrender.com",
+    *[o.strip().rstrip("/") for o in os.getenv("EXTRA_CORS_ORIGINS", "").split(",") if o.strip()],
+})
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
@@ -179,10 +185,19 @@ LOGIN_LOCKOUT_WINDOW = 900  # 15 minutes
 
 
 def get_client_ip(request: Request) -> str:
-    """Extract client IP, respecting X-Forwarded-For from reverse proxies."""
+    """
+    Extract the real client IP behind Render's Cloudflare proxy.
+
+    CF-Connecting-IP is set (and overwritten) by Cloudflare, so clients cannot forge it.
+    Failing that, use the RIGHTMOST X-Forwarded-For entry: that one is appended by our
+    proxy, whereas everything to its left is client-supplied and trivially spoofed.
+    """
+    cf_ip = request.headers.get("CF-Connecting-IP")
+    if cf_ip:
+        return cf_ip.strip()
     forwarded = request.headers.get("X-Forwarded-For")
     if forwarded:
-        return forwarded.split(",")[0].strip()
+        return forwarded.split(",")[-1].strip()
     return request.client.host if request.client else "unknown"
 
 
@@ -360,7 +375,7 @@ class InviteRequest(BaseModel):
 # =========================
 # Authentication Dependency (Supabase)
 # =========================
-async def get_current_user(
+def get_current_user(
     access_token: Optional[str] = Cookie(None, alias="sb_access_token"),
     authorization: Optional[str] = Header(None)
 ):
@@ -378,19 +393,19 @@ async def get_current_user(
     user = get_user_from_token(token)
     return user
 
-async def require_auth(user: Optional[dict] = Depends(get_current_user)):
+def require_auth(user: Optional[dict] = Depends(get_current_user)):
     """Dependency that requires authentication"""
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
     return user
 
-async def require_admin(user: dict = Depends(require_auth)):
+def require_admin(user: dict = Depends(require_auth)):
     """Dependency that requires admin role"""
     if user.get('role') != 'admin':
         raise HTTPException(status_code=403, detail="Admin access required")
     return user
 
-async def rate_limit_dependency(user: dict = Depends(require_auth)):
+def rate_limit_dependency(user: dict = Depends(require_auth)):
     """Dependency to enforce rate limiting on authenticated endpoints"""
     if not check_rate_limit(user['email']):
         raise HTTPException(
@@ -575,11 +590,11 @@ def call_openai_json(system_msg: str, user_msg: str) -> Dict[str, Any]:
 
 # Helper function for cookie settings
 def get_cookie_secure():
-    """Return True if running in production (HTTPS), False for development (HTTP)"""
-    return os.getenv("ENVIRONMENT", "development") == "production"
+    """Secure cookies everywhere except an explicit local-development run over plain HTTP."""
+    return os.getenv("ENVIRONMENT", "production") != "development"
 
 @app.post("/auth/login")
-async def login(req: LoginRequest, response: Response, request: Request):
+def login(req: LoginRequest, response: Response, request: Request):
     """Login endpoint - authenticates user via Supabase"""
     ip = get_client_ip(request)
     if not check_auth_rate_limit(ip, "login"):
@@ -629,13 +644,16 @@ async def login(req: LoginRequest, response: Response, request: Request):
     }
 
 @app.post("/auth/logout")
-async def logout(
+def logout(
     response: Response,
-    access_token: Optional[str] = Cookie(None, alias="sb_access_token")
+    access_token: Optional[str] = Cookie(None, alias="sb_access_token"),
+    refresh_token: Optional[str] = Cookie(None, alias="sb_refresh_token"),
 ):
-    """Logout endpoint - clears session cookies"""
-    if access_token:
-        sign_out(access_token)
+    """Logout endpoint - revokes this device's session and clears the cookies"""
+    if access_token or refresh_token:
+        result = sign_out(access_token, refresh_token)
+        if "error" in result:
+            logger.warning(f"[Auth] Session revoke failed on logout: {result['error']}")
 
     response.delete_cookie(key="sb_access_token")
     response.delete_cookie(key="sb_refresh_token")
@@ -643,7 +661,7 @@ async def logout(
     return {"success": True}
 
 @app.get("/auth/me")
-async def get_me(user: Optional[dict] = Depends(get_current_user)):
+def get_me(user: Optional[dict] = Depends(get_current_user)):
     """Get current user info"""
     if not user:
         return {"authenticated": False}
@@ -658,7 +676,7 @@ async def get_me(user: Optional[dict] = Depends(get_current_user)):
     }
 
 @app.post("/auth/refresh")
-async def refresh_token_endpoint(
+def refresh_token_endpoint(
     response: Response,
     request: Request,
     refresh_token: Optional[str] = Cookie(None, alias="sb_refresh_token")
@@ -724,7 +742,7 @@ async def exchange_token_endpoint(req: Request, response: Response):
     if not access_token:
         raise HTTPException(status_code=400, detail="access_token required")
 
-    user = get_user_from_token(access_token)
+    user = await run_in_threadpool(get_user_from_token, access_token)
     if not user:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
 
@@ -749,7 +767,7 @@ async def exchange_token_endpoint(req: Request, response: Response):
     return {"success": True}
 
 @app.post("/auth/forgot-password")
-async def forgot_password(req: LoginRequest, request: Request):
+def forgot_password(req: LoginRequest, request: Request):
     """Request password reset email"""
     ip = get_client_ip(request)
     if not check_auth_rate_limit(ip, "forgot-password"):
@@ -759,8 +777,7 @@ async def forgot_password(req: LoginRequest, request: Request):
         raise HTTPException(status_code=429, detail="Too many reset requests. Please wait before trying again.")
 
     # Get the site URL for redirect - redirect to main page, frontend handles token
-    site_url = os.getenv("SITE_URL", "https://legaltech-explorer.onrender.com")
-    redirect_url = site_url.rstrip('/') + '/auth/callback'
+    redirect_url = SITE_URL + '/auth/callback'
 
     result = request_password_reset(req.email, redirect_url)
 
@@ -768,7 +785,7 @@ async def forgot_password(req: LoginRequest, request: Request):
     return {"success": True, "message": "If an account exists, a reset email has been sent"}
 
 @app.post("/auth/signup")
-async def signup(req: SignUpRequest, request: Request):
+def signup(req: SignUpRequest, request: Request):
     """Public sign-up — Supabase sends a verification email automatically"""
     ip = get_client_ip(request)
     if not check_auth_rate_limit(ip, "signup"):
@@ -800,7 +817,7 @@ class ResendVerificationRequest(BaseModel):
     email: str
 
 @app.post("/auth/resend-verification")
-async def resend_verification_endpoint(req: ResendVerificationRequest, request: Request):
+def resend_verification_endpoint(req: ResendVerificationRequest, request: Request):
     """Resend email verification"""
     ip = get_client_ip(request)
     if not check_auth_rate_limit(ip, "resend-verification"):
@@ -820,7 +837,7 @@ class UpdateProfileRequest(BaseModel):
     company: Optional[str] = ""
 
 @app.post("/auth/update-profile")
-async def update_profile_endpoint(req: UpdateProfileRequest, user: dict = Depends(require_auth)):
+def update_profile_endpoint(req: UpdateProfileRequest, user: dict = Depends(require_auth)):
     """Update the authenticated user's name and company in Supabase user_metadata."""
     result = update_user_profile(
         user["id"],
@@ -837,7 +854,7 @@ class UpdatePasswordRequest(BaseModel):
     password: str
 
 @app.post("/auth/update-password")
-async def update_password_endpoint(
+def update_password_endpoint(
     req: UpdatePasswordRequest,
     request: Request,
     token: Optional[str] = Cookie(None, alias="sb_access_token")
@@ -861,14 +878,12 @@ async def update_password_endpoint(
 # Admin Routes (User Management via Supabase)
 # =========================
 @app.post("/admin/invite")
-async def create_invite_endpoint(req: InviteRequest, admin: dict = Depends(require_admin)):
+def create_invite_endpoint(req: InviteRequest, admin: dict = Depends(require_admin)):
     """Admin endpoint to send invite email via Supabase"""
-    site_url = os.getenv("SITE_URL", "https://legaltech-explorer.onrender.com")
-
     result = admin_invite_user(
         email=req.email,
         role=req.role,
-        redirect_url=site_url
+        redirect_url=SITE_URL
     )
 
     if "error" in result:
@@ -881,7 +896,7 @@ async def create_invite_endpoint(req: InviteRequest, admin: dict = Depends(requi
     }
 
 @app.post("/admin/create-user")
-async def create_user_endpoint(req: LoginRequest, admin: dict = Depends(require_admin)):
+def create_user_endpoint(req: LoginRequest, admin: dict = Depends(require_admin)):
     """Admin endpoint to create user directly with password"""
     result = admin_create_user(
         email=req.email,
@@ -898,13 +913,23 @@ async def create_user_endpoint(req: LoginRequest, admin: dict = Depends(require_
     }
 
 @app.get("/admin/users")
-async def list_users_endpoint(admin: dict = Depends(require_admin)):
-    """Admin endpoint to list all users with usage statistics"""
-    users = get_all_users_stats()
+def list_users_endpoint(admin: dict = Depends(require_admin)):
+    """Admin endpoint to list all Supabase users with usage statistics"""
+    result = admin_list_users()
+    if "error" in result:
+        raise HTTPException(status_code=502, detail="Failed to load users")
+    counts = get_usage_counts()
+    users = [
+        {**u,
+         "total_requests": (counts.get(u["email"]) or {}).get("total_requests", 0),
+         "last_request": (counts.get(u["email"]) or {}).get("last_request")}
+        for u in result["users"]
+    ]
+    users.sort(key=lambda u: u["total_requests"], reverse=True)
     return {"users": users}
 
 @app.get("/admin/users/{email}/stats")
-async def get_user_stats_endpoint(email: str, admin: dict = Depends(require_admin)):
+def get_user_stats_endpoint(email: str, admin: dict = Depends(require_admin)):
     """Admin endpoint to get detailed statistics for a specific user"""
     stats = get_user_stats(email)
     return stats
@@ -913,20 +938,19 @@ class UserStatusRequest(BaseModel):
     status: str  # 'active' or 'disabled'
 
 @app.post("/admin/users/{email}/status")
-async def set_user_status_endpoint(email: str, req: UserStatusRequest, admin: dict = Depends(require_admin)):
+def set_user_status_endpoint(email: str, req: UserStatusRequest, admin: dict = Depends(require_admin)):
     """Admin endpoint to enable or disable a user account"""
     if req.status not in ['active', 'disabled']:
         raise HTTPException(status_code=400, detail="Status must be 'active' or 'disabled'")
 
-    success = set_user_status(email, req.status)
-    if not success:
+    # Supabase app_metadata is the source of truth: get_user_from_token rejects
+    # disabled users on every request, even with a live session
+    result = admin_set_user_status(email, req.status)
+    if result.get("not_found"):
         raise HTTPException(status_code=404, detail="User not found")
-
-    # Mirror the status to Supabase app_metadata so get_user_from_token
-    # enforces it on every authenticated request, even with a live session
-    sb_result = admin_set_user_status(email, req.status)
-    if "error" in sb_result:
-        print(f"[Auth] Warning: failed to sync status to Supabase for {email}: {sb_result['error']}")
+    if "error" in result:
+        logger.error(f"[Admin] Failed to set status for {email}: {result['error']}")
+        raise HTTPException(status_code=502, detail="Failed to update user status")
 
     return {
         "success": True,
@@ -938,7 +962,7 @@ async def set_user_status_endpoint(email: str, req: UserStatusRequest, admin: di
 # Public Routes
 # =========================
 @app.get("/")
-async def root(user: Optional[dict] = Depends(get_current_user)):
+async def root():
     """Serve index.html - with optional authentication"""
     response = FileResponse("index.html")
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
@@ -983,20 +1007,40 @@ def serve_updated_csv(user: dict = Depends(require_auth)):
     response.headers["Expires"] = "0"
     return response
 
+# Columns sent to the browser. Never select "*": that includes the embedding
+# vectors (~12 MB for the full table) which are only needed server-side.
+TOOL_COLUMNS = [
+    "Vendor Name", "Vendor Overview", "Product Name", "Product Description",
+    "Legal Functionality", "Functionality Sub-Category", "Main problem solved",
+    "Primary User Segment", "Maturity Entry Level", "Regions Served", "AI Powered",
+    "AI Platform Type", "Hosting Location", "Pricing Model",
+    "Demo / Proof of Concept Available", "Adoption Level", "Ease of Purchase",
+    "Deployment Model", "Industry Focus", "Languages Supported", "HQ",
+    "Office Locations", "Hosting Provider", "ISO Certifications",
+    "Security & Compliance Certifications", "Approx. Price Range (AUD)",
+    "Customer Reviews", "Customer Feedback Rating", "Vendor Website",
+    "Vendor Contact Details", "popularity_score", "google_trends_score",
+]
+TOOLS_SELECT = ",".join(f'"{c}"' for c in TOOL_COLUMNS)
+CACHE_TTL_TOOLS = 60 * 10  # 10 minutes — tool data only changes via the data pipeline
+
 @app.get("/tools")
-def get_tools(user: Optional[dict] = Depends(get_current_user)):
+def get_tools():
     """Return all legal tools from Supabase as JSON. Public endpoint — no auth required."""
     if not supabase_admin:
         raise HTTPException(status_code=503, detail="Database not configured")
+    cached = cache_get("tools")
+    if cached is not None:
+        return JSONResponse(content=cached)
     try:
-        response = supabase_admin.table("legal_tools").select("*").execute()
-        # Strip embedding vectors (server-side only) and resolve logo URLs
-        tools = []
-        for t in response.data:
-            tool = {k: v for k, v in t.items() if k != "embedding"}
-            tool["__logo_url"] = get_logo_url(t.get("Vendor Name", ""))
-            tools.append(tool)
-        return JSONResponse(content={"tools": tools})
+        response = supabase_admin.table("legal_tools").select(TOOLS_SELECT).execute()
+        tools = [
+            {**t, "__logo_url": get_logo_url(t.get("Vendor Name", ""))}
+            for t in response.data
+        ]
+        payload = {"tools": tools}
+        cache_set("tools", payload, ttl=CACHE_TTL_TOOLS)
+        return JSONResponse(content=payload)
     except Exception as e:
         logger.error(f"[Tools] Failed to fetch tools from Supabase: {e}")
         raise HTTPException(status_code=500, detail="Failed to load tools")
@@ -1046,6 +1090,8 @@ def get_logo_url(vendor_name: str) -> Optional[str]:
 
 def get_logo_b64(vendor_name: str) -> Optional[str]:
     """Load a vendor logo from disk and return a base64 data URI, or None."""
+    # vendor_name comes from the client: keep it to a bare filename inside logos/
+    vendor_name = os.path.basename(str(vendor_name or "").replace("\\", "/"))
     name_raw = re.sub(r'\s+', '', vendor_name)          # strip whitespace only
     name_slug = re.sub(r'[^a-z0-9]', '', vendor_name.lower())  # lowercase alphanumeric
     candidates = []
@@ -1203,7 +1249,7 @@ class ReportRequest(BaseModel):
 
 
 @app.get("/report/preview", response_class=HTMLResponse)
-async def report_preview(request: Request, user: dict = Depends(require_auth)):
+def report_preview(request: Request, user: dict = Depends(require_auth)):
     """Preview the report as HTML in the browser — for fast iteration during development."""
     # Phase 1: mock data only. Replace with real data in Phase 3.
     mock_tools = [
@@ -1240,7 +1286,7 @@ async def generate_report(req: ReportRequest, user: dict = Depends(require_auth)
     tools = req.tools[:3]
     today = datetime.date.today().isoformat()
     meta = {
-        "query": clean_query_text(req.meta.query or ""),
+        "query": await run_in_threadpool(clean_query_text, req.meta.query or ""),
         "generated_at": req.meta.generated_at or today,
     }
 
@@ -1265,8 +1311,8 @@ async def generate_report(req: ReportRequest, user: dict = Depends(require_auth)
     # Load logos as base64 data URIs so Playwright doesn't need HTTP requests
     logos = [get_logo_b64(t.get('Vendor Name', '')) for t in tools]
 
-    # Get structured AI comparison (4 sections)
-    comparison = get_structured_comparison(tools)
+    # Get structured AI comparison (4 sections) — blocking OpenAI call, run off the event loop
+    comparison = await run_in_threadpool(get_structured_comparison, tools)
 
     # Render dynamic pages (cover + at-a-glance + overview + tool detail pages)
     html = templates.get_template("report.html").render(
@@ -1282,7 +1328,7 @@ async def generate_report(req: ReportRequest, user: dict = Depends(require_auth)
 
     # Merge: static pages 1,2 + dynamic pages 3,4 + static page 5
     try:
-        merged_bytes = merge_report_pdfs(dynamic_pdf_bytes)
+        merged_bytes = await run_in_threadpool(merge_report_pdfs, dynamic_pdf_bytes)
     except Exception as e:
         logger.error(f"[Report] PDF merge failed: {e}")
         merged_bytes = dynamic_pdf_bytes
@@ -1301,7 +1347,7 @@ class SearchRequest(BaseModel):
     limit: int = 25
 
 @app.post("/search")
-async def semantic_search(req: SearchRequest, user: dict = Depends(rate_limit_dependency)):
+def semantic_search(req: SearchRequest, user: dict = Depends(rate_limit_dependency)):
     """Semantic search using pgvector embeddings stored in Supabase."""
     if not supabase_admin:
         raise HTTPException(status_code=503, detail="Database not configured")
@@ -1342,7 +1388,7 @@ async def semantic_search(req: SearchRequest, user: dict = Depends(rate_limit_de
 
 
 @app.post("/query")
-async def generate_filters(req: Query, user: dict = Depends(rate_limit_dependency)):
+def generate_filters(req: Query, user: dict = Depends(rate_limit_dependency)):
     system_msg = (
         "You map natural-language legal-tech needs into structured filters for a database.\n"
         "Return ONLY a single JSON object (no markdown, no prose) using these EXACT field names when applicable:\n"
@@ -1400,7 +1446,7 @@ async def generate_filters(req: Query, user: dict = Depends(rate_limit_dependenc
         return JSONResponse(status_code=500, content={"error": "Query processing failed. Please try again."})
 
 @app.post("/summarize")
-async def summarize_comparison(req: ComparisonRequest, user: dict = Depends(rate_limit_dependency)):
+def summarize_comparison(req: ComparisonRequest, user: dict = Depends(rate_limit_dependency)):
     """
     Generate an AI summary comparing multiple legal tech tools.
     """

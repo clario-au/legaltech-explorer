@@ -5,7 +5,13 @@ Handles user authentication via Supabase Auth
 """
 import os
 from typing import Optional
+
+from dotenv import load_dotenv
+
+# Load .env before reading config (this module is imported before the app calls load_dotenv)
+load_dotenv()
 from supabase import create_client, Client
+from supabase.lib.client_options import ClientOptions
 
 # Supabase configuration
 SUPABASE_URL = os.getenv("SUPABASE_URL")
@@ -18,14 +24,27 @@ supabase: Optional[Client] = None
 # Admin client for server-side operations (bypasses RLS)
 supabase_admin: Optional[Client] = None
 
+# Server-side clients must never hold a user session: they are shared by every
+# request, so a stored session would leak between users (and be auto-refreshed
+# in the background, rotating that user's refresh token).
+def _stateless_options() -> ClientOptions:
+    return ClientOptions(auto_refresh_token=False, persist_session=False)
+
+
+def _auth_client() -> Client:
+    """Fresh anon client for calls that create a session (sign in/up, refresh)."""
+    return create_client(SUPABASE_URL, SUPABASE_ANON_KEY, options=_stateless_options())
+
+
 if SUPABASE_URL and SUPABASE_ANON_KEY:
-    supabase = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
+    # Shared client: only used for stateless calls such as get_user(jwt)
+    supabase = create_client(SUPABASE_URL, SUPABASE_ANON_KEY, options=_stateless_options())
     print("[Auth] Supabase client initialized")
 else:
     print("[Auth] Warning: Supabase credentials not found")
 
 if SUPABASE_URL and SUPABASE_SERVICE_KEY:
-    supabase_admin = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+    supabase_admin = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY, options=_stateless_options())
     print("[Auth] Supabase admin client initialized")
 
 
@@ -60,7 +79,7 @@ def sign_up(
         if user_meta:
             payload["options"] = {"data": user_meta}
 
-        response = supabase.auth.sign_up(payload)
+        response = _auth_client().auth.sign_up(payload)
 
         if response.user:
             return {
@@ -89,7 +108,7 @@ def sign_in(email: str, password: str) -> dict:
         return {"error": "Supabase not configured"}
 
     try:
-        response = supabase.auth.sign_in_with_password({
+        response = _auth_client().auth.sign_in_with_password({
             "email": email,
             "password": password
         })
@@ -117,17 +136,26 @@ def sign_in(email: str, password: str) -> dict:
         return {"error": error_msg}
 
 
-def sign_out(access_token: str) -> dict:
+def sign_out(access_token: Optional[str], refresh_token: Optional[str] = None) -> dict:
     """
-    Sign out a user
+    Revoke the caller's own session (this device only).
+    If the access token has expired, a still-valid refresh token is exchanged
+    for a fresh access token first so the session can still be revoked.
     Returns: {"success": True} or {"error": "..."}
     """
-    if not supabase:
+    if not supabase_admin:
         return {"error": "Supabase not configured"}
 
     try:
-        # Set the session before signing out
-        supabase.auth.sign_out()
+        if access_token and get_user_from_token(access_token) is None:
+            access_token = None
+        if not access_token and refresh_token:
+            refreshed = refresh_session(refresh_token)
+            access_token = (refreshed.get("session") or {}).get("access_token")
+        if not access_token:
+            return {"success": True}  # nothing left to revoke
+
+        supabase_admin.auth.admin.sign_out(access_token, "local")
         return {"success": True}
     except Exception as e:
         return {"error": str(e)}
@@ -196,7 +224,7 @@ def refresh_session(refresh_token: str) -> dict:
         return {"error": "Supabase not configured"}
 
     try:
-        response = supabase.auth.refresh_session(refresh_token)
+        response = _auth_client().auth.refresh_session(refresh_token)
 
         if response.session:
             return {
@@ -222,7 +250,7 @@ def resend_verification(email: str) -> dict:
         return {"error": "Supabase not configured"}
 
     try:
-        supabase.auth.resend({
+        _auth_client().auth.resend({
             "type": "signup",
             "email": email
         })
@@ -242,7 +270,7 @@ def request_password_reset(email: str, redirect_url: str) -> dict:
 
     try:
         print(f"[Auth] Requesting password reset for {email}, redirect to {redirect_url}")
-        supabase.auth.reset_password_email(
+        _auth_client().auth.reset_password_email(
             email,
             options={"redirect_to": redirect_url}
         )
@@ -269,29 +297,42 @@ def update_password(access_token: str, new_password: str) -> dict:
         if not user or not user.user:
             return {"error": "Invalid or expired session"}
 
-        # Update password using the admin client for reliability
-        if supabase_admin:
-            response = supabase_admin.auth.admin.update_user_by_id(
-                user.user.id,
-                {"password": new_password}
-            )
-            if response.user:
-                return {"success": True}
-            return {"error": "Failed to update password"}
-        else:
-            # Fallback to regular update (may not work without proper session)
-            response = supabase.auth.update_user({
-                "password": new_password
-            })
-            if response.user:
-                return {"success": True}
-            return {"error": "Failed to update password"}
+        if not supabase_admin:
+            return {"error": "Supabase admin not configured"}
+
+        response = supabase_admin.auth.admin.update_user_by_id(
+            user.user.id,
+            {"password": new_password}
+        )
+        if response.user:
+            return {"success": True}
+        return {"error": "Failed to update password"}
     except Exception as e:
         print(f"[Auth] Password update error: {e}")
         return {"error": str(e)}
 
 
 # ===== Admin Operations (Server-side only) =====
+
+ADMIN_PAGE_SIZE = 1000
+
+
+def _iter_all_users():
+    """Yield every Supabase user; list_users() alone only returns the first page (50)."""
+    page = 1
+    while True:
+        batch = supabase_admin.auth.admin.list_users(page=page, per_page=ADMIN_PAGE_SIZE)
+        yield from batch
+        if len(batch) < ADMIN_PAGE_SIZE:
+            return
+        page += 1
+
+
+def find_user_by_email(email: str):
+    """Return the Supabase user with this email (case-insensitive), or None."""
+    target = (email or "").strip().lower()
+    return next((u for u in _iter_all_users() if (u.email or "").lower() == target), None)
+
 
 def admin_create_user(email: str, password: str, role: str = "user") -> dict:
     """
@@ -378,15 +419,14 @@ def admin_list_users() -> dict:
         return {"error": "Supabase admin not configured"}
 
     try:
-        response = supabase_admin.auth.admin.list_users()
-
         users = []
-        for user in response:
+        for user in _iter_all_users():
             app_metadata = user.app_metadata or {}
             users.append({
                 "id": user.id,
                 "email": user.email,
                 "role": app_metadata.get("role", "user"),
+                "status": "disabled" if app_metadata.get("disabled") else "active",
                 "created_at": str(user.created_at),
                 "last_sign_in": str(user.last_sign_in_at) if user.last_sign_in_at else None,
                 "confirmed": user.email_confirmed_at is not None
@@ -411,11 +451,9 @@ def admin_set_user_status(email: str, status: str) -> dict:
         return {"error": "Status must be 'active' or 'disabled'"}
 
     try:
-        # Find the user by email
-        all_users = supabase_admin.auth.admin.list_users()
-        target = next((u for u in all_users if u.email == email), None)
+        target = find_user_by_email(email)
         if not target:
-            return {"error": "User not found in Supabase"}
+            return {"error": "User not found", "not_found": True}
 
         disabled = status == "disabled"
         # Preserve existing app_metadata fields while updating disabled flag
@@ -452,6 +490,5 @@ def admin_update_user_role(user_id: str, role: str) -> dict:
         return {"error": str(e)}
 
 
-# ===== Usage Tracking (Keep using PostgreSQL) =====
-# Usage tracking remains in auth_models.py using your Render PostgreSQL
-# This keeps your usage data separate from Supabase auth
+# ===== Usage Tracking =====
+# Usage logs live in the Supabase `usage_logs` table (see usage_store.py)

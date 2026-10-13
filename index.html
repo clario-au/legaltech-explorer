@@ -1649,7 +1649,8 @@
 
   <!-- libs -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-  <script src="/static/purify.min.js" integrity="sha384-OLBgp1GsljhM2TJ+sbHjaiH9txEUvgdDTAzHv2P24donTt6/529l+9Ua0vFImLlb" crossorigin="anonymous"></script>
+  <script src="/static/filter_utils.js?v=20261013"></script>
+  <script src="/static/purify.min.js" integrity="sha384-+VfUPEb0PdtChMwmBcBmykRMDd+v6D/oFmB3rZM/puCMDYcIvF968OimRh4KQY9a" crossorigin="anonymous"></script>
 
   <!-- === App logic === -->
   <script>
@@ -1750,19 +1751,19 @@
     { key: 'Functionality Sub-Category', group: 'Legal Functionality & Use Case', type: 'single' },
     { key: 'Main Problem Solved', group: 'Legal Functionality & Use Case', type: 'text' },
 
-    { key: 'Primary User Segment', group: 'Audience, Fit & Accessibility', type: 'single', values: ['Corporate legal','Private practice','Alternative Legal Service Providers (ALSPs)','Legal Operations Professionals','Contract Management Teams / Procurement','Compliance & Risk Teams','Litigation / Disputes Teams','Intellectual Property Teams.'] },
+    { key: 'Primary User Segment', group: 'Audience, Fit & Accessibility', type: 'single', values: ['Corporate legal','Private practice','Alternative Legal Service Providers (ALSPs)','Legal Operations Professionals','Contract Management Teams / Procurement','Compliance & Risk Teams','Litigation / Disputes Teams','Intellectual Property Teams','Government / Public Sector'] },
     { key: 'Industry Focus', group: 'Audience, Fit & Accessibility', type: 'single', values: ['Corporate','Government / Public Sector','Financial Services','Healthcare / Life Sciences','Education / Research','Energy / Resources','Professional Services','Other / Not Specified'] },
 
-    { key: 'Maturity Entry Level', group: 'AI Capabilities & Innovation', type: 'single', values: ['Experimental / early stage','Quick Win','Advanced','Enterprise-grade','Enterprise-Grade'] },
+    { key: 'Maturity Entry Level', group: 'AI Capabilities & Innovation', type: 'single', values: ['Experimental / early stage','Quick Win','Advanced','Enterprise-grade'] },
     { key: 'AI Powered', group: 'AI Capabilities & Innovation', type: 'single', values: ['Yes','No'] },
-    { key: 'AI Platform Type', group: 'AI Capabilities & Innovation', type: 'single', values: ['Large Language Model (LLM) Platforms','Predictive / Machine Learning (ML) Platforms','Natural Language Processing (NLP) / Text Analytics','Computer Vision & Document Recognition','Recommendation & Decision Support Systems','Conversational / Copilot Layer','AI Integration / Orchestration Layer','Domain-Specific or Proprietary AI Engines.'] },
-    { key: 'Deployment Model', group: 'AI Capabilities & Innovation', type: 'single', values: ['Cloud (SaaS)','Private Cloud','On-Premises','Hybrid','Desktop / Local Application.'] },
+    { key: 'AI Platform Type', group: 'AI Capabilities & Innovation', type: 'single', values: ['Large Language Model (LLM) Platforms','Predictive / Machine Learning (ML) Platforms','Natural Language Processing (NLP) / Text Analytics','Computer Vision & Document Recognition','Recommendation & Decision Support Systems','Conversational / Copilot Layer','AI Integration / Orchestration Layer','Domain-Specific or Proprietary AI Engines'] },
+    { key: 'Deployment Model', group: 'AI Capabilities & Innovation', type: 'single', values: ['Cloud (SaaS)','Private Cloud','On-Premises','Hybrid','Desktop / Local Application'] },
     { key: 'Hosting Location', group: 'AI Capabilities & Innovation', type: 'single', values: ['Australia','Asia-Pacific (ex-AU)','United States','Europe / UK','Multi-Region / Distributed Cloud','Customer-Hosted / Private Cloud'] },
     { key: 'Hosting Provider', group: 'AI Capabilities & Innovation', type: 'single', values: ['AWS','Azure','Google Cloud','Other'] },
 
-    { key: 'Security & Compliance Certifications', group: 'Security, Privacy & Trust', type: 'single', values: ['SOC 1 (Type I or II)','SOC 2 (Type I or II)','SOC 3','GDPR Compliance (EU)','CCPA Compliance (US)','HIPAA Compliance (US)','FedRAMP, Authorization (US)','IRAP Assessment (AU)','CSA STAR Certification','Cyber Essentials / Plus (UK).'] },
+    { key: 'Security & Compliance Certifications', group: 'Security, Privacy & Trust', type: 'single', values: ['SOC 1 (Type I or II)','SOC 2 (Type I or II)','SOC 3','GDPR Compliance (EU)','CCPA Compliance (US)','HIPAA Compliance (US)','FedRAMP, Authorization (US)','IRAP Assessment (AU)','CSA STAR Certification','Cyber Essentials / Plus (UK)'] },
 
-    { key: 'Pricing Model', group: 'Commercials & Procurement', type: 'single', values: ['Subscription (SaaS)','Usage-Based / Consumption','Per Seat / License','Tiered / Plan-Based','Enterprise Custom Quote','Freemium / Free Trial','One-Time Purchase / Perpetual License.'] },
+    { key: 'Pricing Model', group: 'Commercials & Procurement', type: 'single', values: ['Subscription (SaaS)','Usage-Based / Consumption','Per Seat / License','Tiered / Plan-Based','Enterprise Custom Quote','Freemium / Free Trial','One-Time Purchase / Perpetual License'] },
     { key: 'Approx. Price Range (AUD)', group: 'Commercials & Procurement', type: 'single', values: ['<$10K','$10K–$50K','$51K-$100K','$101K+'] },
     { key: 'Demo / Proof of Concept Available', group: 'Commercials & Procurement', type: 'single', values: ['Yes','No'] },
     { key: 'Adoption Level', group: 'Commercials & Procurement', type: 'single', values: ['Emerging / New Entrant','Growing Adoption','Mainstream / Proven','Market Leader / Standard'] },
@@ -1781,13 +1782,7 @@
   window.DATA_READY = new Promise(function(resolve){ _dataReadyResolve = resolve; });
 
   function esc(s){ return (s||'').toString().replace(/[&<>"]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
-  function splitMulti(v){
-    if(!v) return [];
-    return String(v).split(/[;,|\/\n]+/)
-      .map(x=>x.trim())
-      .map(x=>x.replace(/^and\s+/i, ''))  // Remove leading "and "
-      .filter(x => x && x.toLowerCase() !== 'and');  // Filter out empty strings and standalone "and"
-  }
+  // splitMulti, normalizeFilterValue and multiMatch live in /static/filter_utils.js
   function vendorSlug(name){ return String(name||'').toLowerCase().replace(/[^a-z0-9]/g,''); }
   function vendorNoSpace(name){ return String(name||'').replace(/\s+/g,''); }
   function logoCandidates(name){ var a=[], raw=vendorNoSpace(name), slug=vendorSlug(name); ['png','jpg','jpeg','webp'].forEach(ext=>{ a.push('logos/'+raw+'.'+ext); a.push('logos/'+slug+'.'+ext); }); return a; }
@@ -2071,20 +2066,6 @@
   function quickBlob(rec){
     return (rec.__display_name+' '+(rec['Vendor Name']||'')+' '+(rec['Product Name']||'')+' '+(rec['Product Description']||'')+' '+(rec['Vendor Overview']||''));
   }
-  function multiMatch(recVal, selected, fieldKey){
-    if(!selected || !selected.length) return true;
-    var hay=splitMulti(recVal);
-
-    // If the record has no value for this field and it's "Regions Served",
-    // treat it as available everywhere (don't filter it out)
-    if((!hay || hay.length === 0) && fieldKey === 'Regions Served'){
-      return true;
-    }
-
-    var set={}; hay.forEach(v=>set[v]=1);
-    for(var i=0;i<selected.length;i++){ if(set[selected[i]]) return true; }
-    return false;
-  }
   function matchRecord(rec){
     var t=(window.q && q.value.trim().toLowerCase())||'';
     if(t){ if(quickBlob(rec).toLowerCase().indexOf(t)===-1) return false; }
@@ -2113,12 +2094,12 @@
       } else if(schema && schema.type==='number-range'){
         if(String(rec[key]||'') !== String(val)) return false;
       } else {
-        var recVal = String(rec[key]||'').replace(/\.+$/,'').trim();
-        var selValStr = String(val).replace(/\.+$/,'').trim();
+        var recVal = normalizeFilterValue(rec[key]);
+        var selValStr = normalizeFilterValue(val);
         // Pricing Model: include tools with no pricing data (unknown = could match anything)
         if(key === 'Pricing Model'){
           if(!recVal) continue;
-          var pricingModels = recVal.split(/[;,]+/).map(function(v){ return v.replace(/\.+$/,'').trim(); });
+          var pricingModels = recVal.split(/[;,]+/).map(normalizeFilterValue);
           if(!pricingModels.includes(selValStr)) return false;
         } else if(recVal !== selValStr) return false;
       }
